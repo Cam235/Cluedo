@@ -27,8 +27,8 @@ public class Card {
         name = newName;
     }
     
-    public String getType(){
-        return type.toString();
+    public CardType getType(){
+        return type;
     }
     
     public void setType(CardType newType){
