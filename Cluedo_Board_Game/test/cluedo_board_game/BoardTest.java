@@ -5,6 +5,7 @@
  */
 package cluedo_board_game;
 
+
 import cluedo_board_game.Board;
 import cluedo_board_game.Tile;
 import org.junit.After;
@@ -22,14 +23,14 @@ public class BoardTest {
 
     int h = 5;
     int w = 5;
-    Board instance;
+    Board board;
 
     public BoardTest() {
     }
 
     @Before
     public void setUp() {
-        instance = new Board(w, h);
+        board = new Board(w, h);
     }
 
     @After
@@ -45,11 +46,83 @@ public class BoardTest {
         String testNonOccupiedMap = "";
         for (int _h = 0; _h < h; _h++) {
             for (int _w = 0; _w < w; _w++) {
-                testNonOccupiedMap += "F";
+                testNonOccupiedMap += "X";
             }
-            testNonOccupiedMap+="\n";
+            testNonOccupiedMap += "\n";
         }
-        assertEquals(instance.toString(),testNonOccupiedMap); 
+        assertEquals(board.toString(), testNonOccupiedMap);
     }
 
+    @Test
+    public void testOccupiedMap() {
+        System.out.println("TestOccupiedMap");
+        board.initializePawn("Z", 0, 0);
+        String testOccupiedMap = "";
+        for (int _h = 0; _h < h; _h++) {
+            for (int _w = 0; _w < w; _w++) {
+                //tests if at 0,0 it is occupied)
+                testOccupiedMap += (_h == 0 && _w == 0) ? "O" : "X";
+            }
+            testOccupiedMap += "\n";
+        }
+        assertEquals(board.toString(), testOccupiedMap);
+    }
+
+    @Test
+    public void testFailedPawnInitiation() {
+        System.out.println("TestFailedInitiation");
+        assertEquals(board.initializePawn("Z", -1, 0), null);
+    }
+
+    @Test
+    public void testPawnMovementToSide() {
+        System.out.println("TestSideMovement");
+        board.initializePawn("Z", 0, 0);
+        board.movePawn(1, 0);
+        String testOccupiedMap = "";
+        for (int _h = 0; _h < h; _h++) {
+            for (int _w = 0; _w < w; _w++) {
+                //tests if at 0,0 it is occupied)
+                testOccupiedMap += (_w == 1 && _h == 0) ? "O" : "X";
+            }
+            testOccupiedMap += "\n";
+        }
+        assertEquals(board.toString(), testOccupiedMap);
+        System.out.println(testOccupiedMap);
+    }
+
+    @Test
+    public void testPawnMovementToLower() {
+        System.out.println("TestLowerMovement");
+        board.initializePawn("Z", 1, 0);
+        board.movePawn(0, 0);
+        String testOccupiedMap = "";
+        for (int _h = 0; _h < h; _h++) {
+            for (int _w = 0; _w < w; _w++) {
+                //tests if at 0,0 it is occupied)
+                testOccupiedMap += (_w == 0 && _h == 0) ? "O" : "X";
+            }
+            testOccupiedMap += "\n";
+        }
+        assertEquals(board.toString(), testOccupiedMap);
+    }
+
+    @Test
+    public void testFailedMovement() {
+        System.out.println("TestFailedMovement");
+        board.initializePawn("Z", 0, 0);
+        //See it failss
+        board.movePawn(2,0);
+        board.movePawn(-1,3);
+        String testOccupiedMap = "";
+        for (int _h = 0; _h < h; _h++) {
+            for (int _w = 0; _w < w; _w++) {
+                //tests if at 0,0 it is occupied)
+                testOccupiedMap += (_w == 0 && _h == 0) ? "O" : "X";
+            }
+            testOccupiedMap += "\n";
+        }
+        assertEquals(board.toString(),testOccupiedMap);
+    }
 }
+

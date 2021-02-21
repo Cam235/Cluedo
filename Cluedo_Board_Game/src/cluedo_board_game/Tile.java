@@ -5,6 +5,10 @@
  */
 package cluedo_board_game;
 
+
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
 /**
  *
  * @author Anilz
@@ -18,33 +22,34 @@ public class Tile {
 
     // Constructor
     public Tile() {
+
     }
+
     //Occupied
-    public boolean isOccupied() {
+    public boolean getOccupied() {
         return isOccupied;
     }
 
     public void setOccupied(boolean isOccupied) {
         this.isOccupied = isOccupied;
     }
-    
-    
+
     //For Wall
-    public boolean isWall() {
+    public boolean getWall() {
         return isWall;
     }
-    
+
     public void setWall(boolean isWall) {
         this.isWall = isWall;
     }
-    
+
     //For the Doors
-    public boolean isDoor() {
+    public boolean getDoor() {
         return isDoor;
     }
 
     public void setDoor(boolean isDoor) {
         this.isDoor = isDoor;
     }
-    
+
 }

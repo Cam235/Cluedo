@@ -11,9 +11,11 @@ package cluedo_board_game;
  */
 public class Board {
 
-    Tile[][] tileMap;//Map of Tiles
-    int width, height;// Parameters
+    private Tile[][] tileMap;   //Map of Tiles
+    private int width, height;  // Parameters
+    private Pawn boardPawn;     // Sets the boardPawn
 
+    //Sets Up the Board of Tiles
     public Board(int width, int height) {
         // fields determining width and height of map
         this.width = width;
@@ -39,25 +41,46 @@ public class Board {
         return height;
     }
 
+    //Puts pawn on board
+    public Pawn initializePawn(String pawnName, int x, int y) {
+        if (x >= 0 && x < width && y < height && y >= 0) {
+            boardPawn = new Pawn(pawnName);
+            boardPawn.setPawnLocation(tileMap[x][y]);
+            return boardPawn;
+        } else {
+            System.out.println("You can't initialize here bro");
+            return null;
+        }
+
+    }
+
+    public void movePawn(int x, int y) {
+        try {
+            if ((tileMap[x][y].getOccupied() == false)
+                    && ((boardPawn.getPawnLocation().equals(tileMap[x + 1][y]))
+                    || (boardPawn.getPawnLocation().equals(tileMap[x - 1][y]))
+                    || (boardPawn.getPawnLocation().equals(tileMap[x][y + 1]))
+                    || (boardPawn.getPawnLocation().equals(tileMap[x][y - 1])))) {
+                //If the pawn above below, right and left or above,of existing place,AND  not occupied, then move the pawn 
+                boardPawn.getPawnLocation().setOccupied(false);
+                boardPawn.setPawnLocation(tileMap[x][y]);
+            } else {
+                System.out.println("Cannot Move Here!");
+            }
+        } catch(ArrayIndexOutOfBoundsException e)  {
+            System.out.println("Dont try again");           
+        }
+    }
+
     @Override
     public String toString() {
         String s = "";
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                s += tileMap[i][j].isOccupied() ? "O" : "F";
+        for (int _h = 0; _h < height; _h++) {
+            for (int _w = 0; _w < width; _w++) {
+                s += tileMap[_w][_h].getOccupied() ? "O" : "X";
             }
             s += "\n";
         }
         return s;
     }
-        /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        Board instance = new Board(5,5);
-        System.out.println(instance);
-        
-    }
-    
-
 }

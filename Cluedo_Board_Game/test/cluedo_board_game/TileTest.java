@@ -39,14 +39,14 @@ public class TileTest {
     }
 
     /**
-     * Test of isOccupied method, of class Tile.
+     * Test of getOccupied method, of class Tile.
      */
     @Test
     public void testIsOccupied() {
         System.out.println("isOccupied");
         Tile instance = new Tile();
         //Test default value being false
-        assertEquals(instance.isOccupied(), false);
+        assertEquals(instance.getOccupied(), false);
 
     }
 
@@ -60,19 +60,19 @@ public class TileTest {
         Tile instance = new Tile();       
         instance.setOccupied(isOccupied);
         //Test the occupied value after set true
-        assertTrue(instance.isOccupied());
+        assertTrue(instance.getOccupied());
 
     }
 
     /**
-     * Test of isWall method, of class Tile.
+     * Test of getWall method, of class Tile.
      */
     @Test
     public void testIsWall() {
         System.out.println("isWall");
         Tile instance = new Tile();
         //Test default value of tile being wall
-        assertEquals(instance.isWall(),false);
+        assertEquals(instance.getWall(),false);
 
 
     }
@@ -87,19 +87,19 @@ public class TileTest {
         Tile instance = new Tile();
         instance.setWall(isWall);
         //Test wall being set true
-        assertTrue(instance.isWall());
+        assertTrue(instance.getWall());
 
     }
 
     /**
-     * Test of isDoor method, of class Tile.
+     * Test of getDoor method, of class Tile.
      */
     @Test
     public void testIsDoor() {
         System.out.println("isDoor");
         Tile instance = new Tile();
         //Test default Door being false
-        assertEquals(instance.isDoor(), false);
+        assertEquals(instance.getDoor(), false);
 
     }
 
@@ -113,6 +113,6 @@ public class TileTest {
         Tile instance = new Tile();
         instance.setDoor(isDoor);
         //Test Door set true
-        assertTrue(instance.isDoor());
+        assertTrue(instance.getDoor());
     }
 }
