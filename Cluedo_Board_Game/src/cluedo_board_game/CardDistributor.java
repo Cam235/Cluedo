@@ -79,7 +79,7 @@ public class CardDistributor {
         Collections.shuffle(finalDeck);
     }
     
-    public Card getMurder(){
+    public Card getMurderer(){
         return envelope.get("Person");
     }
     
@@ -89,6 +89,11 @@ public class CardDistributor {
     
     public Card getMurderRoom(){
         return envelope.get("Room");
+    }
+    
+    /*used only for testing*/
+    public ArrayList<Card> getFinalDeck(){
+        return finalDeck;
     }
     
 }
