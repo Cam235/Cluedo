@@ -104,6 +104,10 @@ public class CardDistributor {
         ArrayList<ArrayList<Card>> playerHands = new ArrayList<>(); //list of list for the hand of each player
         int i = 0; //incrementor
         
+        pList.forEach((_item) -> { //add a new list to player hands for each player
+            playerHands.add(new ArrayList<>());
+        });
+        
         while(!finalDeck.isEmpty()){ //while there are still cards to deal
             playerHands.get(i).add(finalDeck.remove(0)); //remove a card from final deck and add it to a hand 
             //wrap i around to first player if i=last player index
