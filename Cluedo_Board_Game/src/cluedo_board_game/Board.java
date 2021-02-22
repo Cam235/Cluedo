@@ -5,6 +5,12 @@
  */
 package cluedo_board_game;
 
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 /**
  *
  * @author Anilz
@@ -14,6 +20,10 @@ public class Board {
     private Tile[][] tileMap;   //Map of Tiles
     private int width, height;  // Parameters
     private Pawn boardPawn;     // Sets the boardPawn
+    
+    private Random idGenerator; //used to generate unique player Ids
+    private Map<Integer,Player> playerList; //map of players and their Ids
+    private CardDistributor cardDistributor; //card distributor for board
 
     //Sets Up the Board of Tiles
     public Board(int width, int height) {
@@ -27,6 +37,10 @@ public class Board {
                 tileMap[_width][_height] = new Tile();
             }
         }
+        
+        //initialise remaining fields
+        idGenerator = new Random();
+        playerList = new HashMap<>();
     }
 
     public Tile[][] getTileMap() {
@@ -82,5 +96,24 @@ public class Board {
             s += "\n";
         }
         return s;
+    }
+    
+    public void setCardDistributor(List<Card> cardList){
+        cardDistributor = new CardDistributor(cardList);
+    }
+    
+    public void setPlayerList(List<String> playerNames){        
+        boolean playerAdded; //represents if a player is added successfully
+        int potentialId; //stores potential ids for players
+        for(String s:playerNames){ //iterate through a list of player names and generate players for each name
+            playerAdded = false;
+            while(!playerAdded){ //generate new player ID until a unique one is found so player can be added
+                potentialId = idGenerator.nextInt(1000);//ids can be in range 0,999
+                if(!playerList.containsKey(potentialId)){ //if id is unique add player to playerList
+                    playerList.put(potentialId,new Player(potentialId,s));
+                    playerAdded = true;
+                }
+            }
+        }
     }
 }

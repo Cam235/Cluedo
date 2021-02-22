@@ -96,4 +96,32 @@ public class CardDistributor {
         return finalDeck;
     }
     
+    public HashMap dealCards(HashMap<Integer,Player> playerMap){
+        //create ArrayLists from playerMap values and keys
+        List<Player> pList = new ArrayList<>(playerMap.values());
+        List<Integer> idList = new ArrayList<>(playerMap.keySet());
+        
+        ArrayList<ArrayList<Card>> playerHands = new ArrayList<>(); //list of list for the hand of each player
+        int i = 0; //incrementor
+        
+        while(!finalDeck.isEmpty()){ //while there are still cards to deal
+            playerHands.get(i).add(finalDeck.remove(0)); //remove a card from final deck and add it to a hand 
+            //wrap i around to first player if i=last player index
+            if(i == pList.size()-1){ 
+                i=0;
+            }
+            //else increment i
+            else{
+                i++;
+            }
+        }
+        
+        //for each player deal them thier hand and add them back to the map
+        for(int j=0; j < pList.size(); j++){
+            pList.get(j).setHand(playerHands.get(j));
+            playerMap.put(idList.get(j), pList.get(j));
+        }
+        return playerMap;
+    }
+    
 }

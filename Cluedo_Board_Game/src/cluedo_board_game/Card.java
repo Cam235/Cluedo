@@ -11,10 +11,11 @@ package cluedo_board_game;
  */
 public class Card {
     
-    private CardType type;
-    private String name; 
+    private CardType type; //determines card type
+    private String name;   //display name of card
     
     public Card(CardType cardType, String cardName){
+        //initialise variables
         type = cardType;
         name = cardName;
     }
