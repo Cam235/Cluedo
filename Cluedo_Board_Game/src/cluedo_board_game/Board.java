@@ -98,11 +98,19 @@ public class Board {
         return s;
     }
     
+    /**
+     * Instantiates the cardDistributor for the board
+     * @param cardList a list of card Objects used to instantiate the cardDistributor
+     */
     public void setCardDistributor(List<Card> cardList){
         cardDistributor = new CardDistributor(cardList);
     }
     
-    public void setPlayerList(List<String> playerNames){        
+    /**
+     * Instantiates Player objects and adds them to the player map of the board game
+     * @param playerNames a list of player name Strings to be made into player Objects and added to the player Map
+     */
+    public void addPlayers(List<String> playerNames){        
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
         for(String s:playerNames){ //iterate through a list of player names and generate players for each name

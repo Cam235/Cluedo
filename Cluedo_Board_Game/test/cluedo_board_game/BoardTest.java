@@ -128,15 +128,15 @@ public class BoardTest {
     }
     
     /**
-     * Test of setPlayerList method, of class Board.
+     * Test of addPlayers method, of class Board.
      */
     @Test
-    public void testSetPlayerList() {
+    public void testaddPlayers() {
         List<String> playerNames = new ArrayList<>();
         playerNames.add("p1");
         playerNames.add("p2");
         playerNames.add("p3");
-        board.setPlayerList(playerNames);
+        board.addPlayers(playerNames);
         assertEquals(3, board.getPlayerList().keySet().size());       
     }
 }

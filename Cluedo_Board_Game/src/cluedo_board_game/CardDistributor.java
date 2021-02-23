@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
  */
 package cluedo_board_game;
 
@@ -13,8 +11,10 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- *
+ * Used to distribute cards among players and the envelope 
+ * 
  * @author cwood
+ * @version 1.0
  */
 public class CardDistributor {
     //Array lists for person, weapon and room cards
@@ -28,6 +28,11 @@ public class CardDistributor {
     //Array list for cards that are handed to players
     private ArrayList<Card> finalDeck;
     
+    /**
+     * Constructor for objects of class CardDistributor
+     * 
+     * @param cards a list of the cards in the game to be distributed 
+     */
     public CardDistributor(List<Card> cards){
         //intialise class variables
         pCards = new ArrayList<>();
@@ -55,6 +60,9 @@ public class CardDistributor {
         }
     }
     
+    /**
+     * Sets the envelope for the board game with one card from each of the three types
+     */
     public void setEnvelope(){
         //create new empty envelope
         envelope = new HashMap<>();
@@ -65,10 +73,12 @@ public class CardDistributor {
         randomIndex = randInt.nextInt(wCards.size());
         envelope.put("Weapon", wCards.remove(randomIndex));
         randomIndex = randInt.nextInt(rCards.size());
-        envelope.put("Room", rCards.remove(randomIndex));
-        
+        envelope.put("Room", rCards.remove(randomIndex)); 
     }
     
+    /**
+     * Puts all the cards into one deck and shuffles them into a random order
+     */
     public void shuffleCards(){
         //add all elements from pCards, wCards and rCards to finalDeck
         finalDeck.addAll(pCards);
@@ -96,6 +106,12 @@ public class CardDistributor {
         return finalDeck;
     }
     
+    /**
+     * Deals the cards in the deck to a given HashMap of players
+     * 
+     * @param playerMap a HashMap of players to deal the cards to
+     * @return the updated HashMap of players
+     */
     public HashMap dealCards(HashMap<Integer,Player> playerMap){
         //create ArrayLists from playerMap values and keys
         List<Player> pList = new ArrayList<>(playerMap.values());
