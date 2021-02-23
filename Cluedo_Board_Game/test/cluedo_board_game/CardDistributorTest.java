@@ -63,12 +63,12 @@ public class CardDistributorTest {
     
     
     /**
-     * Test of shuffleCards method, of class CardDistributor.
+     * Test of dealCards method, of class CardDistributor.
      */
     @Test
     public void testDealCards() {
         cDInstance.shuffleCards();
-        playerMap = cDInstance.dealCards(playerMap);
+        cDInstance.dealCards(playerMap);
         assertEquals(3, playerMap.get(1).getHand().size());
         assertEquals(3, playerMap.get(2).getHand().size());
         

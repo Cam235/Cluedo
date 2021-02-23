@@ -8,6 +8,8 @@ package cluedo_board_game;
 
 import cluedo_board_game.Board;
 import cluedo_board_game.Tile;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -123,6 +125,19 @@ public class BoardTest {
             testOccupiedMap += "\n";
         }
         assertEquals(board.toString(),testOccupiedMap);
+    }
+    
+    /**
+     * Test of setPlayerList method, of class Board.
+     */
+    @Test
+    public void testSetPlayerList() {
+        List<String> playerNames = new ArrayList<>();
+        playerNames.add("p1");
+        playerNames.add("p2");
+        playerNames.add("p3");
+        board.setPlayerList(playerNames);
+        assertEquals(3, board.getPlayerList().keySet().size());       
     }
 }
 

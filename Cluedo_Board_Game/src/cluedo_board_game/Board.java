@@ -116,4 +116,8 @@ public class Board {
             }
         }
     }
+
+    public Map<Integer, Player> getPlayerList() {
+        return playerList;
+    }
 }
