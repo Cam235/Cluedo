@@ -97,6 +97,11 @@ public class CardDistributor {
         return envelope.get("Weapon");
     }
     
+    /**
+     * getter for murder room
+     * 
+     * @return returns murder room
+     */
     public Card getMurderRoom(){
         return envelope.get("Room");
     }
