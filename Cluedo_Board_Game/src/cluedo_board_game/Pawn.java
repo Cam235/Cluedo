@@ -4,17 +4,24 @@
  * and open the template in the editor.
  */
 package cluedo_board_game;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+
 /**
  *
  * @author Anilz
  */
-public class Pawn {
+public class Pawn extends Circle {
     private String name;
+    private boolean agent = true;
     private Tile pawnLocation = null;
- //   private boolean isAgent = false;
+
 
     public Pawn(String name) {
         this.name = name;
+        setFill(Color.RED);
+        setRadius(8);
+        setTranslateX(+2);
    //     this.pawnLocation = pawnLocation;
     }
 
@@ -34,5 +41,17 @@ public class Pawn {
         this.pawnLocation = pawnLocation;
         pawnLocation.setOccupied(true);
     }
+
+    //For Agent
+    public boolean IsAgent() {
+        return agent;
+    }
+
+    public void setIsAgent(boolean isAgent) {
+        this.agent = isAgent;
+    }
+    
+    
+    
     
 }

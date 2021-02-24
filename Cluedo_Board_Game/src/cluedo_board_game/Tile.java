@@ -6,36 +6,43 @@
 package cluedo_board_game;
 
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
 /**
  *
  * @author Anilz
  */
 public class Tile {
-
-    private boolean isOccupied;// see if pawn on Tile    
+    private int colIndex, rowIndex;
+    private boolean isOccupied; // see if pawn on Tile    
     //When part of room
-    private boolean isWall; // see if the tile is wall
-    private boolean isDoor; // if the tile is doorway of the room 
+   // private boolean isWall;     // see if the tile is wall
+    //private boolean isDoor;     // if the tile is doorway of the room 
 
     // Constructor
-    public Tile() {
-
+    public Tile(int colIndex,int rowIndex){
+        this.colIndex=colIndex;
+        this.rowIndex=rowIndex;
+        
     }
 
+    public int getColIndex() {
+        return colIndex;
+    }
+
+    public int getRowIndex() {
+        return rowIndex;
+    }
+    
     //Occupied
-    public boolean getOccupied() {
+    public boolean getIsOccupied() {
         return isOccupied;
     }
 
     public void setOccupied(boolean isOccupied) {
         this.isOccupied = isOccupied;
     }
-
+/**
     //For Wall
-    public boolean getWall() {
+    public boolean getIsWall() {
         return isWall;
     }
 
@@ -44,12 +51,13 @@ public class Tile {
     }
 
     //For the Doors
-    public boolean getDoor() {
+    public boolean getIsDoor() {
         return isDoor;
     }
 
     public void setDoor(boolean isDoor) {
         this.isDoor = isDoor;
     }
+    * */
 
 }

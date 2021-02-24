@@ -37,10 +37,11 @@ public class TileTest {
     @After
     public void tearDown() {
     }
-
+}
+    
     /**
-     * Test of getOccupied method, of class Tile.
-     */
+    
+    
     @Test
     public void testIsOccupied() {
         System.out.println("isOccupied");
@@ -50,9 +51,7 @@ public class TileTest {
 
     }
 
-    /**
-     * Test of setOccupied method, of class Tile.
-     */
+    
     @Test
     public void testSetOccupied() {
         System.out.println("setOccupied");
@@ -64,9 +63,7 @@ public class TileTest {
 
     }
 
-    /**
-     * Test of getWall method, of class Tile.
-     */
+    
     @Test
     public void testIsWall() {
         System.out.println("isWall");
@@ -77,9 +74,7 @@ public class TileTest {
 
     }
 
-    /**
-     * Test of setWall method, of class Tile.
-     */
+    
     @Test
     public void testSetWall() {
         System.out.println("setWall");
@@ -91,9 +86,7 @@ public class TileTest {
 
     }
 
-    /**
-     * Test of getDoor method, of class Tile.
-     */
+    
     @Test
     public void testIsDoor() {
         System.out.println("isDoor");
@@ -103,9 +96,7 @@ public class TileTest {
 
     }
 
-    /**
-     * Test of setDoor method, of class Tile.
-     */
+    
     @Test
     public void testSetDoor() {
         System.out.println("setDoor");
@@ -116,3 +107,4 @@ public class TileTest {
         assertTrue(instance.getDoor());
     }
 }
+* */

@@ -16,30 +16,29 @@ import java.util.Random;
  * @author Anilz
  */
 public class Board {
-
-    private Tile[][] tileMap;   //Map of Tiles
-    private int width, height;  // Parameters
-    private Pawn boardPawn;     // Sets the boardPawn
     
     private Random idGenerator; //used to generate unique player Ids
     private Map<Integer,Player> playerList; //map of players and their Ids
     private CardDistributor cardDistributor; //card distributor for board
+       
+    Tile[][] tileMap;   //Map of Tiles
+    private int columns, rows;  // Parameters
+    private Pawn boardPawn;     // Sets the boardPawn
 
     //Sets Up the Board of Tiles
-    public Board(int width, int height) {
-        // fields determining width and height of map
-        this.width = width;
-        this.height = height;
+    public Board(int columns, int rows) {
+        // fields determining columns and rows of map
+        this.columns = columns;
+        this.rows = rows;
         // initiate tileMap 
-        tileMap = new Tile[width][height];
-        for (int _height = 0; _height < height; _height++) {
-            for (int _width = 0; _width < width; _width++) {
-                tileMap[_width][_height] = new Tile();
+        tileMap = new Tile[columns][rows];
+        for (int _row = 0; _row < rows; _row++) {
+            for (int _column = 0; _column < columns; _column++) {
+                //Created TileMap of Tiles,and indexes are provided for each tile created
+                tileMap[_column][_row] = new Tile(_column, _row);
             }
         }
         
-        //initialise remaining fields
-        idGenerator = new Random();
         playerList = new HashMap<>();
     }
 
@@ -47,30 +46,29 @@ public class Board {
         return tileMap;
     }
 
-    public int getWidth() {
-        return width;
+    public int getColumns() {
+        return columns;
     }
 
-    public int getHeight() {
-        return height;
+    public int getRows() {
+        return rows;
     }
 
     //Puts pawn on board
     public Pawn initializePawn(String pawnName, int x, int y) {
-        if (x >= 0 && x < width && y < height && y >= 0) {
+        try{
             boardPawn = new Pawn(pawnName);
             boardPawn.setPawnLocation(tileMap[x][y]);
             return boardPawn;
-        } else {
-            System.out.println("You can't initialize here bro");
+        } catch(ArrayIndexOutOfBoundsException e) {
+            System.out.println("You can't initialize here ");
             return null;
         }
-
     }
-
-    public void movePawn(int x, int y) {
+/*
+    public boolean movePawn(Pawn pawn,int x, int y) {
         try {
-            if ((tileMap[x][y].getOccupied() == false)
+            if ((tileMap[x][y].getIsOccupied() == false)
                     && ((boardPawn.getPawnLocation().equals(tileMap[x + 1][y]))
                     || (boardPawn.getPawnLocation().equals(tileMap[x - 1][y]))
                     || (boardPawn.getPawnLocation().equals(tileMap[x][y + 1]))
@@ -78,25 +76,29 @@ public class Board {
                 //If the pawn above below, right and left or above,of existing place,AND  not occupied, then move the pawn 
                 boardPawn.getPawnLocation().setOccupied(false);
                 boardPawn.setPawnLocation(tileMap[x][y]);
+                return true;
             } else {
                 System.out.println("Cannot Move Here!");
             }
-        } catch(ArrayIndexOutOfBoundsException e)  {
-            System.out.println("Dont try again");           
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Dont try again");
         }
+        return false;
     }
+*/
 
     @Override
     public String toString() {
         String s = "";
-        for (int _h = 0; _h < height; _h++) {
-            for (int _w = 0; _w < width; _w++) {
-                s += tileMap[_w][_h].getOccupied() ? "O" : "X";
+        for (int _h = 0; _h < rows; _h++) {
+            for (int _w = 0; _w < columns; _w++) {
+                s += tileMap[_w][_h].getIsOccupied() ? "O" : "X";
             }
             s += "\n";
         }
         return s;
     }
+    
     
     /**
      * Instantiates the cardDistributor for the board
