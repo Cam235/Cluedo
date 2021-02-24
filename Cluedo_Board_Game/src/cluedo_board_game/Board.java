@@ -40,6 +40,7 @@ public class Board {
         }
         
         playerList = new HashMap<>();
+        idGenerator = new Random();
     }
 
     public Tile[][] getTileMap() {
