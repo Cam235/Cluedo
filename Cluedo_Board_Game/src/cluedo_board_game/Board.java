@@ -23,7 +23,7 @@ public class Board {
        
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    private Pawn boardPawn;     // Sets the boardPawn
+    private Pawn boardPawn;     // the boardPawn
 
     //Sets Up the Board of Tiles
     public Board(int columns, int rows) {
@@ -90,7 +90,7 @@ public class Board {
         String s = "";
         for (int _h = 0; _h < rows; _h++) {
             for (int _w = 0; _w < columns; _w++) {
-                s += tileMap[_w][_h].getIsOccupied() ? "O" : "X";
+                s += tileMap[_w][_h].IsOccupied() ? "O" : "X";
             }
             s += "\n";
         }

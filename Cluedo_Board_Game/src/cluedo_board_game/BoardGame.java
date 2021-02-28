@@ -94,7 +94,7 @@ public class BoardGame extends Application {
         pawn = board.initializePawn("TestPawn", 0, 0);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                if (board.getTileMap()[_c][_r].getIsOccupied()) {
+                if (board.getTileMap()[_c][_r].IsOccupied()) {
                     boardView.add(pawn, _c, _r);
                 }
             }

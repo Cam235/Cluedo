@@ -16,17 +16,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- *Represents the rolling a dice via button
+ * Represents the rolling a dice via button
+ *
  * @author Anilz
  */
 public class DiceRoller {
-
-    //Button to throw dice
-    Button diceRollerButton;
     private boolean diceRolled;
     //Initial Dice Values are given 1
     private int diceNumber = 1;
     private int diceNumber2 = 1;
+//-----------GUI stuff---------//
+    //Button to throw dice
+    Button rollButton;
     //Initial 1st Dice View
     Image diceImage = new Image("/Die/Dice" + diceNumber + ".png", 60, 60, false, false);
     ImageView diceImageView = new ImageView(diceImage);
@@ -35,14 +36,16 @@ public class DiceRoller {
     ImageView diceImageView2 = new ImageView(diceImage2);
 
     /**
-     * Creates diceroller content 2 Dices and a roll button is added,with their GUI
+     * Creates diceroller content 2 Dices and a roll button is added,with their
+     * GUI
+     *
      * @return
      */
     public VBox CreateContent() {
-        diceRollerButton = new Button();
-        diceRollerButton.setText("Roll the Dice");
-        diceRollerButton.setPrefWidth(120);
-        diceRollerButton.setOnAction(new EventHandler<ActionEvent>() {
+        rollButton = new Button();
+        rollButton.setText("Roll the Dice");
+        rollButton.setPrefWidth(120);
+        rollButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //Rolls the Dice
@@ -58,7 +61,7 @@ public class DiceRoller {
                 diceImage2 = new Image("/Die/Dice" + diceNumber2 + ".png", 60, 60, false, false);
                 diceImageView2.setImage(diceImage2);
                 //Disables button after pressed
-                diceRollerButton.setDisable(true);
+                rollButton.setDisable(true);
             }
         });
         //Displays dices horizontally
@@ -66,7 +69,7 @@ public class DiceRoller {
         dicesHbox.getChildren().addAll(diceImageView, diceImageView2);
         //Displays roll button above dices
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(diceRollerButton, dicesHbox);
+        vbox.getChildren().addAll(rollButton, dicesHbox);
         //SetsAlignments
         dicesHbox.setAlignment(Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
@@ -94,7 +97,7 @@ public class DiceRoller {
      * Enables the diceRoller Button to roll the dice
      */
     public void enableDiceRollerButton() {
-        diceRollerButton.setDisable(false);
+        rollButton.setDisable(false);
     }
 
     /**

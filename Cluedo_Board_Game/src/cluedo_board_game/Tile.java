@@ -13,7 +13,9 @@ package cluedo_board_game;
 public class Tile {
 
     private int colIndex, rowIndex;
-    private boolean isOccupied; // see if pawn on Tile    
+    //to see if pawn on Tile  
+    private boolean occupied;   
+    
     //Applied when room is established
     //private boolean isWall;     // see if the tile is wall
     //private boolean isDoor;     // if the tile is doorway of the room 
@@ -48,8 +50,8 @@ public class Tile {
      * 
      * @return whether or not the tile is occupied by pawn
      */
-    public boolean getIsOccupied() {
-        return isOccupied;
+    public boolean IsOccupied() {
+        return occupied;
     }
     
     /**
@@ -57,7 +59,7 @@ public class Tile {
      * @param isOccupied 
      */
     public void setOccupied(boolean isOccupied) {
-        this.isOccupied = isOccupied;
+        this.occupied = isOccupied;
     }
     
     //For wall and room values
