@@ -22,7 +22,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- *
+ * Representation of the boardgame where player can throw a dice and move the pawn
+ * 
  * @author Anilz
  */
 public class BoardGame extends Application {
@@ -32,7 +33,7 @@ public class BoardGame extends Application {
     //Used to Combine Board movements with Dice Image
     private VBox gameBox;
     //Pane will be used for Board
-    GridPane root;
+    GridPane boardView;
     //Board and repsenetation of Board with Rectangles
     private Board board;
     private Rectangle[][] tileImages;
@@ -54,7 +55,12 @@ public class BoardGame extends Application {
     Button switcherButton;
 
 
-    /*Creates Board, initialize Pawn at specified location and put in root*/
+    /**
+     * Creates Board, initialize Pawn at specified location and put in the boardView
+     * Creates DiceRoller object 
+     * Combines 2 different classes in VBox
+     * @return 
+     */
     public VBox CreateContent() {
         gameBox = new VBox();
         //DiceRoller added to play with dice
@@ -71,7 +77,7 @@ public class BoardGame extends Application {
         //Establish Board
         board = new Board(columns, rows);
         //Establish array of rectangles
-        root = new GridPane();
+        boardView = new GridPane();
         //Set up the Image of Board
         tileImages = new Rectangle[columns][rows];
         for (int _r = 0; _r < rows; _r++) {
@@ -81,7 +87,7 @@ public class BoardGame extends Application {
                 tileImages[_c][_r].setHeight(Tile_Size);
                 tileImages[_c][_r].setFill(Color.YELLOW);
                 tileImages[_c][_r].setStroke(Color.BLACK);
-                root.add(tileImages[_c][_r], _c, _r);
+                boardView.add(tileImages[_c][_r], _c, _r);
             }
         }
         //Initialize the Pawn on specified location
@@ -89,17 +95,24 @@ public class BoardGame extends Application {
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 if (board.getTileMap()[_c][_r].getIsOccupied()) {
-                    root.add(pawn, _c, _r);
+                    boardView.add(pawn, _c, _r);
                 }
             }
         }
         //Combines diceRoller and Board
-        gameBox.getChildren().addAll(switcherButton,diceRollerView, root);
+        gameBox.getChildren().addAll(switcherButton,diceRollerView, boardView);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
 
-    /*Method to move object on tileMap by throwing the dice*/
+    /**
+     * Method to move pawn on specified location on tileMap 
+     * Method can be replicated as much as total dice value
+     * TO make it work, dice has to be rethrown
+     * @param pawn
+     * @param x
+     * @param y 
+     */
     private void movePawn(Pawn pawn, int x, int y) {
         if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
             try {
@@ -119,7 +132,9 @@ public class BoardGame extends Application {
         }
     }
 
-    /*Makes random movements for AI*/
+    /**
+     * Makes random movements for AI pawn on the board
+     */
     public void positionUpdateAI() {//Bunu Implement Etmedim Daha
         if (pawn.IsAgent()) {
             Random random = new Random();
@@ -147,7 +162,9 @@ public class BoardGame extends Application {
         }
     }
 
-    /*Allows Player to make movements with WASD*/
+    /**
+     * Allows player to move pawn using WASD buttons
+     */
     public void positionUpdatePlayer() {
         if (!pawn.IsAgent()) {
             scene.setOnKeyPressed((KeyEvent event) -> {
@@ -168,7 +185,7 @@ public class BoardGame extends Application {
                         movePawn(pawn, pawn.getPawnLocation().getColIndex() + 1, (pawn.getPawnLocation().getRowIndex()));
                         System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
                         break;
-                    default://NOn valid Ket
+                    default://Non valid Ket
                         System.out.println("NOT VALID");
                         break;
                 }
@@ -179,17 +196,24 @@ public class BoardGame extends Application {
         }
     }
 
-    /*Updates view of pawn on board*/
+   /**
+    * Updates Pawns view on the board by removing pawn image on previous
+    * and adding pawn image on existing position
+    */
     public void updateView() {
-        root.getChildren().remove(pawn);
-        root.add(pawn, pawn.getPawnLocation().getColIndex(), pawn.getPawnLocation().getRowIndex());
+        boardView.getChildren().remove(pawn);
+        boardView.add(pawn, pawn.getPawnLocation().getColIndex(), pawn.getPawnLocation().getRowIndex());
     }
-
+    
+    /**
+     * Starts the prototype GUI
+     * @param primaryStage 
+     */
     @Override
     public void start(Stage primaryStage) {
         CreateContent();
+        //For setting scene and showing labels
         scene = new Scene(gameBox);
-        //For setting scene and showing
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -212,6 +236,7 @@ public class BoardGame extends Application {
             });
             thread.start();
         } else {
+            //If pawn is not AI, then allows player to make movements
             positionUpdatePlayer();
         }
 

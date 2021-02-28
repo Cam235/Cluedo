@@ -5,59 +5,71 @@
  */
 package cluedo_board_game;
 
-
 /**
+ * Represents tiles of the board
  *
  * @author Anilz
  */
 public class Tile {
+
     private int colIndex, rowIndex;
     private boolean isOccupied; // see if pawn on Tile    
-    //When part of room
-   // private boolean isWall;     // see if the tile is wall
+    //Applied when room is established
+    //private boolean isWall;     // see if the tile is wall
     //private boolean isDoor;     // if the tile is doorway of the room 
 
-    // Constructor
-    public Tile(int colIndex,int rowIndex){
-        this.colIndex=colIndex;
-        this.rowIndex=rowIndex;
-        
+    /**
+     * Constructor of tile object Takes row and column index parameters to
+     * identify tile from other tiles
+     *
+     * @param colIndex
+     * @param rowIndex
+     */
+    public Tile(int colIndex, int rowIndex) {
+        this.colIndex = colIndex;
+        this.rowIndex = rowIndex;
     }
 
+    /**
+     * @return column index
+     */
     public int getColIndex() {
         return colIndex;
     }
 
+    /**
+     * @return row index
+     */
     public int getRowIndex() {
         return rowIndex;
     }
-    
-    //Occupied
+
+    /**
+     * 
+     * @return whether or not the tile is occupied by pawn
+     */
     public boolean getIsOccupied() {
         return isOccupied;
     }
-
+    
+    /**
+     * Set the tile to occupied or not based on parameter 
+     * @param isOccupied 
+     */
     public void setOccupied(boolean isOccupied) {
         this.isOccupied = isOccupied;
     }
-/**
-    //For Wall
-    public boolean getIsWall() {
-        return isWall;
-    }
-
-    public void setWall(boolean isWall) {
-        this.isWall = isWall;
-    }
-
-    //For the Doors
-    public boolean getIsDoor() {
-        return isDoor;
-    }
-
-    public void setDoor(boolean isDoor) {
-        this.isDoor = isDoor;
-    }
-    * */
+    
+    //For wall and room values
+    /**
+     * //For Wall public boolean getIsWall() { return isWall; }
+     *
+     * public void setWall(boolean isWall) { this.isWall = isWall; }
+     *
+     * //For the Doors public boolean getIsDoor() { return isDoor; }
+     *
+     * public void setDoor(boolean isDoor) { this.isDoor = isDoor; }
+    *
+     */
 
 }

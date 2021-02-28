@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- *
+ * Represents board of the game
  * @author Anilz
  */
 public class Board {
-    
+    //These should not be on board 
     private Random idGenerator; //used to generate unique player Ids
     private Map<Integer,Player> playerList; //map of players and their Ids
     private CardDistributor cardDistributor; //card distributor for board
@@ -42,20 +42,35 @@ public class Board {
         playerList = new HashMap<>();
         idGenerator = new Random();
     }
-
+    /**
+     * 
+     * @return board
+     */
     public Tile[][] getTileMap() {
         return tileMap;
     }
-
+    /**
+     * 
+     * @return column size of the board
+     */
     public int getColumns() {
         return columns;
     }
-
+    /**
+     * 
+     * @return row size of the board
+     */
     public int getRows() {
         return rows;
     }
 
-    //Puts pawn on board
+    /**
+     * Initialize pawn on specific locations
+     * @param pawnName
+     * @param x
+     * @param y
+     * @return 
+     */
     public Pawn initializePawn(String pawnName, int x, int y) {
         try{
             boardPawn = new Pawn(pawnName);
@@ -66,28 +81,10 @@ public class Board {
             return null;
         }
     }
-/*
-    public boolean movePawn(Pawn pawn,int x, int y) {
-        try {
-            if ((tileMap[x][y].getIsOccupied() == false)
-                    && ((boardPawn.getPawnLocation().equals(tileMap[x + 1][y]))
-                    || (boardPawn.getPawnLocation().equals(tileMap[x - 1][y]))
-                    || (boardPawn.getPawnLocation().equals(tileMap[x][y + 1]))
-                    || (boardPawn.getPawnLocation().equals(tileMap[x][y - 1])))) {
-                //If the pawn above below, right and left or above,of existing place,AND  not occupied, then move the pawn 
-                boardPawn.getPawnLocation().setOccupied(false);
-                boardPawn.setPawnLocation(tileMap[x][y]);
-                return true;
-            } else {
-                System.out.println("Cannot Move Here!");
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Dont try again");
-        }
-        return false;
-    }
-*/
-
+    
+    /**
+     * @return textual representation of board
+     */
     @Override
     public String toString() {
         String s = "";
