@@ -16,7 +16,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- *
+ *Represents the rolling a dice via button
  * @author Anilz
  */
 public class DiceRoller {
@@ -34,6 +34,10 @@ public class DiceRoller {
     Image diceImage2 = new Image("/Die/Dice" + diceNumber + ".png", 60, 60, false, false);
     ImageView diceImageView2 = new ImageView(diceImage2);
 
+    /**
+     * Creates diceroller content 2 Dices and a roll button is added,with their GUI
+     * @return
+     */
     public VBox CreateContent() {
         diceRollerButton = new Button();
         diceRollerButton.setText("Roll the Dice");
@@ -69,19 +73,33 @@ public class DiceRoller {
         return vbox;
     }
 
+    /**
+     *
+     * @return true if dice is rolled, and false if dice has not rolled yet
+     */
     public boolean isDiceRolled() {
         return diceRolled;
     }
 
+    /**
+     * sets whether or not dice has rolled
+     *
+     * @param diceRolled
+     */
     public void setDiceRolled(boolean diceRolled) {
         this.diceRolled = diceRolled;
     }
-    
-    //Enables DiceRollerButton
+
+    /**
+     * Enables the diceRoller Button to roll the dice
+     */
     public void enableDiceRollerButton() {
         diceRollerButton.setDisable(false);
     }
 
+    /**
+     * @return total Dice value from
+     */
     public int getDiceTotal() {
         return diceNumber + diceNumber2;
     }
