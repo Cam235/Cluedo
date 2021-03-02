@@ -22,8 +22,9 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * Representation of the boardgame where player can throw a dice and move the pawn
- * 
+ * Representation of the boardgame where player can throw a dice and move the
+ * pawn
+ *
  * @author Anilz
  */
 public class BoardGame extends Application {
@@ -45,8 +46,8 @@ public class BoardGame extends Application {
     public static final int Tile_Size = 20;
     public static final int Pawn_Radius = 15;
     //Number of Rows and Column
-    private final int columns = 23;
-    private final int rows = 23;
+    private final int columns = 28;
+    private final int rows = 28;
     //DiceRoll object to step as much as dice Values
     DiceRoller diceRoller;
     //To measure steps not surpassing value of dice
@@ -54,12 +55,11 @@ public class BoardGame extends Application {
     //Switch Between Player and AI
     Button switcherButton;
 
-
     /**
-     * Creates Board, initialize Pawn at specified location and put in the boardView
-     * Creates DiceRoller object 
-     * Combines 2 different classes in VBox
-     * @return 
+     * Creates Board, initialize Pawn at specified location and put in the
+     * boardView Creates DiceRoller object Combines 2 different classes in VBox
+     *
+     * @return
      */
     public VBox CreateContent() {
         gameBox = new VBox();
@@ -71,7 +71,7 @@ public class BoardGame extends Application {
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-               pawn.setIsAgent(!pawn.IsAgent());
+                pawn.setIsAgent(!pawn.IsAgent());
             }
         });
         //Establish Board
@@ -100,18 +100,19 @@ public class BoardGame extends Application {
             }
         }
         //Combines diceRoller and Board
-        gameBox.getChildren().addAll(switcherButton,diceRollerView, boardView);
+        gameBox.getChildren().addAll(switcherButton, diceRollerView, boardView);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
 
     /**
-     * Method to move pawn on specified location on tileMap 
-     * Method can be replicated as much as total dice value
-     * TO make it work, dice has to be rethrown
+     * Method to move pawn on specified location on tileMap Method can be
+     * replicated as much as total dice value TO make it work, dice has to be
+     * rethrown
+     *
      * @param pawn
      * @param x
-     * @param y 
+     * @param y
      */
     private void movePawn(Pawn pawn, int x, int y) {
         if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
@@ -122,13 +123,13 @@ public class BoardGame extends Application {
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("You cant go here");
             }
-        }else{            
+        } else {
             System.out.println("Please Roll the Dice");
             //Sets Counter to 0
-            counter=0;
+            counter = 0;
             //Set Dice Rolled to false and Enables DiceRoller
             diceRoller.setDiceRolled(false);
-            diceRoller.enableDiceRollerButton();            
+            diceRoller.enableDiceRollerButton();
         }
     }
 
@@ -196,18 +197,19 @@ public class BoardGame extends Application {
         }
     }
 
-   /**
-    * Updates Pawns view on the board by removing pawn image on previous
-    * and adding pawn image on existing position
-    */
+    /**
+     * Updates Pawns view on the board by removing pawn image on previous and
+     * adding pawn image on existing position
+     */
     public void updateView() {
         boardView.getChildren().remove(pawn);
         boardView.add(pawn, pawn.getPawnLocation().getColIndex(), pawn.getPawnLocation().getRowIndex());
     }
-    
+
     /**
      * Starts the prototype GUI
-     * @param primaryStage 
+     *
+     * @param primaryStage
      */
     @Override
     public void start(Stage primaryStage) {
@@ -229,7 +231,7 @@ public class BoardGame extends Application {
                     }
                     // UI positionUpdateAI is run on the Application thread
                     Platform.runLater(updater);
-                    if (!pawn.IsAgent()){
+                    if (!pawn.IsAgent()) {
                         positionUpdatePlayer();
                     }
                 }
