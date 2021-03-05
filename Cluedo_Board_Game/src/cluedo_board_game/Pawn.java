@@ -30,7 +30,7 @@ public class Pawn extends Circle {
         //Initialise Pawn, with circle properties
         this.name = name;
         setFill(Color.RED);
-        setRadius(8);
+        setRadius(5);
         setTranslateX(+2);
         //this.pawnLocation = pawnLocation;
     }
@@ -79,8 +79,10 @@ public class Pawn extends Circle {
      *  
      * @param isAgent set pawn to agent if true, else player controls
      */
-    public void setIsAgent(boolean isAgent) {
+    public void setAgent(boolean isAgent) {
         this.agent = isAgent;
     }
+    
+    
 
 }

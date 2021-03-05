@@ -5,6 +5,7 @@
  */
 package cluedo_board_game;
 
+import java.util.ArrayList;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -37,14 +38,13 @@ public class BoardGame extends Application {
     GridPane boardView;
     //Board and repsenetation of Board with Rectangles
     private Board board;
-    private Rectangle[][] tileImages;
     //For Pawn with representation
     private Pawn pawn;
     //IsGameRunning
     boolean isRunning = true;
     //Sizes
-    public static final int Tile_Size = 20;
-    public static final int Pawn_Radius = 15;
+    public static final int Tile_Size = 15;
+    //public static final int Pawn_Radius = 15;
     //Number of Rows and Column
     private final int columns = 28;
     private final int rows = 28;
@@ -61,7 +61,7 @@ public class BoardGame extends Application {
      *
      * @return
      */
-    public VBox CreateContent() {
+    public VBox SetUpBoard() {
         gameBox = new VBox();
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
@@ -71,25 +71,79 @@ public class BoardGame extends Application {
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                pawn.setIsAgent(!pawn.IsAgent());
+                pawn.setAgent(!pawn.IsAgent());
             }
         });
         //Establish Board
         board = new Board(columns, rows);
+        /////////////////////////////////////////ADD ROOMS////////////////////// 
+        //Adding Kitchen room
+        ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
+        ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
+        for (int i = 21; i < 23; i++) {
+            for (int j = 21; j < 23; j++) {
+                kitchenSpace.add(board.getTileMap()[j][i]);
+            }
+        }
+        Tile kitchenDoor = board.getTileMap()[20][21];
+        kitchenDoors.add(kitchenDoor);
+        board.initializeRoom("Kitchen", kitchenSpace, kitchenDoors);
+        //-------------------------
+        //Adding Bedroom
+        ArrayList<Tile> bedroomSpace = new ArrayList<Tile>();
+        ArrayList<Tile> bedroomDoors = new ArrayList<Tile>();
+        for (int i = 10; i < 12; i++) {
+            for (int j = 21; j < 23; j++) {
+                bedroomSpace.add(board.getTileMap()[j][i]);
+            }
+        }
+        Tile bedroomDoor = board.getTileMap()[9][10];
+        bedroomDoors.add(bedroomDoor);
+        board.initializeRoom("BedRoom", bedroomSpace, bedroomDoors);
+        //-------------------------     
+        //Adding Surprise Room :)
+        ArrayList<Tile> surpriseSpace = new ArrayList<Tile>();
+        ArrayList<Tile> surpriseDoor = new ArrayList<Tile>();
+        surpriseSpace.add(board.getTileMap()[4][10]);
+        surpriseSpace.add(board.getTileMap()[4][11]);
+        surpriseSpace.add(board.getTileMap()[4][12]);
+        surpriseSpace.add(board.getTileMap()[4][13]);
+        surpriseSpace.add(board.getTileMap()[5][13]);
+        surpriseSpace.add(board.getTileMap()[3][13]);
+        surpriseSpace.add(board.getTileMap()[4][14]);
+        surpriseSpace.add(board.getTileMap()[5][14]);
+        surpriseSpace.add(board.getTileMap()[3][14]);
+        surpriseDoor.add(board.getTileMap()[4][9]);
+        board.initializeRoom("SurpriseRoom", surpriseSpace, surpriseDoor);
+        ///////////////////////////////////////////////////////////////////////////////////////
+        //---------------------------------------------------------------------------------///
+        ////////////////////////////////////////GRIDPANE//////////////////////////////////////
         //Establish array of rectangles
         boardView = new GridPane();
         //Set up the Image of Board
-        tileImages = new Rectangle[columns][rows];
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                tileImages[_c][_r] = new Rectangle();
-                tileImages[_c][_r].setWidth(Tile_Size);
-                tileImages[_c][_r].setHeight(Tile_Size);
-                tileImages[_c][_r].setFill(Color.YELLOW);
-                tileImages[_c][_r].setStroke(Color.BLACK);
-                boardView.add(tileImages[_c][_r], _c, _r);
+                board.getTileMap()[_c][_r].setWidth(Tile_Size);
+                board.getTileMap()[_c][_r].setHeight(Tile_Size);
+                if (board.getTileMap()[_c][_r].getIsWall()) {
+                    board.getTileMap()[_c][_r].setFill(Color.BLUE);
+                    board.getTileMap()[_c][_r].setStroke(Color.BLUE);
+                } else if (board.getTileMap()[_c][_r].getIsDoor()) {
+                    board.getTileMap()[_c][_r].setFill(Color.WHITE);
+                } else {
+                    board.getTileMap()[_c][_r].setFill(Color.YELLOW);
+                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
+                }
+                for (Room room : board.getRooms()) {
+                    if (room.checkTileInRoom(board.getTileMap()[_c][_r])) {
+                        board.getTileMap()[_c][_r].setFill(Color.GRAY);
+                        board.getTileMap()[_c][_r].setStroke(Color.GRAY);
+                    }
+                }
+                boardView.add(board.getTileMap()[_c][_r], _c, _r);
             }
         }
+
         //Initialize the Pawn on specified location
         pawn = board.initializePawn("TestPawn", 0, 0);
         for (int _r = 0; _r < rows; _r++) {
@@ -105,8 +159,17 @@ public class BoardGame extends Application {
         return gameBox;
     }
 
+    private void spawnTokenInRoom(Pawn pawn, Room room) {
+        //When hits 
+        int index = (int) (Math.random() * room.getRoomSpace().size());
+        int newX = room.getRoomSpace().get(index).getColIndex();
+        int newY = room.getRoomSpace().get(index).getRowIndex();
+        movePawn(pawn, newX, newY);
+
+    }
+
     /**
-     * Method to move pawn on specified location on tileMap Method can be
+     * Method to move pawn on specified location on board Method can be
      * replicated as much as total dice value TO make it work, dice has to be
      * rethrown
      *
@@ -117,9 +180,41 @@ public class BoardGame extends Application {
     private void movePawn(Pawn pawn, int x, int y) {
         if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
             try {
-                pawn.getPawnLocation().setOccupied(false);
-                pawn.setPawnLocation(board.tileMap[x][y]);
-                counter++;
+                //If the tile to be moved is not Wall,confirm movement
+                if (!board.getTileMap()[x][y].getIsWall()) {
+                    //If the board tile to be moved is door then,loop through rooms
+                    if (board.getTileMap()[x][y].getIsDoor()) {
+                        for (Room room : board.getRooms()) {
+                            //if room contains the door to be moved
+                            if (room.getDoorTiles().contains(board.getTileMap()[x][y])) {
+                                //And if the player has not in room yet
+                                if (!room.getRoomSpace().contains(pawn.getPawnLocation())) {
+                                    //Prints which room of entry
+                                    System.out.println("You are at entering the " + room.getRoomName());
+                                    //Hit the door
+                                    pawn.getPawnLocation().setOccupied(false);
+                                    pawn.setPawnLocation(board.getTileMap()[x][y]);
+                                    //And spawn token outside the door
+                                    spawnTokenInRoom(pawn, room);
+                                    //Ends pawn movements
+                                    counter = diceRoller.getDiceTotal();
+                                } else {
+                                    //If it is already in room, then do not spawn in room
+                                    pawn.getPawnLocation().setOccupied(false);
+                                    pawn.setPawnLocation(board.getTileMap()[x][y]);
+                                }
+                            }
+                        }
+                    } else {
+                        //if neither wall nor door, make just a movement
+                        pawn.getPawnLocation().setOccupied(false);
+                        pawn.setPawnLocation(board.getTileMap()[x][y]);
+                        counter++;
+                    }
+                    //if tile to be moved is wall , then cannot move    
+                } else {
+                    System.out.println("You cannot go through Wall");
+                }
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("You cant go here");
             }
@@ -190,7 +285,11 @@ public class BoardGame extends Application {
                         System.out.println("NOT VALID");
                         break;
                 }
-                System.out.println(counter);
+                for (Room room : board.getRooms()) {
+                    if (room.checkTileInRoom(board.getTileMap()[pawn.getPawnLocation().getColIndex()][pawn.getPawnLocation().getRowIndex()])) {
+                        System.out.println("PAWN IS IN " + room.getRoomName());
+                    }
+                }
                 updateView();
             });
 
@@ -213,7 +312,7 @@ public class BoardGame extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        CreateContent();
+        SetUpBoard();
         //For setting scene and showing labels
         scene = new Scene(gameBox);
         primaryStage.setTitle("Play it Broo");
