@@ -9,7 +9,7 @@ package cluedo_board_game;
  * @author cwood
  * @version 1.0
  */
-enum CardType {
+enum CardType implements CardTypeInterface{
         Person,
         Weapon,
         Room

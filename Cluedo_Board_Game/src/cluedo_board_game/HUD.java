@@ -21,12 +21,12 @@ import javafx.stage.Stage;
  *
  * @author Seb
  */
-public class HUD extends Application {
+public class HUD extends Application implements HUDInterface {
     
     
-    private Boolean isSuggestionLocked;
-    private Boolean isAccusationLocked;
-    private Boolean isEndTurnLocked;
+    private boolean isSuggestionLocked;
+    private boolean isAccusationLocked;
+    private boolean isEndTurnLocked;
     public PopUpMenu suggestionMenu;
     public PopUpMenu accusationMenu;
     
@@ -55,24 +55,32 @@ public class HUD extends Application {
     @FXML
     Button endTurnButton;
     
+    @Override
     public void setSuggestionLocked(){
         isSuggestionLocked = true;
     }
+    
+    @Override
     public void setEndTurnLocked(){
         isEndTurnLocked = true;
     }
-    public Boolean getEndTurnLocked(){
+    
+    @Override
+    public boolean getEndTurnLocked(){
         return isEndTurnLocked;
     }
-    public Boolean getSuggestionLocked(){
+    
+    @Override
+    public boolean getSuggestionLocked(){
         return isSuggestionLocked;
     }
-    public Boolean getAccusationLocked(){
+    
+    @Override
+    public boolean getAccusationLocked(){
         return isAccusationLocked;
     }
-    
-    
-    
+
+    @Override
     public void onClick(){
         suggestionButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {

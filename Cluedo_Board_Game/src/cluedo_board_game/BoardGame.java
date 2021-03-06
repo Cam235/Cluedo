@@ -28,7 +28,7 @@ import javafx.stage.WindowEvent;
  *
  * @author Anilz
  */
-public class BoardGame extends Application {
+public class BoardGame extends Application implements BoardGameInterface {
 
     //Made Scene Global,for methods access
     Scene scene;
@@ -61,17 +61,18 @@ public class BoardGame extends Application {
      *
      * @return
      */
-    public VBox SetUpBoard() {
+    @Override
+    public VBox setUpBoard() {
         gameBox = new VBox();
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
-        VBox diceRollerView = diceRoller.CreateContent();
+        VBox diceRollerView = diceRoller.createContent();
         //Button to swith between Player and AI
         switcherButton = new Button("AI/Player");
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                pawn.setAgent(!pawn.IsAgent());
+                pawn.setAgent(!pawn.isAgent());
             }
         });
         //Establish Board
@@ -158,8 +159,9 @@ public class BoardGame extends Application {
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
-
-    private void spawnTokenInRoom(Pawn pawn, Room room) {
+    
+    @Override
+    public void spawnTokenInRoom(Pawn pawn, Room room) {
         //When hits 
         int index = (int) (Math.random() * room.getRoomSpace().size());
         int newX = room.getRoomSpace().get(index).getColIndex();
@@ -177,7 +179,8 @@ public class BoardGame extends Application {
      * @param x
      * @param y
      */
-    private void movePawn(Pawn pawn, int x, int y) {
+    @Override
+    public void movePawn(Pawn pawn, int x, int y) {
         if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
             try {
                 //If the tile to be moved is not Wall,confirm movement
@@ -232,7 +235,7 @@ public class BoardGame extends Application {
      * Makes random movements for AI pawn on the board
      */
     public void positionUpdateAI() {//Bunu Implement Etmedim Daha
-        if (pawn.IsAgent()) {
+        if (pawn.isAgent()) {
             Random random = new Random();
             int movement = random.nextInt(4);
             switch (movement) {
@@ -262,7 +265,7 @@ public class BoardGame extends Application {
      * Allows player to move pawn using WASD buttons
      */
     public void positionUpdatePlayer() {
-        if (!pawn.IsAgent()) {
+        if (!pawn.isAgent()) {
             scene.setOnKeyPressed((KeyEvent event) -> {
                 switch (event.getCode()) {
                     case W://go up
@@ -312,14 +315,14 @@ public class BoardGame extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        SetUpBoard();
+        setUpBoard();
         //For setting scene and showing labels
         scene = new Scene(gameBox);
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
         //Checks if pawn is agent or player,provides gameplay accordingly      
-        if (pawn.IsAgent()) {
+        if (pawn.isAgent()) {
             //Use threads for with assigned method to make random movements
             Thread thread = new Thread(() -> {
                 Runnable updater = () -> positionUpdateAI();
@@ -330,7 +333,7 @@ public class BoardGame extends Application {
                     }
                     // UI positionUpdateAI is run on the Application thread
                     Platform.runLater(updater);
-                    if (!pawn.IsAgent()) {
+                    if (!pawn.isAgent()) {
                         positionUpdatePlayer();
                     }
                 }

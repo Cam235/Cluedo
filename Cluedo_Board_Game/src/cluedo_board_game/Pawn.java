@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
  * @author Anilz
  * @version 1.0
  */
-public class Pawn extends Circle {
+public class Pawn extends Circle implements PawnInterface{
 
     //Pawn name, if boolean or agent, and which tile it does steps on
     private String name;
@@ -38,6 +38,7 @@ public class Pawn extends Circle {
     /**
      * @return the name of Pawn
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -45,6 +46,7 @@ public class Pawn extends Circle {
     /**
      * sets the name of Pawn
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -53,6 +55,7 @@ public class Pawn extends Circle {
      *
      * @return location of the pawn
      */
+    @Override
     public Tile getPawnLocation() {
         return pawnLocation;
     }
@@ -62,6 +65,7 @@ public class Pawn extends Circle {
      *
      * @param pawnLocation is the new selected tile
      */
+    @Override
     public void setPawnLocation(Tile pawnLocation) {
         this.pawnLocation = pawnLocation;
         pawnLocation.setOccupied(true);
@@ -71,7 +75,8 @@ public class Pawn extends Circle {
      *
      * @return whether pawn is agent or not
      */
-    public boolean IsAgent() {
+    @Override
+    public boolean isAgent() {
         return agent;
     }
 
@@ -79,6 +84,7 @@ public class Pawn extends Circle {
      *  
      * @param isAgent set pawn to agent if true, else player controls
      */
+    @Override
     public void setAgent(boolean isAgent) {
         this.agent = isAgent;
     }

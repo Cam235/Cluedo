@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Anilz
  */
-public class DiceRoller {
+public class DiceRoller implements DiceRollerInterface{
     private boolean diceRolled;
     //Initial Dice Values are given 1
     private int diceNumber = 1;
@@ -41,7 +41,8 @@ public class DiceRoller {
      *
      * @return
      */
-    public VBox CreateContent() {
+    @Override
+    public VBox createContent() {
         rollButton = new Button();
         rollButton.setText("Roll the Dice");
         rollButton.setPrefWidth(120);
@@ -80,6 +81,7 @@ public class DiceRoller {
      *
      * @return true if dice is rolled, and false if dice has not rolled yet
      */
+    @Override
     public boolean isDiceRolled() {
         return diceRolled;
     }
@@ -89,6 +91,7 @@ public class DiceRoller {
      *
      * @param diceRolled
      */
+    @Override
     public void setDiceRolled(boolean diceRolled) {
         this.diceRolled = diceRolled;
     }
@@ -96,6 +99,7 @@ public class DiceRoller {
     /**
      * Enables the diceRoller Button to roll the dice
      */
+    @Override
     public void enableDiceRollerButton() {
         rollButton.setDisable(false);
     }
@@ -103,6 +107,7 @@ public class DiceRoller {
     /**
      * @return total Dice value from
      */
+    @Override
     public int getDiceTotal() {
         return diceNumber + diceNumber2;
     }

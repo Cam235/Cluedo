@@ -14,9 +14,9 @@ import java.util.Random;
  * Used to distribute cards among players and the envelope 
  * 
  * @author cwood
- * @version 1.0
+ * @version 1.01
  */
-public class CardDistributor {
+public class CardDistributor implements CardDistributorInterface{
     //Array lists for person, weapon and room cards
     private ArrayList<Card> pCards;
     private ArrayList<Card> wCards;
@@ -63,6 +63,7 @@ public class CardDistributor {
     /**
      * Sets the envelope for the board game with one card from each of the three types
      */
+    @Override
     public void setEnvelope(){
         //create new empty envelope
         envelope = new HashMap<>();
@@ -79,6 +80,7 @@ public class CardDistributor {
     /**
      * Puts all the cards into one deck and shuffles them into a random order
      */
+    @Override
     public void shuffleCards(){
         //add all elements from pCards, wCards and rCards to finalDeck
         finalDeck.addAll(pCards);
@@ -89,10 +91,12 @@ public class CardDistributor {
         Collections.shuffle(finalDeck);
     }
     
+    @Override
     public Card getMurderer(){
         return envelope.get("Person");
     }
     
+    @Override
     public Card getMurderWeapon(){
         return envelope.get("Weapon");
     }
@@ -102,11 +106,13 @@ public class CardDistributor {
      * 
      * @return returns murder room
      */
+    @Override
     public Card getMurderRoom(){
         return envelope.get("Room");
     }
     
     /*used only for testing*/
+    @Override
     public ArrayList<Card> getFinalDeck(){
         return finalDeck;
     }
@@ -117,6 +123,7 @@ public class CardDistributor {
      * @param playerMap a HashMap of players to deal the cards to
      * @return the updated HashMap of players
      */
+    @Override
     public HashMap dealCards(HashMap<Integer,Player> playerMap){
         //create ArrayLists from playerMap values and keys
         List<Player> pList = new ArrayList<>(playerMap.values());

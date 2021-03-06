@@ -17,7 +17,7 @@ import java.util.Random;
  *
  * @author Anilz
  */
-public class Board {
+public class Board implements BoardInterface{
 
     //These should not be on board 
     private Random idGenerator; //used to generate unique player Ids
@@ -52,6 +52,7 @@ public class Board {
      *
      * @return board
      */
+    @Override
     public Tile[][] getTileMap() {
         return tileMap;
     }
@@ -60,6 +61,7 @@ public class Board {
      *
      * @return column size of the board
      */
+    @Override
     public int getColumns() {
         return columns;
     }
@@ -68,10 +70,12 @@ public class Board {
      *
      * @return row size of the board
      */
+    @Override
     public int getRows() {
         return rows;
     }
-
+    
+    @Override
     public ArrayList<Room> getRooms() {
         return rooms;
     }
@@ -84,6 +88,7 @@ public class Board {
      * @param y
      * @return
      */
+    @Override
     public Pawn initializePawn(String pawnName, int x, int y) {
         try {
             boardPawn = new Pawn(pawnName);
@@ -94,7 +99,8 @@ public class Board {
             return null;
         }
     }
-
+    
+    @Override
     public void initializeRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
         try {
             //Creates Room
@@ -179,6 +185,7 @@ public class Board {
      * @param cardList a list of card Objects used to instantiate the
      * cardDistributor
      */
+    @Override
     public void setCardDistributor(List<Card> cardList) {
         cardDistributor = new CardDistributor(cardList);
     }
@@ -190,6 +197,7 @@ public class Board {
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
      */
+    @Override
     public void addPlayers(List<String> playerNames) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
@@ -204,7 +212,8 @@ public class Board {
             }
         }
     }
-
+    
+    @Override
     public Map<Integer, Player> getPlayerList() {
         return playerList;
     }

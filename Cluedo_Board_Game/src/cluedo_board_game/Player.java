@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author cwood
  * @version 1.0
  */
-public class Player {
+public class Player implements PlayerInterface {
     
     private int playerId; //uniquely identifies a player
     private String name; //display name for player, doesn't have to be unique
@@ -27,18 +27,22 @@ public class Player {
         this.name = name;
     }
 
+    @Override
     public int getPlayerId() {
         return playerId;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public ArrayList<Card> getHand() {
         return hand;
     }
 
+    @Override
     public void setHand(ArrayList<Card> hand) {
         this.hand = hand;
     }

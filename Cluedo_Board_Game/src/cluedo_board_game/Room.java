@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author Anilz
  */
-public class Room {
+public class Room implements RoomInterface{
 
     private String roomName;
     private ArrayList<Tile> roomSpace;
@@ -24,23 +24,28 @@ public class Room {
         this.roomSpace = roomSpace;
     }
 
+    @Override
     public String getRoomName() {
         return roomName;
     }
 
+    @Override
     public ArrayList<Tile> getRoomSpace() {
         return roomSpace;
     }
 
+    @Override
     public ArrayList<Tile> getDoorTiles() {
         return doorTiles;
     }
     
 
+    @Override
     public boolean checkTileInRoom(Tile tile) {
         return roomSpace.contains(tile);
     }
 
+    @Override
     public void addRoomDoor(Tile doorTile) {
             //firstly if the tile is wall,initiate for loop to see if the wall covers the correct room
             if (doorTile.getIsWall()) {

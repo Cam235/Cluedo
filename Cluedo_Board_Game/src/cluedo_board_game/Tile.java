@@ -12,7 +12,7 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Anilz
  */
-public class Tile extends Rectangle {
+public class Tile extends Rectangle implements TileInterface{
 
     private int colIndex, rowIndex;
     //to see if pawn on Tile  
@@ -37,6 +37,7 @@ public class Tile extends Rectangle {
     /**
      * @return column index
      */
+    @Override
     public int getColIndex() {
         return colIndex;
     }
@@ -44,6 +45,7 @@ public class Tile extends Rectangle {
     /**
      * @return row index
      */
+    @Override
     public int getRowIndex() {
         return rowIndex;
     }
@@ -52,6 +54,7 @@ public class Tile extends Rectangle {
      * 
      * @return whether or not the tile is occupied by pawn
      */
+    @Override
     public boolean IsOccupied() {
         return occupied;
     }
@@ -60,28 +63,32 @@ public class Tile extends Rectangle {
      * Set the tile to occupied or not based on parameter 
      * @param isOccupied 
      */
+    @Override
     public void setOccupied(boolean isOccupied) {
         this.occupied = isOccupied;
     }
       
     //For Wall
+    @Override
     public boolean getIsWall() {
         return wall;
     }
 
+    @Override
     public void setWall(boolean isWall) {
         this.wall = isWall;
     }
 
     //For the Doors
+    @Override
     public boolean getIsDoor() {
         return door;
     }
 
+    @Override
     public void setDoor(boolean isDoor) {
         //if its door, its no longer wall
         setWall(false);
         this.door = isDoor;
     }
-
 }

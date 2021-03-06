@@ -10,7 +10,7 @@ package cluedo_board_game;
  * @author cwood 
  * @version 1.0
  */
-public class Card {
+public class Card implements CardInterface{
     
     private CardType type; //determines card type
     private String name;   //display name of card
@@ -27,6 +27,7 @@ public class Card {
         name = cardName;
     }
     
+    @Override
     public String getName(){
         return name;
     }
@@ -34,10 +35,12 @@ public class Card {
     /**
      * @param newName 
      */
+    @Override
     public void setName(String newName){
         name = newName;
     }
     
+    @Override
     public CardType getType(){
         return type;
     }
@@ -45,6 +48,7 @@ public class Card {
     /**
      * @param newType 
      */
+    @Override
     public void setType(CardType newType){
         type = newType;
     }

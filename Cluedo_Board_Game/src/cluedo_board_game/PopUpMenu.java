@@ -25,7 +25,7 @@ import javafx.stage.Stage;
  */
 public class PopUpMenu extends Application {
     
-    private Boolean isRoomLocked;
+    private boolean isRoomLocked;
     
     
     public PopUpMenu(String type){
@@ -49,7 +49,7 @@ public class PopUpMenu extends Application {
         primaryStage.show();
     }
     
-    public Boolean getRoomLocked(){
+    public boolean getRoomLocked(){
         return isRoomLocked;
     }
     public void setRoomLocked(){
