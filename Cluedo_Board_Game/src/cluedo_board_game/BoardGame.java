@@ -24,7 +24,7 @@ import javafx.stage.WindowEvent;
 
 /**
  * Representation of the boardgame where player can throw a dice and move the
- * pawn
+ * token
  *
  * @author Anilz
  */
@@ -38,13 +38,13 @@ public class BoardGame extends Application implements BoardGameInterface {
     GridPane boardView;
     //Board and repsenetation of Board with Rectangles
     private Board board;
-    //For Pawn with representation
-    private Pawn pawn;
+    //For Token with representation
+    private Token token;
     //IsGameRunning
     boolean isRunning = true;
     //Sizes
     public static final int Tile_Size = 15;
-    //public static final int Pawn_Radius = 15;
+    //public static final int Token_Radius = 15;
     //Number of Rows and Column
     private final int columns = 28;
     private final int rows = 28;
@@ -56,8 +56,8 @@ public class BoardGame extends Application implements BoardGameInterface {
     Button switcherButton;
 
     /**
-     * Creates Board, initialize Pawn at specified location and put in the
-     * boardView Creates DiceRoller object Combines 2 different classes in VBox
+     * Creates Board, initialize Token at specified location and put in the
+ boardView Creates DiceRoller object Combines 2 different classes in VBox
      *
      * @return
      */
@@ -72,7 +72,7 @@ public class BoardGame extends Application implements BoardGameInterface {
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                pawn.setAgent(!pawn.isAgent());
+                token.setAgent(!token.isAgent());
             }
         });
         //Establish Board
@@ -145,12 +145,12 @@ public class BoardGame extends Application implements BoardGameInterface {
             }
         }
 
-        //Initialize the Pawn on specified location
-        pawn = board.initializePawn("TestPawn", 0, 0);
+        //Initialize the Token on specified location
+        token = board.initializeToken("TestToken", 0, 0);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 if (board.getTileMap()[_c][_r].IsOccupied()) {
-                    boardView.add(pawn, _c, _r);
+                    boardView.add(token, _c, _r);
                 }
             }
         }
@@ -161,26 +161,26 @@ public class BoardGame extends Application implements BoardGameInterface {
     }
     
     @Override
-    public void spawnTokenInRoom(Pawn pawn, Room room) {
+    public void spawnTokenInRoom(Token token, Room room) {
         //When hits 
         int index = (int) (Math.random() * room.getRoomSpace().size());
         int newX = room.getRoomSpace().get(index).getColIndex();
         int newY = room.getRoomSpace().get(index).getRowIndex();
-        movePawn(pawn, newX, newY);
+        moveToken(token, newX, newY);
 
     }
 
     /**
-     * Method to move pawn on specified location on board Method can be
+     * Method to move token on specified location on board Method can be
      * replicated as much as total dice value TO make it work, dice has to be
      * rethrown
      *
-     * @param pawn
+     * @param token
      * @param x
      * @param y
      */
     @Override
-    public void movePawn(Pawn pawn, int x, int y) {
+    public void moveToken(Token token, int x, int y) {
         if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
             try {
                 //If the tile to be moved is not Wall,confirm movement
@@ -191,27 +191,27 @@ public class BoardGame extends Application implements BoardGameInterface {
                             //if room contains the door to be moved
                             if (room.getDoorTiles().contains(board.getTileMap()[x][y])) {
                                 //And if the player has not in room yet
-                                if (!room.getRoomSpace().contains(pawn.getPawnLocation())) {
+                                if (!room.getRoomSpace().contains(token.getTokenLocation())) {
                                     //Prints which room of entry
                                     System.out.println("You are at entering the " + room.getRoomName());
                                     //Hit the door
-                                    pawn.getPawnLocation().setOccupied(false);
-                                    pawn.setPawnLocation(board.getTileMap()[x][y]);
+                                    token.getTokenLocation().setOccupied(false);
+                                    token.setTokenLocation(board.getTileMap()[x][y]);
                                     //And spawn token outside the door
-                                    spawnTokenInRoom(pawn, room);
-                                    //Ends pawn movements
+                                    spawnTokenInRoom(token, room);
+                                    //Ends token movements
                                     counter = diceRoller.getDiceTotal();
                                 } else {
                                     //If it is already in room, then do not spawn in room
-                                    pawn.getPawnLocation().setOccupied(false);
-                                    pawn.setPawnLocation(board.getTileMap()[x][y]);
+                                    token.getTokenLocation().setOccupied(false);
+                                    token.setTokenLocation(board.getTileMap()[x][y]);
                                 }
                             }
                         }
                     } else {
                         //if neither wall nor door, make just a movement
-                        pawn.getPawnLocation().setOccupied(false);
-                        pawn.setPawnLocation(board.getTileMap()[x][y]);
+                        token.getTokenLocation().setOccupied(false);
+                        token.setTokenLocation(board.getTileMap()[x][y]);
                         counter++;
                     }
                     //if tile to be moved is wall , then cannot move    
@@ -232,28 +232,28 @@ public class BoardGame extends Application implements BoardGameInterface {
     }
 
     /**
-     * Makes random movements for AI pawn on the board
+     * Makes random movements for AI token on the board
      */
     public void positionUpdateAI() {//Bunu Implement Etmedim Daha
-        if (pawn.isAgent()) {
+        if (token.isAgent()) {
             Random random = new Random();
             int movement = random.nextInt(4);
             switch (movement) {
                 case 0:
-                    movePawn(pawn, (pawn.getPawnLocation().getColIndex()), (pawn.getPawnLocation().getRowIndex() - 1));
-                    System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                    moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
+                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                     break;
                 case 1:
-                    movePawn(pawn, pawn.getPawnLocation().getColIndex(), (pawn.getPawnLocation().getRowIndex() + 1));
-                    System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                    moveToken(token, token.getTokenLocation().getColIndex(), (token.getTokenLocation().getRowIndex() + 1));
+                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                     break;
                 case 2:
-                    movePawn(pawn, pawn.getPawnLocation().getColIndex() - 1, (pawn.getPawnLocation().getRowIndex()));
-                    System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                    moveToken(token, token.getTokenLocation().getColIndex() - 1, (token.getTokenLocation().getRowIndex()));
+                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                     break;
                 case 3:
-                    movePawn(pawn, pawn.getPawnLocation().getColIndex() + 1, (pawn.getPawnLocation().getRowIndex()));
-                    System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                    moveToken(token, token.getTokenLocation().getColIndex() + 1, (token.getTokenLocation().getRowIndex()));
+                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                     break;
             }
             System.out.println(counter);
@@ -262,35 +262,35 @@ public class BoardGame extends Application implements BoardGameInterface {
     }
 
     /**
-     * Allows player to move pawn using WASD buttons
+     * Allows player to move token using WASD buttons
      */
     public void positionUpdatePlayer() {
-        if (!pawn.isAgent()) {
+        if (!token.isAgent()) {
             scene.setOnKeyPressed((KeyEvent event) -> {
                 switch (event.getCode()) {
                     case W://go up
-                        movePawn(pawn, (pawn.getPawnLocation().getColIndex()), (pawn.getPawnLocation().getRowIndex() - 1));
-                        System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                        moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
+                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                         break;
                     case S:// go down
-                        movePawn(pawn, pawn.getPawnLocation().getColIndex(), (pawn.getPawnLocation().getRowIndex() + 1));
-                        System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                        moveToken(token, token.getTokenLocation().getColIndex(), (token.getTokenLocation().getRowIndex() + 1));
+                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                         break;
                     case A://go left
-                        movePawn(pawn, pawn.getPawnLocation().getColIndex() - 1, (pawn.getPawnLocation().getRowIndex()));
-                        System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                        moveToken(token, token.getTokenLocation().getColIndex() - 1, (token.getTokenLocation().getRowIndex()));
+                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                         break;
                     case D:// go right
-                        movePawn(pawn, pawn.getPawnLocation().getColIndex() + 1, (pawn.getPawnLocation().getRowIndex()));
-                        System.out.println(pawn.getPawnLocation().getColIndex() + "," + pawn.getPawnLocation().getRowIndex());
+                        moveToken(token, token.getTokenLocation().getColIndex() + 1, (token.getTokenLocation().getRowIndex()));
+                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
                         break;
                     default://Non valid Ket
                         System.out.println("NOT VALID");
                         break;
                 }
                 for (Room room : board.getRooms()) {
-                    if (room.checkTileInRoom(board.getTileMap()[pawn.getPawnLocation().getColIndex()][pawn.getPawnLocation().getRowIndex()])) {
-                        System.out.println("PAWN IS IN " + room.getRoomName());
+                    if (room.checkTileInRoom(board.getTileMap()[token.getTokenLocation().getColIndex()][token.getTokenLocation().getRowIndex()])) {
+                        System.out.println("TOKEN IS IN " + room.getRoomName());
                     }
                 }
                 updateView();
@@ -300,12 +300,12 @@ public class BoardGame extends Application implements BoardGameInterface {
     }
 
     /**
-     * Updates Pawns view on the board by removing pawn image on previous and
-     * adding pawn image on existing position
+     * Updates Tokens view on the board by removing token image on previous and
+     * adding token image on existing position
      */
     public void updateView() {
-        boardView.getChildren().remove(pawn);
-        boardView.add(pawn, pawn.getPawnLocation().getColIndex(), pawn.getPawnLocation().getRowIndex());
+        boardView.getChildren().remove(token);
+        boardView.add(token, token.getTokenLocation().getColIndex(), token.getTokenLocation().getRowIndex());
     }
 
     /**
@@ -321,8 +321,8 @@ public class BoardGame extends Application implements BoardGameInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
-        //Checks if pawn is agent or player,provides gameplay accordingly      
-        if (pawn.isAgent()) {
+        //Checks if token is agent or player,provides gameplay accordingly      
+        if (token.isAgent()) {
             //Use threads for with assigned method to make random movements
             Thread thread = new Thread(() -> {
                 Runnable updater = () -> positionUpdateAI();
@@ -333,14 +333,14 @@ public class BoardGame extends Application implements BoardGameInterface {
                     }
                     // UI positionUpdateAI is run on the Application thread
                     Platform.runLater(updater);
-                    if (!pawn.isAgent()) {
+                    if (!token.isAgent()) {
                         positionUpdatePlayer();
                     }
                 }
             });
             thread.start();
         } else {
-            //If pawn is not AI, then allows player to make movements
+            //If token is not AI, then allow player to make movements
             positionUpdatePlayer();
         }
 

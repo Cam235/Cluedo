@@ -26,9 +26,9 @@ public class Board implements BoardInterface{
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    private Pawn boardPawn;     // the boardPawn
+    private Token boardToken;     // the boardToken
     private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
-    // private ArrayList<Pawn> pawns;
+    // private ArrayList<Token> tokens;
 
     //Sets Up the Board of Tiles
     public Board(int columns, int rows) {
@@ -81,19 +81,19 @@ public class Board implements BoardInterface{
     }
 
     /**
-     * Initialize pawn on specific locations
+     * Initialize token on specific locations
      *
-     * @param pawnName
+     * @param tokenName
      * @param x
      * @param y
      * @return
      */
     @Override
-    public Pawn initializePawn(String pawnName, int x, int y) {
+    public Token initializeToken(String tokenName, int x, int y) {
         try {
-            boardPawn = new Pawn(pawnName);
-            boardPawn.setPawnLocation(tileMap[x][y]);
-            return boardPawn;
+            boardToken = new Token(tokenName);
+            boardToken.setTokenLocation(tileMap[x][y]);
+            return boardToken;
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You can't initialize here ");
             return null;

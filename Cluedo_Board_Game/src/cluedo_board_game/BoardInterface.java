@@ -13,7 +13,7 @@ public interface BoardInterface {
     public int getColumns();
     public int getRows();
     public ArrayList<Room> getRooms();
-    public Pawn initializePawn(String pawnName, int x, int y);
+    public Token initializeToken(String tokenName, int x, int y);
     public void initializeRoom(String name, ArrayList<Tile> roomSpace, 
             ArrayList<Tile> roomDoors);
     @Override

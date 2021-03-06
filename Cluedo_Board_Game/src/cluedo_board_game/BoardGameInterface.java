@@ -9,8 +9,8 @@ import javafx.stage.Stage;
  */
 public interface BoardGameInterface {
     public VBox setUpBoard();
-    public void spawnTokenInRoom(Pawn pawn, Room room);
-    public void movePawn(Pawn pawn, int x, int y);
+    public void spawnTokenInRoom(Token token, Room room);
+    public void moveToken(Token token, int x, int y);
     public void positionUpdateAI();
     public void positionUpdatePlayer();
     public void updateView();
