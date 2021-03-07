@@ -21,4 +21,21 @@ public interface BoardInterface {
     public void setCardDistributor(List<Card> cardList);
     public void addPlayers(List<String> playerNames);
     public Map<Integer, Player> getPlayerList();
+    
+    // Moved from BoardGUI class
+    public void positionUpdateAI();
+    public void positionUpdatePlayer();
+    
+    // New methods
+    public void orderPlayerList(); // Orders the player list such that it's ordered in priority of the characters as said in the requirements: 
+                                   // Miss Scarlett: Red (top right), 
+                                   // Col Mustard: Yellow (right top), 
+                                   // Mrs White: White (bottom right), 
+                                   // Rev Green: Green (bottom left)
+                                   // Mrs Peacock: Blue (left bottom)
+                                   // Prof Plum: Purple (left top)
+    public void initializeWeapons(); // Initializes each weapon to be in each room, i.e. have their own tile with a room set, 
+                                     // no two weapons MUST not occupy the same room initially.
+                                     // Tiles for each weapon can be set my iterating through the rooms' roomSpace attribute and randomly assign the tile.
+
 }

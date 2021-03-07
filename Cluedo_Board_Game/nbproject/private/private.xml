@@ -4,16 +4,27 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/PlayerInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/HUD.java</file>
             <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/PopUpMenuInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/BoardGameInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/RoomInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/PawnInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/BoardInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/CardDistributorInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/HUDInterface.java</file>
-            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/CardInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Token.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/BoardGUI.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Board.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/BoardGUIInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Agent.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Tile.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/WeaponInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Card.java</file>
             <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/DiceRollerInterface.java</file>
             <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/TileInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Player.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/Human.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/TokenInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/RoomInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/BoardInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/CardDistributorInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/PopUpMenu.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/HUDInterface.java</file>
+            <file>file:/C:/Users/Mazon/OneDrive%20-%20University%20of%20Sussex/Y2%20Modules/Semester%202/Software%20Engineering/Cluedo/Cluedo_Board_Game/src/cluedo_board_game/CardInterface.java</file>
         </group>
     </open-files>
 </project-private>

@@ -46,5 +46,10 @@ public class Player implements PlayerInterface {
     public void setHand(ArrayList<Card> hand) {
         this.hand = hand;
     }
+
+    @Override
+    public void moveToken(Token token, int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
       
 }

@@ -11,4 +11,7 @@ public interface PlayerInterface {
     public String getName();
     public ArrayList<Card> getHand();
     public void setHand(ArrayList<Card> hand);
+    
+    // Moved from Board class
+    public void moveToken(Token token, int x, int y);
 }
