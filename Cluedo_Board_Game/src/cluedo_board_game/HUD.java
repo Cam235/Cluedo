@@ -35,7 +35,7 @@ public class HUD extends Application implements HUDInterface {
        // Create the FXMLLoader 
         FXMLLoader loader = new FXMLLoader();
         // Path to the FXML File
-        String fxmlDocPath = "C:\\Users\\Seb\\Documents\\NetBeansProjects\\Cluedo-main\\Cluedo_Board_Game\\src\\cluedo_board_game\\hud.fxml";
+        String fxmlDocPath = "./src/cluedo_board_game/hud.fxml";
         FileInputStream fxmlStream = new FileInputStream(fxmlDocPath);
          
         // Create the Pane and all Details

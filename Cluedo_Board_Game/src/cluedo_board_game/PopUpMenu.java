@@ -28,15 +28,12 @@ public class PopUpMenu extends Application {
     private boolean isRoomLocked;
     
     
-    public PopUpMenu(String type){
-        
-    }
     @Override
     public void start(Stage primaryStage) throws IOException {
        // Create the FXMLLoader 
         FXMLLoader loader = new FXMLLoader();
         // Path to the FXML File
-        String fxmlDocPath = "C:\\Users\\Seb\\Documents\\NetBeansProjects\\Cluedo-main\\Cluedo_Board_Game\\src\\cluedo_board_game\\popUpMenu.fxml";
+        String fxmlDocPath = "./src/cluedo_board_game/popUpMenu.fxml";
         FileInputStream fxmlStream = new FileInputStream(fxmlDocPath);
          
         // Create the Pane and all Details
