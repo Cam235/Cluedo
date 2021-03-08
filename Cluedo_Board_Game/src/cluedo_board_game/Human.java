@@ -11,31 +11,20 @@ import java.util.ArrayList;
  *
  * @author Mazon
  */
-public class Human implements PlayerInterface{
+public class Human extends Player{
+
+    public Human(int playerId, String name) {
+        super(playerId, name);
+    }
     
     @Override
-    public int getPlayerId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Boolean isAgent(){
+        return false;
     }
-
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ArrayList<Card> getHand() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void setHand(ArrayList<Card> hand) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     @Override
     public void moveToken(Token token, int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet");
     }
     
 }

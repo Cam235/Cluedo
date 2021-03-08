@@ -58,7 +58,7 @@ public class BoardTest {
     @Test
     public void testOccupiedMap() {
         System.out.println("TestOccupiedMap");
-        board.initializePawn("Z", 0, 0);
+        board.initializeToken("Z", 0, 0);
         String testOccupiedMap = "";
         for (int _h = 0; _h < h; _h++) {
             for (int _w = 0; _w < w; _w++) {
@@ -73,7 +73,7 @@ public class BoardTest {
     @Test
     public void testFailedPawnInitiation() {
         System.out.println("TestFailedInitiation");
-        assertEquals(board.initializePawn("Z", -1, 0), null);
+        assertEquals(board.initializeToken("Z", -1, 0), null);
     }
 
     /*@Test

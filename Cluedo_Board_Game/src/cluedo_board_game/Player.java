@@ -15,6 +15,7 @@ public class Player implements PlayerInterface {
     private int playerId; //uniquely identifies a player
     private String name; //display name for player, doesn't have to be unique
     private ArrayList<Card> hand; //the players hand of cards
+    private Token token;
     
     /**
      * Constructor for objects of class Player
@@ -25,6 +26,7 @@ public class Player implements PlayerInterface {
     public Player(int playerId, String name){
         this.playerId = playerId;
         this.name = name;
+        token = null;
     }
 
     @Override
@@ -47,9 +49,21 @@ public class Player implements PlayerInterface {
         this.hand = hand;
     }
 
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
+    }
+
     @Override
     public void moveToken(Token token, int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Unsupported Player class for move token"); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Boolean isAgent(){
+        return null;
     }
       
 }
