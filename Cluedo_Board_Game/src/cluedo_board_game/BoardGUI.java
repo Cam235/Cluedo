@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -23,7 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * Representation of the boardgame where player can throw a dice and move the
+ * Representation of the boardGUI where player can throw a dice and move the
  * token
  *
  * @author Anilz
@@ -189,7 +190,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if (board.getTileMap()[x][y].getIsDoor()) {
                         for (Room room : board.getRooms()) {
                             //if room contains the door to be moved
-                            if (room.getDoorTiles().contains(board.getTileMap()[x][y])) {
+                            if (room.getRoomDoors().contains(board.getTileMap()[x][y])) {
                                 //And if the player has not in room yet
                                 if (!room.getRoomSpace().contains(token.getTokenLocation())) {
                                     //Prints which room of entry
