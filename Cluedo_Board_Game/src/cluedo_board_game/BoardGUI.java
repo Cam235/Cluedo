@@ -43,8 +43,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Token token;
     //IsGameRunning
     boolean isRunning = true;
-    //Sizes
-    public static final int Tile_Size = 15;
+    //Size of tiles
+    public static final int Tile_Size = 20;
     //public static final int Token_Radius = 15;
     //Number of Rows and Column
     private final int columns = 28;
@@ -78,8 +78,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         });
         //Establish Board
         board = new Board(columns, rows);
+        
         /////////////////////////////////////////ADD ROOMS////////////////////// 
+        ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
+        ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
+         for (int i = 15; i < 23; i++) {
+            for (int j = 15; j < 23; j++) {
+                bathroomSpace.add(board.getTileMap()[j][i]);
+            }
+        }
+         Tile bathroomDoor = board.getTileMap()[14][22];
+         bathroomDoors.add(bathroomDoor);
+         board.initializeRoom("Bathroom",bathroomSpace ,bathroomDoors );
+        /*
         //Adding Kitchen room
+       
         ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
         ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
         for (int i = 21; i < 23; i++) {
@@ -90,6 +103,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile kitchenDoor = board.getTileMap()[20][21];
         kitchenDoors.add(kitchenDoor);
         board.initializeRoom("Kitchen", kitchenSpace, kitchenDoors);
+        /*
         //-------------------------
         //Adding Bedroom
         ArrayList<Tile> bedroomSpace = new ArrayList<Tile>();
@@ -118,6 +132,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         surpriseDoor.add(board.getTileMap()[4][9]);
         board.initializeRoom("SurpriseRoom", surpriseSpace, surpriseDoor);
         ///////////////////////////////////////////////////////////////////////////////////////
+        */
         //---------------------------------------------------------------------------------///
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
         //Establish array of rectangles
