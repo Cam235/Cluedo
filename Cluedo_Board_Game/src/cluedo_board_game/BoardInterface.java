@@ -20,7 +20,8 @@ public interface BoardInterface {
     public String toString();
     public void setCardDistributor(List<Card> cardList);
     public void addPlayers(List<String> playerNames);
-    public Map<Integer, Player> getPlayerList();
+    public ArrayList<Player> getPlayerList();
+    public void incrementCurrentPlayer();
     
     // Moved from BoardGUI class
     public void positionUpdateAI();

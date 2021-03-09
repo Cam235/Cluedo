@@ -8,9 +8,11 @@ package cluedo_board_game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Represents board of the game
@@ -21,7 +23,7 @@ public class Board implements BoardInterface{
 
     //These should not be on board 
     private Random idGenerator; //used to generate unique player Ids
-    private Map<Integer, Player> playerList; //map of players and their Ids
+    private ArrayList<Player> playerList; //map of players and their Ids
     private CardDistributor cardDistributor; //card distributor for board
 
     Tile[][] tileMap;   //Map of Tiles
@@ -29,6 +31,9 @@ public class Board implements BoardInterface{
     private Token boardToken;     // the boardToken
     private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
     // private ArrayList<Token> tokens;
+    
+    //represents the player whos turn it currently is
+    private Player currentPlayer;
 
     //Sets Up the Board of Tiles
     public Board(int columns, int rows) {
@@ -44,7 +49,7 @@ public class Board implements BoardInterface{
             }
         }
 
-        playerList = new HashMap<>();
+        playerList = new ArrayList<>();
         idGenerator = new Random();
     }
 
@@ -201,12 +206,14 @@ public class Board implements BoardInterface{
     public void addPlayers(List<String> playerNames) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
+        Set<Integer> playerIds = new HashSet<>();
         for (String s : playerNames) { //iterate through a list of player names and generate players for each name
             playerAdded = false;
             while (!playerAdded) { //generate new player ID until a unique one is found so player can be added
                 potentialId = idGenerator.nextInt(1000);//ids can be in range 0,999
-                if (!playerList.containsKey(potentialId)) { //if id is unique add player to playerList
-                    playerList.put(potentialId, new Player(potentialId, s));
+                if (!playerIds.contains(potentialId)) { //if id is unique add player to playerList
+                    playerList.add(new Player(potentialId, s));
+                    playerIds.add(potentialId);
                     playerAdded = true;
                 }
             }
@@ -214,7 +221,7 @@ public class Board implements BoardInterface{
     }
     
     @Override
-    public Map<Integer, Player> getPlayerList() {
+    public ArrayList<Player> getPlayerList() {
         return playerList;
     }
 
@@ -236,5 +243,21 @@ public class Board implements BoardInterface{
     @Override
     public void initializeWeapons() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    /**
+     * increments the current Player
+     */
+    @Override
+    public void incrementCurrentPlayer(){
+        if(!playerList.contains(currentPlayer)){
+            System.out.println("Current Player Not Initialised");
+        }
+        else if(playerList.indexOf(currentPlayer) == playerList.size()-1){
+            currentPlayer = playerList.get(0);
+        }
+        else{
+            currentPlayer = playerList.get(playerList.indexOf(currentPlayer)+1);
+        }
     }
 }

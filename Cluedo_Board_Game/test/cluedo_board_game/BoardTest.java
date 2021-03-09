@@ -139,7 +139,7 @@ public class BoardTest {
         playerNames.add("p2");
         playerNames.add("p3");
         board.addPlayers(playerNames);
-        assertEquals(3, board.getPlayerList().keySet().size());       
+        assertEquals(3, board.getPlayerList().size());       
     }
 }
 
