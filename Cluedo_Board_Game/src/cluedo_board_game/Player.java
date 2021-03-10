@@ -23,10 +23,10 @@ public class Player implements PlayerInterface {
      * @param playerId a number which uniquely identifies a player during a game
      * @param name the display name for the player
      */
-    public Player(int playerId, String name){
+    public Player(int playerId, String name, Token token){
         this.playerId = playerId;
         this.name = name;
-        token = null;
+        this.token = token;
     }
 
     @Override

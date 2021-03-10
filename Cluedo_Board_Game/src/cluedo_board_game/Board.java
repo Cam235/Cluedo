@@ -25,6 +25,8 @@ public class Board implements BoardInterface{
     private Random idGenerator; //used to generate unique player Ids
     private ArrayList<Player> playerList; //map of players and their Ids
     private CardDistributor cardDistributor; //card distributor for board
+    //To measure steps not surpassing value of dice
+    private int counter = 0;
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
@@ -265,5 +267,57 @@ public class Board implements BoardInterface{
         return currentPlayer;
     }
     
+    
+    
+    @Override
+    public void moveToken(Token token, int x, int y) {
+        if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
+            try {
+                //If the tile to be moved is not Wall,confirm movement
+                if (!board.getTileMap()[x][y].getIsWall()) {
+                    //If the board tile to be moved is door then,loop through rooms
+                    if (board.getTileMap()[x][y].getIsDoor()) {
+                        for (Room room : board.getRooms()) {
+                            //if room contains the door to be moved
+                            if (room.getRoomDoors().contains(board.getTileMap()[x][y])) {
+                                //And if the player has not in room yet
+                                if (!room.getRoomSpace().contains(token.getTokenLocation())) {
+                                    //Prints which room of entry
+                                    System.out.println("You are at entering the " + room.getRoomName());
+                                    //Hit the door
+                                    token.getTokenLocation().setOccupied(false);
+                                    token.setTokenLocation(board.getTileMap()[x][y]);
+                                    //And spawn token outside the door
+                                    spawnTokenInRoom(token, room);
+                                    //Ends token movements
+                                    counter = diceRoller.getDiceTotal();
+                                } else {
+                                    //If it is already in room, then do not spawn in room
+                                    token.getTokenLocation().setOccupied(false);
+                                    token.setTokenLocation(board.getTileMap()[x][y]);
+                                }
+                            }
+                        }
+                    } else {
+                        //if neither wall nor door, make just a movement
+                        token.getTokenLocation().setOccupied(false);
+                        token.setTokenLocation(board.getTileMap()[x][y]);
+                        counter++;
+                    }
+                    //if tile to be moved is wall , then cannot move    
+                } else {
+                    System.out.println("You cannot go through Wall");
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("You cant go here");
+            }
+        } else {
+            System.out.println("Please Roll the Dice");
+            //Sets Counter to 0
+            counter = 0;
+            //Set Dice Rolled to false and Enables DiceRoller
+            diceRoller.setDiceRolled(false);
+            diceRoller.enableDiceRollerButton();
+        }
     
 }

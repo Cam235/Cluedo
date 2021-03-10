@@ -39,6 +39,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     GridPane boardView;
     //Board and repsenetation of Board with Rectangles
     private Board board;
+    
+    
     //For Token with representation
     private Token token;
     //IsGameRunning

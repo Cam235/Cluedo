@@ -12,9 +12,10 @@ import java.util.ArrayList;
  * @author Mazon
  */
 public class Human extends Player{
+    
 
-    public Human(int playerId, String name) {
-        super(playerId, name);
+    public Human(int playerId, String name, Token token) {
+        super(playerId, name, token);
     }
     
     @Override
@@ -23,8 +24,8 @@ public class Human extends Player{
     }
     
     @Override
-    public void moveToken(Token token, int x, int y) {
-        throw new UnsupportedOperationException("Not supported yet");
+    public void moveToken(Tile tile) {
+       // token.setTokenLocation(Tile tokenLocation);
     }
     
 }
