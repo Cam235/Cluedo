@@ -14,7 +14,7 @@ public interface BoardGUIInterface {
     // Change to initializeTokens() - spawn all tokens onto the board
     
     // Move these to Board class
-    public void positionUpdateAI();
+    //public void positionUpdateAI();
     public void positionUpdatePlayer();
     ///
     

@@ -260,4 +260,10 @@ public class Board implements BoardInterface{
             currentPlayer = playerList.get(playerList.indexOf(currentPlayer)+1);
         }
     }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+    
+    
 }

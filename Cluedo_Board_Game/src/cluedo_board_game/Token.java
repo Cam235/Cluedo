@@ -18,7 +18,7 @@ public class Token extends Circle implements TokenInterface{
 
     //Token name, if boolean or agent, and which tile it does steps on
     private String name;
-    private boolean agent = true;
+    //private boolean agent = true;
     private Tile tokenLocation = null;
 
     /**
@@ -74,21 +74,21 @@ public class Token extends Circle implements TokenInterface{
     /**
      *
      * @return whether token is agent or not
-     */
+     
     @Override
     public boolean isAgent() {
         return agent;
     }
-
+    */
     /**
      *  
      * @param isAgent set token to agent if true, else player controls
-     */
+  
     @Override
     public void setAgent(boolean isAgent) {
         this.agent = isAgent;
     }
-    
+       */
     
 
 }

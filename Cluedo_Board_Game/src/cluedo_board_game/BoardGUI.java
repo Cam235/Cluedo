@@ -73,7 +73,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                token.setAgent(!token.isAgent());
+                //token.setAgent(!token.isAgent());
             }
         });
         //Establish Board
@@ -249,7 +249,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     /**
      * Makes random movements for AI token on the board
-     */
+    
     public void positionUpdateAI() {//Bunu Implement Etmedim Daha
         if (token.isAgent()) {
             Random random = new Random();
@@ -276,17 +276,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             updateView();
         }
     }
-
+    */
     /**
      * Allows player to move token using WASD buttons
      */
     public void positionUpdatePlayer() {
-        if (!token.isAgent()) {
+        if (true/*!token.isAgent()*/) {
             scene.setOnKeyPressed((KeyEvent event) -> {
                 switch (event.getCode()) {
                     case W://go up
-                        moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
+                        board.getCurrentPlayer().moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
                         System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
+                        counter++;
                         break;
                     case S:// go down
                         moveToken(token, token.getTokenLocation().getColIndex(), (token.getTokenLocation().getRowIndex() + 1));
@@ -337,7 +338,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
-        //Checks if token is agent or player,provides gameplay accordingly      
+        //Checks if token is agent or player,provides gameplay accordingly 
+        /*
         if (token.isAgent()) {
             //Use threads for with assigned method to make random movements
             Thread thread = new Thread(() -> {
@@ -355,11 +357,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             });
             thread.start();
-        } else {
+        }*/ 
+        //else {
             //If token is not AI, then allow player to make movements
-            positionUpdatePlayer();
-        }
-
+        positionUpdatePlayer();
+        //}
+        
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
