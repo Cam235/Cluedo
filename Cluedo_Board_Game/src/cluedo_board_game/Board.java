@@ -30,7 +30,7 @@ public class Board implements BoardInterface{
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    private Token boardToken;     // the boardToken
+    //private Token boardToken;     // the boardToken
     private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
     // private ArrayList<Token> tokens;
     
@@ -87,25 +87,7 @@ public class Board implements BoardInterface{
         return rooms;
     }
 
-    /**
-     * Initialize token on specific locations
-     *
-     * @param tokenName
-     * @param x
-     * @param y
-     * @return
-     */
-    @Override
-    public Token initializeToken(String tokenName, int x, int y) {
-        try {
-            boardToken = new Token(tokenName);
-            boardToken.setTokenLocation(tileMap[x][y]);
-            return boardToken;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("You can't initialize here ");
-            return null;
-        }
-    }
+
     
     @Override
     public void initializeRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
@@ -205,7 +187,7 @@ public class Board implements BoardInterface{
      * Objects and added to the player Map
      */
     @Override
-    public void addPlayers(List<String> playerNames) {
+    public void addPlayers(List<String> playerNames, List<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
         Set<Integer> playerIds = new HashSet<>();
@@ -214,7 +196,14 @@ public class Board implements BoardInterface{
             while (!playerAdded) { //generate new player ID until a unique one is found so player can be added
                 potentialId = idGenerator.nextInt(1000);//ids can be in range 0,999
                 if (!playerIds.contains(potentialId)) { //if id is unique add player to playerList
-                    playerList.add(new Player(potentialId, s));
+                    if(playerTypes.get(0) == 'a'){
+                        playerList.add(new Agent(potentialId, s));
+                        playerTypes.remove(0);
+                    }
+                    else if(playerTypes.get(0) == 'h'){
+                        playerList.add(new Human(potentialId, s));
+                        playerTypes.remove(0);
+                    }
                     playerIds.add(potentialId);
                     playerAdded = true;
                 }
@@ -266,43 +255,63 @@ public class Board implements BoardInterface{
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
     
     
-    
-    @Override
-    public void moveToken(Token token, int x, int y) {
-        if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
+    public void currentPlayerEntersRoom(Room room) {
+        //When hits 
+        int index = (int) (Math.random() * room.getRoomSpace().size());
+        int newX = room.getRoomSpace().get(index).getColIndex();
+        int newY = room.getRoomSpace().get(index).getRowIndex();
+        positionUpdateCurrentPlayer(newX, newY);
+
+    }
+
+    /**
+     * Method to move token on specified location on board Method can be
+     * replicated as much as total dice value TO make it work, dice has to be
+     * rethrown
+     *
+     * @param token
+     * @param x
+     * @param y
+     */
+    public void positionUpdateCurrentPlayer(int x, int y) {
             try {
                 //If the tile to be moved is not Wall,confirm movement
-                if (!board.getTileMap()[x][y].getIsWall()) {
+                if (!getTileMap()[x][y].getIsWall()) {
                     //If the board tile to be moved is door then,loop through rooms
-                    if (board.getTileMap()[x][y].getIsDoor()) {
-                        for (Room room : board.getRooms()) {
+                    if (getTileMap()[x][y].getIsDoor()) {
+                        for (Room room : getRooms()) {
                             //if room contains the door to be moved
-                            if (room.getRoomDoors().contains(board.getTileMap()[x][y])) {
+                            if (room.getRoomDoors().contains(getTileMap()[x][y])) {
                                 //And if the player has not in room yet
-                                if (!room.getRoomSpace().contains(token.getTokenLocation())) {
+                                if (!room.getRoomSpace().contains(currentPlayer.getToken().getTokenLocation())) {
                                     //Prints which room of entry
                                     System.out.println("You are at entering the " + room.getRoomName());
                                     //Hit the door
-                                    token.getTokenLocation().setOccupied(false);
-                                    token.setTokenLocation(board.getTileMap()[x][y]);
+                                    currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                                    //currentPlayer.getToken().setTokenLocation(getTileMap()[x][y]);
+                                    currentPlayer.moveToken(getTileMap()[x][y]);
                                     //And spawn token outside the door
-                                    spawnTokenInRoom(token, room);
+                                    currentPlayerEntersRoom(room);
                                     //Ends token movements
-                                    counter = diceRoller.getDiceTotal();
                                 } else {
                                     //If it is already in room, then do not spawn in room
-                                    token.getTokenLocation().setOccupied(false);
-                                    token.setTokenLocation(board.getTileMap()[x][y]);
+                                    currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                                    //currentPlayer.getToken().setTokenLocation(getTileMap()[x][y]);
+                                    currentPlayer.moveToken(getTileMap()[x][y]);
                                 }
                             }
                         }
                     } else {
                         //if neither wall nor door, make just a movement
-                        token.getTokenLocation().setOccupied(false);
-                        token.setTokenLocation(board.getTileMap()[x][y]);
-                        counter++;
+                        currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                        //currentPlayer.getToken().setTokenLocation(getTileMap()[x][y]);
+                        currentPlayer.moveToken(getTileMap()[x][y]);
                     }
                     //if tile to be moved is wall , then cannot move    
                 } else {
@@ -311,13 +320,6 @@ public class Board implements BoardInterface{
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("You cant go here");
             }
-        } else {
-            System.out.println("Please Roll the Dice");
-            //Sets Counter to 0
-            counter = 0;
-            //Set Dice Rolled to false and Enables DiceRoller
-            diceRoller.setDiceRolled(false);
-            diceRoller.enableDiceRollerButton();
-        }
-    
+        
+    }
 }

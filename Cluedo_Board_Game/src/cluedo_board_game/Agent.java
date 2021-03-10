@@ -13,8 +13,11 @@ import java.util.ArrayList;
  */
 public class Agent extends Player{
     
+    Token token;
+    
     public Agent(int playerId, String name) {
         super(playerId, name);
+        token = super.getToken();
     }
     
     @Override
@@ -23,7 +26,7 @@ public class Agent extends Player{
     }
     
     @Override
-    public void moveToken(Token token, int x, int y) {
+    public void moveToken(Tile tile) {
         throw new UnsupportedOperationException("Not supported yet");
     }
     

@@ -7,6 +7,7 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,7 +43,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     
     
     //For Token with representation
-    private Token token;
+    //private Token token;
     //IsGameRunning
     boolean isRunning = true;
     //Size of tiles
@@ -164,11 +165,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
 
         //Initialize the Token on specified location
-        token = board.initializeToken("TestToken", 0, 0);
+        // for testing Purposes
+        //initialise one token and one player
+        List<String> testPlayerNamesList = new ArrayList<>();
+        testPlayerNamesList.add("p1");
+        List<Character> testPlayerTypesList = new ArrayList<>();
+        testPlayerTypesList.add('h');
+        board.addPlayers(testPlayerNamesList,testPlayerTypesList);
+        board.setCurrentPlayer(board.getPlayerList().get(0));
+        initializePlayerToken(board.getPlayerList().get(0),"TestToken", 2, 3);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 if (board.getTileMap()[_c][_r].IsOccupied()) {
-                    boardView.add(token, _c, _r);
+                    boardView.add(board.getCurrentPlayer().getToken(), _c, _r);
                 }
             }
         }
@@ -178,76 +187,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         return gameBox;
     }
     
-    @Override
-    public void spawnTokenInRoom(Token token, Room room) {
-        //When hits 
-        int index = (int) (Math.random() * room.getRoomSpace().size());
-        int newX = room.getRoomSpace().get(index).getColIndex();
-        int newY = room.getRoomSpace().get(index).getRowIndex();
-        moveToken(token, newX, newY);
-
-    }
-
-    /**
-     * Method to move token on specified location on board Method can be
-     * replicated as much as total dice value TO make it work, dice has to be
-     * rethrown
-     *
-     * @param token
-     * @param x
-     * @param y
-     */
-    @Override
-    public void moveToken(Token token, int x, int y) {
-        if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
-            try {
-                //If the tile to be moved is not Wall,confirm movement
-                if (!board.getTileMap()[x][y].getIsWall()) {
-                    //If the board tile to be moved is door then,loop through rooms
-                    if (board.getTileMap()[x][y].getIsDoor()) {
-                        for (Room room : board.getRooms()) {
-                            //if room contains the door to be moved
-                            if (room.getRoomDoors().contains(board.getTileMap()[x][y])) {
-                                //And if the player has not in room yet
-                                if (!room.getRoomSpace().contains(token.getTokenLocation())) {
-                                    //Prints which room of entry
-                                    System.out.println("You are at entering the " + room.getRoomName());
-                                    //Hit the door
-                                    token.getTokenLocation().setOccupied(false);
-                                    token.setTokenLocation(board.getTileMap()[x][y]);
-                                    //And spawn token outside the door
-                                    spawnTokenInRoom(token, room);
-                                    //Ends token movements
-                                    counter = diceRoller.getDiceTotal();
-                                } else {
-                                    //If it is already in room, then do not spawn in room
-                                    token.getTokenLocation().setOccupied(false);
-                                    token.setTokenLocation(board.getTileMap()[x][y]);
-                                }
-                            }
-                        }
-                    } else {
-                        //if neither wall nor door, make just a movement
-                        token.getTokenLocation().setOccupied(false);
-                        token.setTokenLocation(board.getTileMap()[x][y]);
-                        counter++;
-                    }
-                    //if tile to be moved is wall , then cannot move    
-                } else {
-                    System.out.println("You cannot go through Wall");
-                }
-            } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("You cant go here");
-            }
-        } else {
-            System.out.println("Please Roll the Dice");
-            //Sets Counter to 0
-            counter = 0;
-            //Set Dice Rolled to false and Enables DiceRoller
-            diceRoller.setDiceRolled(false);
-            diceRoller.enableDiceRollerButton();
-        }
-    }
+    
 
     /**
      * Makes random movements for AI token on the board
@@ -282,40 +222,63 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     /**
      * Allows player to move token using WASD buttons
      */
-    public void positionUpdatePlayer() {
-        if (true/*!token.isAgent()*/) {
-            scene.setOnKeyPressed((KeyEvent event) -> {
+    public void setUpControls() {
+        scene.setOnKeyPressed((KeyEvent event) -> {
+            Tile currentPlayerPos = board.getCurrentPlayer().getToken().getTokenLocation();
+            if (diceRoller.isDiceRolled() && (counter < diceRoller.getDiceTotal())) {
                 switch (event.getCode()) {
                     case W://go up
-                        board.getCurrentPlayer().moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
-                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
-                        counter++;
+                        board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1));
+                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                            counter++;
+                        }
                         break;
                     case S:// go down
-                        moveToken(token, token.getTokenLocation().getColIndex(), (token.getTokenLocation().getRowIndex() + 1));
-                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
+                        board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1));
+                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                            counter++;
+                        }
                         break;
                     case A://go left
-                        moveToken(token, token.getTokenLocation().getColIndex() - 1, (token.getTokenLocation().getRowIndex()));
-                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
+                        board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
+                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                            counter++;
+                        }
                         break;
                     case D:// go right
-                        moveToken(token, token.getTokenLocation().getColIndex() + 1, (token.getTokenLocation().getRowIndex()));
-                        System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
+                        board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
+                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                            counter++;
+                        }
                         break;
                     default://Non valid Ket
                         System.out.println("NOT VALID");
                         break;
                 }
                 for (Room room : board.getRooms()) {
-                    if (room.checkTileInRoom(board.getTileMap()[token.getTokenLocation().getColIndex()][token.getTokenLocation().getRowIndex()])) {
+                    if (room.checkTileInRoom(board.getTileMap()[board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()][board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()])) {
                         System.out.println("TOKEN IS IN " + room.getRoomName());
+                        counter = diceRoller.getDiceTotal();
                     }
                 }
-                updateView();
-            });
-
-        }
+                
+            }
+            else {
+                System.out.println("Please Roll the Dice");
+                //Sets Counter to 0
+                counter = 0;
+                //Set Dice Rolled to false and Enables DiceRoller
+                diceRoller.setDiceRolled(false);
+                diceRoller.enableDiceRollerButton();
+            }
+            updateView();
+        });
+        
+          
     }
 
     /**
@@ -323,8 +286,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * adding token image on existing position
      */
     public void updateView() {
-        boardView.getChildren().remove(token);
-        boardView.add(token, token.getTokenLocation().getColIndex(), token.getTokenLocation().getRowIndex());
+        for(Player p: board.getPlayerList()){
+            boardView.getChildren().remove(p.getToken());
+            boardView.add(p.getToken(), p.getToken().getTokenLocation().getColIndex(), p.getToken().getTokenLocation().getRowIndex());
+        }
+        
     }
 
     /**
@@ -354,7 +320,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     // UI positionUpdateAI is run on the Application thread
                     Platform.runLater(updater);
                     if (!token.isAgent()) {
-                        positionUpdatePlayer();
+                        setUpControls();
                     }
                 }
             });
@@ -362,7 +328,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }*/ 
         //else {
             //If token is not AI, then allow player to make movements
-        positionUpdatePlayer();
+        setUpControls();
         //}
         
         //For Closing Window on "x" button
@@ -391,6 +357,25 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     @Override
     public void displayCardList() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+        /**
+     * Initialize token on specific locations
+     *
+     * @param tokenName
+     * @param x
+     * @param y
+     * @return
+     */
+    public Token initializePlayerToken(Player player, String tokenName, int x, int y) {
+        try {
+            player.setToken(new Token(tokenName));
+            player.getToken().setTokenLocation(board.getTileMap()[x][y]);
+            return player.getToken();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You can't initialize here ");
+            return null;
+        }
     }
 
 }

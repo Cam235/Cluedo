@@ -13,5 +13,5 @@ public interface PlayerInterface {
     public void setHand(ArrayList<Card> hand);
     
     // Moved from Board class
-    public void moveToken(Token token, int x, int y);
+    public void moveToken(Tile tile);
 }

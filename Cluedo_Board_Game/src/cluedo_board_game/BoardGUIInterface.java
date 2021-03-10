@@ -10,16 +10,12 @@ import javafx.stage.Stage;
 public interface BoardGUIInterface {
     public VBox setUpBoard();
     
-    public void spawnTokenInRoom(Token token, Room room); 
     // Change to initializeTokens() - spawn all tokens onto the board
     
     // Move these to Board class
     //public void positionUpdateAI();
-    public void positionUpdatePlayer();
+    public void setUpControls();
     ///
-    
-    // Move this to Player class (each player needs to move their token)
-    public void moveToken(Token token, int x, int y);
     
     public void updateView();
     public void start(Stage primaryStage);

@@ -13,13 +13,12 @@ public interface BoardInterface {
     public int getColumns();
     public int getRows();
     public ArrayList<Room> getRooms();
-    public Token initializeToken(String tokenName, int x, int y);
     public void initializeRoom(String name, ArrayList<Tile> roomSpace, 
             ArrayList<Tile> roomDoors);
     @Override
     public String toString();
     public void setCardDistributor(List<Card> cardList);
-    public void addPlayers(List<String> playerNames);
+    public void addPlayers(List<String> playerNames, List<Character> playerTypes);
     public ArrayList<Player> getPlayerList();
     public void incrementCurrentPlayer();
     

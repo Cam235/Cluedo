@@ -13,9 +13,8 @@ import java.util.ArrayList;
  */
 public class Human extends Player{
     
-
-    public Human(int playerId, String name, Token token) {
-        super(playerId, name, token);
+    public Human(int playerId, String name) {
+        super(playerId, name);
     }
     
     @Override
@@ -25,7 +24,7 @@ public class Human extends Player{
     
     @Override
     public void moveToken(Tile tile) {
-       // token.setTokenLocation(Tile tokenLocation);
+       token.setTokenLocation(tile);
     }
     
 }

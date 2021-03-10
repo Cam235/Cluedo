@@ -12,10 +12,10 @@ import java.util.ArrayList;
  */
 public class Player implements PlayerInterface {
     
-    private int playerId; //uniquely identifies a player
-    private String name; //display name for player, doesn't have to be unique
-    private ArrayList<Card> hand; //the players hand of cards
-    private Token token;
+    protected int playerId; //uniquely identifies a player
+    protected String name; //display name for player, doesn't have to be unique
+    protected ArrayList<Card> hand; //the players hand of cards
+    protected Token token;
     
     /**
      * Constructor for objects of class Player
@@ -23,10 +23,10 @@ public class Player implements PlayerInterface {
      * @param playerId a number which uniquely identifies a player during a game
      * @param name the display name for the player
      */
-    public Player(int playerId, String name, Token token){
+    public Player(int playerId, String name){
         this.playerId = playerId;
         this.name = name;
-        this.token = token;
+        this.token = null;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Player implements PlayerInterface {
     }
 
     @Override
-    public void moveToken(Token token, int x, int y) {
+    public void moveToken(Tile tile) {
         throw new UnsupportedOperationException("Unsupported Player class for move token"); //To change body of generated methods, choose Tools | Templates.
     }
     
