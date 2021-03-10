@@ -40,8 +40,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     GridPane boardView;
     //Board and repsenetation of Board with Rectangles
     private Board board;
-    
-    
+
     //For Token with representation
     //private Token token;
     //IsGameRunning
@@ -81,18 +80,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         });
         //Establish Board
         board = new Board(columns, rows);
-        
+
         /////////////////////////////////////////ADD ROOMS////////////////////// 
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
-         for (int i = 15; i < 23; i++) {
+        for (int i = 15; i < 23; i++) {
             for (int j = 15; j < 23; j++) {
                 bathroomSpace.add(board.getTileMap()[j][i]);
             }
         }
-         Tile bathroomDoor = board.getTileMap()[14][22];
-         bathroomDoors.add(bathroomDoor);
-         board.initializeRoom("Bathroom",bathroomSpace ,bathroomDoors );
+        Tile bathroomDoor = board.getTileMap()[14][22];
+        Tile bathroomDoor2 = board.getTileMap()[20][14];
+        bathroomDoors.add(bathroomDoor);
+        bathroomDoors.add(bathroomDoor2);
+        board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
         /*
         //Adding Kitchen room
        
@@ -135,7 +136,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         surpriseDoor.add(board.getTileMap()[4][9]);
         board.initializeRoom("SurpriseRoom", surpriseSpace, surpriseDoor);
         ///////////////////////////////////////////////////////////////////////////////////////
-        */
+         */
         //---------------------------------------------------------------------------------///
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
         //Establish array of rectangles
@@ -171,9 +172,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerNamesList.add("p1");
         List<Character> testPlayerTypesList = new ArrayList<>();
         testPlayerTypesList.add('h');
-        board.addPlayers(testPlayerNamesList,testPlayerTypesList);
+        board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
-        initializePlayerToken(board.getPlayerList().get(0),"TestToken", 2, 3);
+        initializePlayerToken(board.getPlayerList().get(0), "TestToken", 2, 3);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 if (board.getTileMap()[_c][_r].IsOccupied()) {
@@ -186,39 +187,31 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
-    
-    
 
     /**
      * Makes random movements for AI token on the board
-    
-    public void positionUpdateAI() {//Bunu Implement Etmedim Daha
-        if (token.isAgent()) {
-            Random random = new Random();
-            int movement = random.nextInt(4);
-            switch (movement) {
-                case 0:
-                    moveToken(token, (token.getTokenLocation().getColIndex()), (token.getTokenLocation().getRowIndex() - 1));
-                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
-                    break;
-                case 1:
-                    moveToken(token, token.getTokenLocation().getColIndex(), (token.getTokenLocation().getRowIndex() + 1));
-                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
-                    break;
-                case 2:
-                    moveToken(token, token.getTokenLocation().getColIndex() - 1, (token.getTokenLocation().getRowIndex()));
-                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
-                    break;
-                case 3:
-                    moveToken(token, token.getTokenLocation().getColIndex() + 1, (token.getTokenLocation().getRowIndex()));
-                    System.out.println(token.getTokenLocation().getColIndex() + "," + token.getTokenLocation().getRowIndex());
-                    break;
-            }
-            System.out.println(counter);
-            updateView();
-        }
-    }
-    */
+     *
+     * public void positionUpdateAI() {//Bunu Implement Etmedim Daha if
+     * (token.isAgent()) { Random random = new Random(); int movement =
+     * random.nextInt(4); switch (movement) { case 0: moveToken(token,
+     * (token.getTokenLocation().getColIndex()),
+     * (token.getTokenLocation().getRowIndex() - 1));
+     * System.out.println(token.getTokenLocation().getColIndex() + "," +
+     * token.getTokenLocation().getRowIndex()); break; case 1: moveToken(token,
+     * token.getTokenLocation().getColIndex(),
+     * (token.getTokenLocation().getRowIndex() + 1));
+     * System.out.println(token.getTokenLocation().getColIndex() + "," +
+     * token.getTokenLocation().getRowIndex()); break; case 2: moveToken(token,
+     * token.getTokenLocation().getColIndex() - 1,
+     * (token.getTokenLocation().getRowIndex()));
+     * System.out.println(token.getTokenLocation().getColIndex() + "," +
+     * token.getTokenLocation().getRowIndex()); break; case 3: moveToken(token,
+     * token.getTokenLocation().getColIndex() + 1,
+     * (token.getTokenLocation().getRowIndex()));
+     * System.out.println(token.getTokenLocation().getColIndex() + "," +
+     * token.getTokenLocation().getRowIndex()); break; }
+     * System.out.println(counter); updateView(); } }
+     */
     /**
      * Allows player to move token using WASD buttons
      */
@@ -230,28 +223,29 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     case W://go up
                         board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1));
                         System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                        //If moveable increments the counter
+                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                             counter++;
                         }
                         break;
                     case S:// go down
                         board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1));
                         System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                             counter++;
                         }
                         break;
                     case A://go left
                         board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
                         System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                             counter++;
                         }
                         break;
                     case D:// go right
                         board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
                         System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                             counter++;
                         }
                         break;
@@ -259,15 +253,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         System.out.println("NOT VALID");
                         break;
                 }
+                //If enters the room , player can no longer can move
                 for (Room room : board.getRooms()) {
                     if (room.checkTileInRoom(board.getTileMap()[board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()][board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()])) {
                         System.out.println("TOKEN IS IN " + room.getRoomName());
                         counter = diceRoller.getDiceTotal();
                     }
                 }
-                
-            }
-            else {
+            } else {
                 System.out.println("Please Roll the Dice");
                 //Sets Counter to 0
                 counter = 0;
@@ -277,8 +270,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
             updateView();
         });
-        
-          
+
     }
 
     /**
@@ -286,11 +278,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * adding token image on existing position
      */
     public void updateView() {
-        for(Player p: board.getPlayerList()){
+        for (Player p : board.getPlayerList()) {
             boardView.getChildren().remove(p.getToken());
             boardView.add(p.getToken(), p.getToken().getTokenLocation().getColIndex(), p.getToken().getTokenLocation().getRowIndex());
         }
-        
+
     }
 
     /**
@@ -325,12 +317,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             });
             thread.start();
-        }*/ 
+        }*/
         //else {
-            //If token is not AI, then allow player to make movements
+        //If token is not AI, then allow player to make movements
         setUpControls();
         //}
-        
+
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -358,8 +350,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     public void displayCardList() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-        /**
+
+    /**
      * Initialize token on specific locations
      *
      * @param tokenName
