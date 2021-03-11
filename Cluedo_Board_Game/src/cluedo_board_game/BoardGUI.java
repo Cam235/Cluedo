@@ -222,32 +222,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 switch (event.getCode()) {
                     case W://go up
                         board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1));
-                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        //If moveable increments the counter
-                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
-                            counter++;
-                        }
+                        movementControlsHelper(currentPlayerPos);
                         break;
                     case S:// go down
                         board.positionUpdateCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex()), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1));
-                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
-                            counter++;
-                        }
+                        movementControlsHelper(currentPlayerPos);
                         break;
                     case A://go left
                         board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
-                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
-                            counter++;
-                        }
+                        movementControlsHelper(currentPlayerPos);
                         break;
                     case D:// go right
                         board.positionUpdateCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1, (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex()));
-                        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
-                            counter++;
-                        }
+                        movementControlsHelper(currentPlayerPos);
                         break;
                     default://Non valid Ket
                         System.out.println("NOT VALID");
@@ -272,6 +259,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         });
 
     }
+    
+    private void movementControlsHelper(Tile currentPlayerPos){
+        System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
+        counter++;
+        }
+    }    
 
     /**
      * Updates Tokens view on the board by removing token image on previous and
