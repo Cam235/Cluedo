@@ -24,4 +24,5 @@ public interface BoardGUIInterface {
     public void selectCharacters(); // Allow user to select number of players, which characters and toggle if AI or not.
     public void displayCardList(); // Displays card list in front of current player, after done, use setter on Board object.
     
+   // public Token initializePlayerToken(Player player, String tokenName, int x, int y);
 }

@@ -15,6 +15,7 @@ public interface BoardInterface {
     public ArrayList<Room> getRooms();
     public void initializeRoom(String name, ArrayList<Tile> roomSpace, 
             ArrayList<Tile> roomDoors);
+    //public void initializeToken(String tokenName, int x, int y);
     @Override
     public String toString();
     public void setCardDistributor(List<Card> cardList);

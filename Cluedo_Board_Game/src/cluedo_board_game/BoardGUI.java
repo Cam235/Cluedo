@@ -94,49 +94,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         bathroomDoors.add(bathroomDoor);
         bathroomDoors.add(bathroomDoor2);
         board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
-        /*
-        //Adding Kitchen room
-       
-        ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
-        ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
-        for (int i = 21; i < 23; i++) {
-            for (int j = 21; j < 23; j++) {
-                kitchenSpace.add(board.getTileMap()[j][i]);
-            }
-        }
-        Tile kitchenDoor = board.getTileMap()[20][21];
-        kitchenDoors.add(kitchenDoor);
-        board.initializeRoom("Kitchen", kitchenSpace, kitchenDoors);
-        /*
-        //-------------------------
-        //Adding Bedroom
-        ArrayList<Tile> bedroomSpace = new ArrayList<Tile>();
-        ArrayList<Tile> bedroomDoors = new ArrayList<Tile>();
-        for (int i = 10; i < 12; i++) {
-            for (int j = 21; j < 23; j++) {
-                bedroomSpace.add(board.getTileMap()[j][i]);
-            }
-        }
-        Tile bedroomDoor = board.getTileMap()[9][10];
-        bedroomDoors.add(bedroomDoor);
-        board.initializeRoom("BedRoom", bedroomSpace, bedroomDoors);
-        //-------------------------     
-        //Adding Surprise Room :)
-        ArrayList<Tile> surpriseSpace = new ArrayList<Tile>();
-        ArrayList<Tile> surpriseDoor = new ArrayList<Tile>();
-        surpriseSpace.add(board.getTileMap()[4][10]);
-        surpriseSpace.add(board.getTileMap()[4][11]);
-        surpriseSpace.add(board.getTileMap()[4][12]);
-        surpriseSpace.add(board.getTileMap()[4][13]);
-        surpriseSpace.add(board.getTileMap()[5][13]);
-        surpriseSpace.add(board.getTileMap()[3][13]);
-        surpriseSpace.add(board.getTileMap()[4][14]);
-        surpriseSpace.add(board.getTileMap()[5][14]);
-        surpriseSpace.add(board.getTileMap()[3][14]);
-        surpriseDoor.add(board.getTileMap()[4][9]);
-        board.initializeRoom("SurpriseRoom", surpriseSpace, surpriseDoor);
-        ///////////////////////////////////////////////////////////////////////////////////////
-         */
+
         //---------------------------------------------------------------------------------///
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
         //Establish array of rectangles
@@ -174,6 +132,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('h');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
+        /*
         initializePlayerToken(board.getPlayerList().get(0), "TestToken", 2, 3);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
@@ -182,11 +141,31 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         }
+         */
+        //Initialize token on board,assign to token objects
+        Token scarlett = board.initializeToken("Mrs.Scarlet", 2, 3);  
+        Token mustard = board.initializeToken("Mr.Mustard", 7, 3);  
+        //assigns one of the token to one of the player
+        assignTokenToPlayer(board.getCurrentPlayer(), scarlett);
+        for (int _r = 0; _r < rows; _r++) {
+            for (int _c = 0; _c < columns; _c++) {
+                for (Token token : board.getTokens()) {
+                    if (board.getTileMap()[_c][_r].IsOccupied() && token.getTokenLocation()==board.getTileMap()[_c][_r] ) {
+                        boardView.add(token, _c, _r);
+                    }
+                }
+            }
+        }
+        
+        
+
+        //assignTokenToPlayer(board.getCurrentPlayer(),board.getTokens().get(0));
         //Combines diceRoller and Board
         gameBox.getChildren().addAll(switcherButton, diceRollerView, boardView);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
+    
 
     /**
      * Makes random movements for AI token on the board
@@ -259,13 +238,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         });
 
     }
-    
-    private void movementControlsHelper(Tile currentPlayerPos){
+
+    private void movementControlsHelper(Tile currentPlayerPos) {
         System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-        if(!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())){  
-        counter++;
+        if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
+            counter++;
         }
-    }    
+    }
 
     /**
      * Updates Tokens view on the board by removing token image on previous and
@@ -316,7 +295,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //If token is not AI, then allow player to make movements
         setUpControls();
         //}
-
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -345,14 +323,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
+    /*
      * Initialize token on specific locations
      *
      * @param tokenName
      * @param x
      * @param y
      * @return
-     */
+     
     public Token initializePlayerToken(Player player, String tokenName, int x, int y) {
         try {
             player.setToken(new Token(tokenName));
@@ -361,6 +339,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You can't initialize here ");
             return null;
+        }
+    }
+     */
+    
+    /**
+     * Assigns the existing token on board on some player
+     *
+     * @param player
+     * @param token
+     */
+    public void assignTokenToPlayer(Player player, Token token) {
+        try {
+            player.setToken(token);
+        } catch (Exception e) {
+            System.out.println("Cannot take this Character");
         }
     }
 

@@ -30,7 +30,8 @@ public class Board implements BoardInterface {
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    //private Token boardToken;     // the boardToken
+    private ArrayList<Token> tokens = new ArrayList<Token>();     // the boardToken
+
     private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
     // private ArrayList<Token> tokens;
 
@@ -53,6 +54,10 @@ public class Board implements BoardInterface {
 
         playerList = new ArrayList<>();
         idGenerator = new Random();
+    }
+
+    public ArrayList<Token> getTokens() {
+        return tokens;
     }
 
     /**
@@ -135,7 +140,29 @@ public class Board implements BoardInterface {
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You can't initialize here ");
-            //return null;
+
+        }
+    }
+
+    /**
+     * Initialize token to board
+     *
+     * @param tokenName
+     * @param x
+     * @param y
+     * @return token
+     */
+    public Token initializeToken(String tokenName, int x, int y) {
+        try {
+            Token token = new Token(tokenName);
+            //Sets tokens location on board
+            token.setTokenLocation(getTileMap()[x][y]);
+            //Adds the token last
+            tokens.add(token);
+            return token;
+        } catch (Exception e) {
+            System.out.println("Cannot initialize");
+            return null;
         }
     }
 
@@ -263,8 +290,6 @@ public class Board implements BoardInterface {
         positionUpdateCurrentPlayer(newX, newY);
 
     }
-    
-    
 
     /**
      * Method to move token on specified location on board Method can be
@@ -277,8 +302,8 @@ public class Board implements BoardInterface {
      */
     public void positionUpdateCurrentPlayer(int x, int y) {
         try {
-            //If the tile to be moved is not Wall,confirm movement
-            if (!getTileMap()[x][y].getIsWall()) {
+            //If the tile to be moved is not Wall or occupied,confirm movement
+            if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
                 // Loops through all rooms
                 for (Room room : getRooms()) {
                     //If the board tile to be moved is door then of specified room
@@ -296,11 +321,11 @@ public class Board implements BoardInterface {
                             //currentPlayer.getToken().setTokenLocation(getTileMap()[x][y]);
                             currentPlayer.moveToken(getTileMap()[x][y]);
                         }
-                     //If its the player is already in the room
+                        //If its the player is already in the room
                     } else if (room.getRoomSpace().contains(currentPlayer.getToken().getTokenLocation())) {
                         //Choose a random door from doors
                         Random random = new Random();
-                        int doorToExit = random.nextInt(room.getRoomDoors().size());    
+                        int doorToExit = random.nextInt(room.getRoomDoors().size());
                         //Gets the coordinates of doors
                         int newX = room.getRoomDoors().get(doorToExit).getColIndex();
                         int newY = room.getRoomDoors().get(doorToExit).getRowIndex();
