@@ -16,6 +16,8 @@ public class Player implements PlayerInterface {
     protected String name; //display name for player, doesn't have to be unique
     protected ArrayList<Card> hand; //the players hand of cards
     protected Token token;
+    protected Boolean isPlaying; //represents whether the player is currently playing
+    protected Boolean isTurn; //represents whether it is currently the players turn
     
     /**
      * Constructor for objects of class Player
@@ -27,6 +29,7 @@ public class Player implements PlayerInterface {
         this.playerId = playerId;
         this.name = name;
         this.token = null;
+        isPlaying = true;
     }
 
     @Override
@@ -65,5 +68,23 @@ public class Player implements PlayerInterface {
     public Boolean isAgent(){
         return null;
     }
+
+    public Boolean getIsPlaying() {
+        return isPlaying;
+    }
+
+    public void setIsPlaying(Boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+
+    public Boolean getIsTurn() {
+        return isTurn;
+    }
+
+    public void setIsTurn(Boolean isTurn) {
+        this.isTurn = isTurn;
+    }
+    
+    
       
 }

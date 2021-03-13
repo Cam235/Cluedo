@@ -128,10 +128,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //initialise one token and one player
         List<String> testPlayerNamesList = new ArrayList<>();
         testPlayerNamesList.add("p1");
+        testPlayerNamesList.add("p2");
         List<Character> testPlayerTypesList = new ArrayList<>();
+        testPlayerTypesList.add('h');
         testPlayerTypesList.add('h');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
+        //board.getPlayerList().get(1).setIsPlaying(false);
         /*
         initializePlayerToken(board.getPlayerList().get(0), "TestToken", 2, 3);
         for (int _r = 0; _r < rows; _r++) {
@@ -143,22 +146,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
          */
         //Initialize token on board,assign to token objects
-        Token scarlett = board.initializeToken("Mrs.Scarlet", 2, 3);  
-        Token mustard = board.initializeToken("Mr.Mustard", 7, 3);  
+        
+        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 2, 3);  
+        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 7, 3);  
         //assigns one of the token to one of the player
-        assignTokenToPlayer(board.getCurrentPlayer(), scarlett);
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                for (Token token : board.getTokens()) {
-                    if (board.getTileMap()[_c][_r].IsOccupied() && token.getTokenLocation()==board.getTileMap()[_c][_r] ) {
-                        boardView.add(token, _c, _r);
+                for (Player p : board.getPlayerList()) {
+                    if (board.getTileMap()[_c][_r].IsOccupied() && p.getToken().getTokenLocation()==board.getTileMap()[_c][_r] ) {
+                        boardView.add(p.getToken(), _c, _r);
                     }
                 }
             }
         }
         
         
-
+        board.incrementCurrentPlayer();
+        //board.incrementCurrentPlayer();
+        
         //assignTokenToPlayer(board.getCurrentPlayer(),board.getTokens().get(0));
         //Combines diceRoller and Board
         gameBox.getChildren().addAll(switcherButton, diceRollerView, boardView);

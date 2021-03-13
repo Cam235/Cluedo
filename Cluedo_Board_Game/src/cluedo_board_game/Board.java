@@ -30,7 +30,7 @@ public class Board implements BoardInterface {
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    private ArrayList<Token> tokens = new ArrayList<Token>();     // the boardToken
+    //private ArrayList<Token> tokens = new ArrayList<Token>();     // the boardToken
 
     private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
     // private ArrayList<Token> tokens;
@@ -56,10 +56,12 @@ public class Board implements BoardInterface {
         idGenerator = new Random();
     }
 
+    /*
     public ArrayList<Token> getTokens() {
         return tokens;
     }
-
+    */
+    
     /**
      *
      * @return board
@@ -151,7 +153,7 @@ public class Board implements BoardInterface {
      * @param x
      * @param y
      * @return token
-     */
+    
     public Token initializeToken(String tokenName, int x, int y) {
         try {
             Token token = new Token(tokenName);
@@ -163,6 +165,20 @@ public class Board implements BoardInterface {
         } catch (Exception e) {
             System.out.println("Cannot initialize");
             return null;
+        }
+    }
+    *  */
+    
+    public void initializePlayerToken(Player player, String tokenName, int x, int y) {
+        try {
+            Token token = new Token(tokenName);
+            //Sets tokens location on board
+            token.setTokenLocation(getTileMap()[x][y]);
+            //Adds the token last
+            player.setToken(token);
+        } catch (Exception e) {
+            System.out.println("Cannot initialize");
+            
         }
     }
 
@@ -265,12 +281,29 @@ public class Board implements BoardInterface {
      */
     @Override
     public void incrementCurrentPlayer() {
-        if (!playerList.contains(currentPlayer)) {
-            System.out.println("Current Player Not Initialised");
-        } else if (playerList.indexOf(currentPlayer) == playerList.size() - 1) {
-            currentPlayer = playerList.get(0);
-        } else {
-            currentPlayer = playerList.get(playerList.indexOf(currentPlayer) + 1);
+        currentPlayer = getNextActivePlayer(currentPlayer);
+    }
+    
+    public Player getNextActivePlayer(Player startPlayer){
+        Player potentialPlayer;
+        if(playerList.contains(startPlayer)){
+            if (playerList.indexOf(startPlayer) == playerList.size() - 1) {
+                potentialPlayer = playerList.get(0);
+            } else {
+                potentialPlayer = playerList.get(playerList.indexOf(startPlayer) + 1);
+            }
+            while (!potentialPlayer.getIsPlaying()){
+                if (playerList.indexOf(potentialPlayer) == playerList.size() - 1) {
+                    potentialPlayer = playerList.get(0);
+                } else {
+                    potentialPlayer = playerList.get(playerList.indexOf(potentialPlayer) + 1);
+                }
+            }
+            return potentialPlayer;
+        }   
+        else{
+                System.out.println("Player is not in PlayerList");  
+                return null;
         }
     }
 
