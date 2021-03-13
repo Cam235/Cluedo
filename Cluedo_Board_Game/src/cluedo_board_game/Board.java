@@ -30,11 +30,8 @@ public class Board implements BoardInterface {
 
     Tile[][] tileMap;   //Map of Tiles
     private int columns, rows;  // Parameters
-    //private ArrayList<Token> tokens = new ArrayList<Token>();     // the boardToken
-
-    private ArrayList<Room> rooms = new ArrayList<Room>(); // Sets Up the rooms
-    // private ArrayList<Token> tokens;
-
+    private ArrayList<Room> rooms = new ArrayList<Room>(); // Rooms are stored in
+    private ArrayList<Weapon> weapons = new ArrayList<Weapon>(); //Weapons are stored in 
     //represents the player whos turn it currently is
     private Player currentPlayer;
 
@@ -56,12 +53,6 @@ public class Board implements BoardInterface {
         idGenerator = new Random();
     }
 
-    /*
-    public ArrayList<Token> getTokens() {
-        return tokens;
-    }
-    */
-    
     /**
      *
      * @return board
@@ -89,13 +80,56 @@ public class Board implements BoardInterface {
         return rows;
     }
 
+    /**
+     * returns to list of weapons
+     *
+     * @return weapons
+     */
+    public ArrayList<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    /**
+     * Initialize a new weapon and add to the list Then returns to the
+     * Initialized weapon
+     *
+     * @param weapon
+     * @return
+     */
+    public Weapon initializeWeapon(String weapon) {
+        weapons.add(new Weapon(weapon));
+        return weapons.get(weapons.size() - 1);
+    }
+
+    /**
+     * Places selected weapon into selected room
+     *
+     * @param room
+     * @param weapon
+     */
+    public void placeWeaponToRoom(Room room, Weapon weapon) {
+        room.setRoomWeapon(weapon);
+    }
+
+    /**
+     * Returns list of rooms
+     *
+     * @return rooms
+     */
     @Override
     public ArrayList<Room> getRooms() {
         return rooms;
     }
-
+    
+    /**
+     * Initilize a new Room taking parameters of 
+     * @param name
+     * @param roomSpace
+     * @param roomDoors
+     * @return newRoom
+     */
     @Override
-    public void initializeRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
+    public Room initializeRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
         try {
             //Creates Room
             Room newRoom = new Room(name, roomSpace);
@@ -140,35 +174,20 @@ public class Board implements BoardInterface {
             for (Tile roomDoor : roomDoors) {
                 rooms.get(rooms.size() - 1).addRoomDoor(roomDoor);
             }
+            return newRoom;
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You can't initialize here ");
-
+            return null;
         }
     }
 
     /**
-     * Initialize token to board
-     *
+     * Initialize token for each playing and non-playing players of board
+     * @param player
      * @param tokenName
      * @param x
-     * @param y
-     * @return token
-    
-    public Token initializeToken(String tokenName, int x, int y) {
-        try {
-            Token token = new Token(tokenName);
-            //Sets tokens location on board
-            token.setTokenLocation(getTileMap()[x][y]);
-            //Adds the token last
-            tokens.add(token);
-            return token;
-        } catch (Exception e) {
-            System.out.println("Cannot initialize");
-            return null;
-        }
-    }
-    *  */
-    
+     * @param y 
+     */
     public void initializePlayerToken(Player player, String tokenName, int x, int y) {
         try {
             Token token = new Token(tokenName);
@@ -178,7 +197,7 @@ public class Board implements BoardInterface {
             player.setToken(token);
         } catch (Exception e) {
             System.out.println("Cannot initialize");
-            
+
         }
     }
 
@@ -283,16 +302,16 @@ public class Board implements BoardInterface {
     public void incrementCurrentPlayer() {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }
-    
-    public Player getNextActivePlayer(Player startPlayer){
+
+    public Player getNextActivePlayer(Player startPlayer) {
         Player potentialPlayer;
-        if(playerList.contains(startPlayer)){
+        if (playerList.contains(startPlayer)) {
             if (playerList.indexOf(startPlayer) == playerList.size() - 1) {
                 potentialPlayer = playerList.get(0);
             } else {
                 potentialPlayer = playerList.get(playerList.indexOf(startPlayer) + 1);
             }
-            while (!potentialPlayer.getIsPlaying()){
+            while (!potentialPlayer.getIsPlaying()) {
                 if (playerList.indexOf(potentialPlayer) == playerList.size() - 1) {
                     potentialPlayer = playerList.get(0);
                 } else {
@@ -300,10 +319,9 @@ public class Board implements BoardInterface {
                 }
             }
             return potentialPlayer;
-        }   
-        else{
-                System.out.println("Player is not in PlayerList");  
-                return null;
+        } else {
+            System.out.println("Player is not in PlayerList");
+            return null;
         }
     }
 

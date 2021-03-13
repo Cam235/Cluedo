@@ -13,7 +13,7 @@ public interface BoardInterface {
     public int getColumns();
     public int getRows();
     public ArrayList<Room> getRooms();
-    public void initializeRoom(String name, ArrayList<Tile> roomSpace, 
+    public Room initializeRoom(String name, ArrayList<Tile> roomSpace, 
             ArrayList<Tile> roomDoors);
     //public void initializeToken(String tokenName, int x, int y);
     @Override

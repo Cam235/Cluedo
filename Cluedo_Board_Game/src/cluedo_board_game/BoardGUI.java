@@ -7,6 +7,7 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import javafx.application.Application;
@@ -81,7 +82,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Establish Board
         board = new Board(columns, rows);
 
-        /////////////////////////////////////////ADD ROOMS////////////////////// 
+        //------------------------CREATES WEAPONS---------------------------//
+        //DO not yet place anywhere
+        // Dagger, candlestick, revolver, rope, lead piping and spanner.
+        board.initializeWeapon("Dagger");
+        board.initializeWeapon("Candlestick");
+        board.initializeWeapon("Revolver");
+        board.initializeWeapon("Rope");
+        board.initializeWeapon("Lead Piping");
+        board.initializeWeapon("Spanner");
+        
+        
+        //////////////////ADD ROOMS HERE!!!!!!!!!////////////////////// 
+        //.....HERE IS FOR YOU CAMERON......
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
         for (int i = 15; i < 23; i++) {
@@ -93,9 +106,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile bathroomDoor2 = board.getTileMap()[20][14];
         bathroomDoors.add(bathroomDoor);
         bathroomDoors.add(bathroomDoor2);
-        board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
+        Room bathroom = board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
+        
+        
+        
+        
+        
+        //...NOT BELOW
+        //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
+        //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
+        Collections.shuffle(board.getWeapons());
+        Random randomRooms = new Random();
+        for (int i = 0; i < board.getWeapons().size(); i++) {
+            //Selects the random room
+            Room selectedRoom = board.getRooms().get(randomRooms.nextInt(board.getRooms().size()));
+            // Puts the weapon into room
+            board.placeWeaponToRoom(selectedRoom, board.getWeapons().get(i));
+        }
 
-        //---------------------------------------------------------------------------------///
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
         //Establish array of rectangles
         boardView = new GridPane();
@@ -134,43 +162,32 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('h');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
-        //board.getPlayerList().get(1).setIsPlaying(false);
-        /*
-        initializePlayerToken(board.getPlayerList().get(0), "TestToken", 2, 3);
-        for (int _r = 0; _r < rows; _r++) {
-            for (int _c = 0; _c < columns; _c++) {
-                if (board.getTileMap()[_c][_r].IsOccupied()) {
-                    boardView.add(board.getCurrentPlayer().getToken(), _c, _r);
-                }
-            }
-        }
-         */
-        //Initialize token on board,assign to token objects
-        
-        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 2, 3);  
-        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 7, 3);  
+
+
+        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 2, 3);
+        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 7, 3);
         //assigns one of the token to one of the player
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 for (Player p : board.getPlayerList()) {
-                    if (board.getTileMap()[_c][_r].IsOccupied() && p.getToken().getTokenLocation()==board.getTileMap()[_c][_r] ) {
+                    if (board.getTileMap()[_c][_r].IsOccupied() && p.getToken().getTokenLocation() == board.getTileMap()[_c][_r]) {
                         boardView.add(p.getToken(), _c, _r);
                     }
                 }
+                //Gets the first placed weapons location
+                if (board.getTileMap()[_c][_r].equals(board.getWeapons().get(0).getWeaponLocation())) {
+                    boardView.add(board.getWeapons().get(0), _c, _r);
+                }
             }
         }
-        
-        
         board.incrementCurrentPlayer();
         //board.incrementCurrentPlayer();
-        
         //assignTokenToPlayer(board.getCurrentPlayer(),board.getTokens().get(0));
         //Combines diceRoller and Board
         gameBox.getChildren().addAll(switcherButton, diceRollerView, boardView);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
-    
 
     /**
      * Makes random movements for AI token on the board
@@ -347,7 +364,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
     }
      */
-    
     /**
      * Assigns the existing token on board on some player
      *
