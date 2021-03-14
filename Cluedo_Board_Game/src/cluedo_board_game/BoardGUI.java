@@ -93,26 +93,109 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.initializeWeapon("Spanner");
         
         
-        //////////////////ADD ROOMS HERE!!!!!!!!!////////////////////// 
-        //.....HERE IS FOR YOU CAMERON......
+        //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
+        
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
-        for (int i = 15; i < 23; i++) {
-            for (int j = 15; j < 23; j++) {
-                bathroomSpace.add(board.getTileMap()[j][i]);
+        for (int i = 22; i < 27; i++) {
+            for (int j = 22; j < 27; j++) {
+                bathroomSpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile bathroomDoor = board.getTileMap()[14][22];
-        Tile bathroomDoor2 = board.getTileMap()[20][14];
+        Tile bathroomDoor = board.getTileMap()[22][21];
         bathroomDoors.add(bathroomDoor);
-        bathroomDoors.add(bathroomDoor2);
         Room bathroom = board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
         
+        ArrayList<Tile> diningroomSpace = new ArrayList<Tile>();
+        ArrayList<Tile> diningroomDoors = new ArrayList<Tile>();
+        for (int i = 20; i < 27; i++) {
+            for (int j = 12; j < 18; j++) {
+                diningroomSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile diningroomDoor = board.getTileMap()[19][15];
+        Tile diningroomDoor2 = board.getTileMap()[20][11];
+        diningroomDoors.add(diningroomDoor);
+        diningroomDoors.add(diningroomDoor2);
+        Room diningroom = board.initializeRoom("diningroom", diningroomSpace, diningroomDoors);
+        
+        ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
+        ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
+        for (int i = 21; i < 27; i++) {
+            for (int j = 1; j < 7; j++) {
+                kitchenSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile kitchenDoor = board.getTileMap()[21][7];
+        kitchenDoors.add(kitchenDoor);
+        Room kitchen = board.initializeRoom("kitchen", kitchenSpace, kitchenDoors);
+        
+        ArrayList<Tile> ballroomSpace = new ArrayList<Tile>();
+        ArrayList<Tile> ballroomDoors = new ArrayList<Tile>();
+        for (int i = 10; i < 18; i++) {
+            for (int j = 22; j < 27; j++) {
+                ballroomSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile ballroomDoor = board.getTileMap()[11][21];
+        Tile ballroomDoor2 = board.getTileMap()[16][21];
+        Tile ballroomDoor3 = board.getTileMap()[9][23];
+        Tile ballroomDoor4 = board.getTileMap()[18][23];
+        ballroomDoors.add(ballroomDoor);
+        ballroomDoors.add(ballroomDoor2);
+        ballroomDoors.add(ballroomDoor3);
+        ballroomDoors.add(ballroomDoor4);
+        Room ballroom = board.initializeRoom("ballroom", ballroomSpace, ballroomDoors);
+        
+        ArrayList<Tile> conservatorySpace = new ArrayList<Tile>();
+        ArrayList<Tile> conservatoryDoors = new ArrayList<Tile>();
+        for (int i = 1; i < 6; i++) {
+            for (int j = 23; j < 27; j++) {
+                conservatorySpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile conservatoryDoor = board.getTileMap()[5][22];
+        conservatoryDoors.add(conservatoryDoor);
+        Room conservatory = board.initializeRoom("conservatory", conservatorySpace, conservatoryDoors);
+        
+        ArrayList<Tile> gamesroomSpace = new ArrayList<Tile>();
+        ArrayList<Tile> gamesroomDoors = new ArrayList<Tile>();
+        for (int i = 1; i < 6; i++) {
+            for (int j = 15; j < 19; j++) {
+                gamesroomSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile gamesroomDoor = board.getTileMap()[1][14];
+        Tile gamesroomDoor2 = board.getTileMap()[6][18];
+        gamesroomDoors.add(gamesroomDoor);
+        gamesroomDoors.add(gamesroomDoor2);
+        Room gamesroom = board.initializeRoom("gamesroom", gamesroomSpace, gamesroomDoors);
+        
+        ArrayList<Tile> librarySpace = new ArrayList<Tile>();
+        ArrayList<Tile> libraryDoors = new ArrayList<Tile>();
+        for (int i = 1; i < 7; i++) {
+            for (int j = 8; j < 12; j++) {
+                librarySpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile libraryDoor = board.getTileMap()[3][12];
+        Tile libraryDoor2 = board.getTileMap()[7][9];
+        libraryDoors.add(libraryDoor);
+        libraryDoors.add(libraryDoor2);
+        Room library = board.initializeRoom("library", librarySpace, libraryDoors);
+        
+        ArrayList<Tile> officeSpace = new ArrayList<Tile>();
+        ArrayList<Tile> officeDoors = new ArrayList<Tile>();
+        for (int i = 1; i < 7; i++) {
+            for (int j = 1; j < 4; j++) {
+                officeSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile officeDoor = board.getTileMap()[6][4];
+        officeDoors.add(officeDoor);
+        Room office = board.initializeRoom("office", officeSpace, officeDoors);
         
         
-        
-        
-        //...NOT BELOW
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
         Collections.shuffle(board.getWeapons());
@@ -164,8 +247,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.setCurrentPlayer(board.getPlayerList().get(0));
 
 
-        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 2, 3);
-        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 7, 3);
+        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 14, 14);
+        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 15, 15);
         //assigns one of the token to one of the player
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
