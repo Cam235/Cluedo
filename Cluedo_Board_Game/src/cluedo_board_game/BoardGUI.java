@@ -195,6 +195,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         officeDoors.add(officeDoor);
         Room office = board.initializeRoom("office", officeSpace, officeDoors);
         
+        ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
+        ArrayList<Tile> hallwayDoors = new ArrayList<Tile>();
+        for (int i = 11; i < 17; i++) {
+            for (int j = 1; j < 7; j++) {
+                hallwaySpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile hallwayDoor = board.getTileMap()[13][7];
+        Tile hallwayDoor2 = board.getTileMap()[14][7];
+        Tile hallwayDoor3 = board.getTileMap()[10][5];
+        hallwayDoors.add(hallwayDoor);
+        hallwayDoors.add(hallwayDoor2);
+        hallwayDoors.add(hallwayDoor3);
+        Room hallway = board.initializeRoom("hallway", hallwaySpace, hallwayDoors);
         
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
@@ -247,8 +261,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.setCurrentPlayer(board.getPlayerList().get(0));
 
 
-        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 14, 14);
-        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 15, 15);
+        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 19, 0);
+        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 27, 9);
         //assigns one of the token to one of the player
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
