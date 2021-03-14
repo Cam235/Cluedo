@@ -72,6 +72,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to swith between Player and AI
+        /*
         switcherButton = new Button("AI/Player");
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -79,6 +80,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 //token.setAgent(!token.isAgent());
             }
         });
+         */
         //Establish Board
         board = new Board(columns, rows);
 
@@ -91,10 +93,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.initializeWeapon("Rope");
         board.initializeWeapon("Lead Piping");
         board.initializeWeapon("Spanner");
-        
-        
+
         //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
-        
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
         for (int i = 22; i < 27; i++) {
@@ -105,7 +105,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile bathroomDoor = board.getTileMap()[22][21];
         bathroomDoors.add(bathroomDoor);
         Room bathroom = board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
-        
+
         ArrayList<Tile> diningroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> diningroomDoors = new ArrayList<Tile>();
         for (int i = 20; i < 27; i++) {
@@ -117,8 +117,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile diningroomDoor2 = board.getTileMap()[20][11];
         diningroomDoors.add(diningroomDoor);
         diningroomDoors.add(diningroomDoor2);
-        Room diningroom = board.initializeRoom("diningroom", diningroomSpace, diningroomDoors);
-        
+        Room diningroom = board.initializeRoom("Diningroom", diningroomSpace, diningroomDoors);
+
         ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
         ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
         for (int i = 21; i < 27; i++) {
@@ -129,7 +129,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile kitchenDoor = board.getTileMap()[21][7];
         kitchenDoors.add(kitchenDoor);
         Room kitchen = board.initializeRoom("kitchen", kitchenSpace, kitchenDoors);
-        
+
         ArrayList<Tile> ballroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> ballroomDoors = new ArrayList<Tile>();
         for (int i = 10; i < 18; i++) {
@@ -146,7 +146,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         ballroomDoors.add(ballroomDoor3);
         ballroomDoors.add(ballroomDoor4);
         Room ballroom = board.initializeRoom("ballroom", ballroomSpace, ballroomDoors);
-        
+
         ArrayList<Tile> conservatorySpace = new ArrayList<Tile>();
         ArrayList<Tile> conservatoryDoors = new ArrayList<Tile>();
         for (int i = 1; i < 6; i++) {
@@ -157,7 +157,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile conservatoryDoor = board.getTileMap()[5][22];
         conservatoryDoors.add(conservatoryDoor);
         Room conservatory = board.initializeRoom("conservatory", conservatorySpace, conservatoryDoors);
-        
+
         ArrayList<Tile> gamesroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> gamesroomDoors = new ArrayList<Tile>();
         for (int i = 1; i < 6; i++) {
@@ -170,7 +170,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gamesroomDoors.add(gamesroomDoor);
         gamesroomDoors.add(gamesroomDoor2);
         Room gamesroom = board.initializeRoom("gamesroom", gamesroomSpace, gamesroomDoors);
-        
+
         ArrayList<Tile> librarySpace = new ArrayList<Tile>();
         ArrayList<Tile> libraryDoors = new ArrayList<Tile>();
         for (int i = 1; i < 7; i++) {
@@ -183,7 +183,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         libraryDoors.add(libraryDoor);
         libraryDoors.add(libraryDoor2);
         Room library = board.initializeRoom("library", librarySpace, libraryDoors);
-        
+
+        // HALLWAY STUFF
+        ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
+        ArrayList<Tile> hallwayDoors = new ArrayList<Tile>();
+        for (int i = 11; i < 17; i++) {
+            for (int j = 1; j < 7; j++) {
+                hallwaySpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        Tile hallwayDoor1 = board.getTileMap()[13][7];
+        Tile hallwayDoor2 = board.getTileMap()[14][7];
+        Tile hallwayDoor3 = board.getTileMap()[8][4];
+        hallwayDoors.add(hallwayDoor1);
+        hallwayDoors.add(hallwayDoor2);
+        hallwayDoors.add(hallwayDoor3);
+        board.initializeRoom("HALLWAY", hallwaySpace, hallwayDoors);
+
+        //OFFICE
         ArrayList<Tile> officeSpace = new ArrayList<Tile>();
         ArrayList<Tile> officeDoors = new ArrayList<Tile>();
         for (int i = 1; i < 7; i++) {
@@ -194,22 +211,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
         Room office = board.initializeRoom("office", officeSpace, officeDoors);
-        
-        ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
-        ArrayList<Tile> hallwayDoors = new ArrayList<Tile>();
-        for (int i = 11; i < 17; i++) {
-            for (int j = 1; j < 7; j++) {
-                hallwaySpace.add(board.getTileMap()[i][j]);
-            }
-        }
-        Tile hallwayDoor = board.getTileMap()[13][7];
-        Tile hallwayDoor2 = board.getTileMap()[14][7];
-        Tile hallwayDoor3 = board.getTileMap()[10][5];
-        hallwayDoors.add(hallwayDoor);
-        hallwayDoors.add(hallwayDoor2);
-        hallwayDoors.add(hallwayDoor3);
-        Room hallway = board.initializeRoom("hallway", hallwaySpace, hallwayDoors);
-        
+
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
         Collections.shuffle(board.getWeapons());
@@ -260,7 +262,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
 
-
         board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 19, 0);
         board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 27, 9);
         //assigns one of the token to one of the player
@@ -271,17 +272,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         boardView.add(p.getToken(), _c, _r);
                     }
                 }
-                //Gets the first placed weapons location
-                if (board.getTileMap()[_c][_r].equals(board.getWeapons().get(0).getWeaponLocation())) {
-                    boardView.add(board.getWeapons().get(0), _c, _r);
+                for (Weapon weapon : board.getWeapons()) {
+                    //Gets the first placed weapons location
+                    if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
+                        boardView.add(weapon, _c, _r);
+                    }
                 }
             }
         }
         board.incrementCurrentPlayer();
         //board.incrementCurrentPlayer();
-        //assignTokenToPlayer(board.getCurrentPlayer(),board.getTokens().get(0));
         //Combines diceRoller and Board
-        gameBox.getChildren().addAll(switcherButton, diceRollerView, boardView);
+        gameBox.getChildren().addAll(diceRollerView, boardView);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
