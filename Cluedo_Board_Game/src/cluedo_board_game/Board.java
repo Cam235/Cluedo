@@ -387,7 +387,10 @@ public class Board implements BoardInterface {
                     }
                 } else {
                     //If its not door
-                    for (Room room : getRooms()) {
+                    boolean roomFound = false; //whether a room that contains the player is found
+                    int i = 0;
+                    while(!roomFound && i < getRooms().size()){
+                        Room room = getRooms().get(i);
                         //If current players token is in room
                         if (room.checkTileInRoom(currentPlayer.getToken().getTokenLocation())) {
                             //Spawn at one of the door
@@ -399,11 +402,14 @@ public class Board implements BoardInterface {
                             //Place the player at the door
                             currentPlayer.getToken().getTokenLocation().setOccupied(false);
                             currentPlayer.moveToken(getTileMap()[newX][newY]);
-                        } else {
-                            //if neither wall nor door, make just a movement
-                            currentPlayer.getToken().getTokenLocation().setOccupied(false);
-                            currentPlayer.moveToken(getTileMap()[x][y]);
+                            roomFound = true;
                         }
+                        i++;
+                    }
+                    if(!roomFound){
+                        //if neither wall nor door, make just a movement
+                        currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                        currentPlayer.moveToken(getTileMap()[x][y]);
                     }
                 }
             } else {
