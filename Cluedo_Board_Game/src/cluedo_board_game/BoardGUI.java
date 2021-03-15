@@ -17,6 +17,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -58,6 +60,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     int counter = 0;
     //Switch Between Player and AI
     Button switcherButton;
+    //ImageView of Weapon
 
     /**
      * Creates Board, initialize Token at specified location and put in the
@@ -91,8 +94,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.initializeWeapon("Candlestick");
         board.initializeWeapon("Revolver");
         board.initializeWeapon("Rope");
-        board.initializeWeapon("Lead Piping");
+        board.initializeWeapon("Leadpiping");
         board.initializeWeapon("Spanner");
+        //Sets up Images of weapons
+        for (Weapon weapon : board.getWeapons()) {
+            weapon.setWeaponImage(new Image("/weaponImages/" + weapon.getName() + ".png", 20, 20, false, false));
+        }
 
         //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
@@ -198,7 +205,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         hallwayDoors.add(hallwayDoor1);
         hallwayDoors.add(hallwayDoor2);
         hallwayDoors.add(hallwayDoor3);
-        board.initializeRoom("HALLWAY", hallwaySpace, hallwayDoors);
+        board.initializeRoom("Hallway", hallwaySpace, hallwayDoors);
 
         //OFFICE
         ArrayList<Tile> officeSpace = new ArrayList<Tile>();
@@ -210,17 +217,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
-        Room office = board.initializeRoom("office", officeSpace, officeDoors);
+        Room office = board.initializeRoom("Office", officeSpace, officeDoors);
 
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
         Collections.shuffle(board.getWeapons());
-        Random randomRooms = new Random();
+        Collections.shuffle(board.getRooms());
         for (int i = 0; i < board.getWeapons().size(); i++) {
-            //Selects the random room
-            Room selectedRoom = board.getRooms().get(randomRooms.nextInt(board.getRooms().size()));
             // Puts the weapon into room
-            board.placeWeaponToRoom(selectedRoom, board.getWeapons().get(i));
+            board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
+            //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
         }
 
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
@@ -275,7 +281,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 for (Weapon weapon : board.getWeapons()) {
                     //Gets the first placed weapons location
                     if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
-                        boardView.add(weapon, _c, _r);
+                        ImageView weaponImageView = new ImageView(weapon.getWeaponImage());                   
+                        boardView.add(weaponImageView, _c, _r);
                     }
                 }
             }

@@ -108,7 +108,14 @@ public class Board implements BoardInterface {
      * @param weapon
      */
     public void placeWeaponToRoom(Room room, Weapon weapon) {
-        room.setRoomWeapon(weapon);
+        //If weapon is already in any room, remove from that room
+        for (Room potentialRoom : rooms) {
+            if (potentialRoom.getRoomWeapons().contains(weapon)) {
+                potentialRoom.getRoomWeapons().remove(weapon);
+            }
+        }
+        //Add to new Room 
+        room.addRoomWeapon(weapon);
     }
 
     /**
