@@ -312,22 +312,24 @@ public class Board implements BoardInterface {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }
 
-    public Player getNextActivePlayer(Player startPlayer) {
-        Player potentialPlayer;
-        if (playerList.contains(startPlayer)) {
-            if (playerList.indexOf(startPlayer) == playerList.size() - 1) {
-                potentialPlayer = playerList.get(0);
-            } else {
-                potentialPlayer = playerList.get(playerList.indexOf(startPlayer) + 1);
-            }
-            while (!potentialPlayer.getIsPlaying()) {
-                if (playerList.indexOf(potentialPlayer) == playerList.size() - 1) {
-                    potentialPlayer = playerList.get(0);
+    public Player getNextActivePlayer(Player player) {
+        if (playerList.contains(player)) {
+            int i = 0;
+            do{
+                if (playerList.indexOf(player) == playerList.size() - 1) {
+                    player = playerList.get(0);
                 } else {
-                    potentialPlayer = playerList.get(playerList.indexOf(potentialPlayer) + 1);
+                    player = playerList.get(playerList.indexOf(player) + 1);
                 }
+                i++;
+            } while (!player.getIsPlaying() && i < playerList.size());
+            if(player.getIsPlaying()){
+                return player;
             }
-            return potentialPlayer;
+            else{
+                System.out.println("No remaining active players");
+                return null;
+            }
         } else {
             System.out.println("Player is not in PlayerList");
             return null;
