@@ -24,6 +24,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -61,6 +63,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //Switch Between Player and AI
     Button switcherButton;
     //ImageView of Weapon
+    
+    Button showHandBtn;
 
     /**
      * Creates Board, initialize Token at specified location and put in the
@@ -75,6 +79,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to swith between Player and AI
+        
+        
+        showHandBtn = new Button("Show Hand");
         /*
         switcherButton = new Button("AI/Player");
         switcherButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -84,6 +91,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
          */
+        
+        
+        
         //Establish Board
         board = new Board(columns, rows);
 
@@ -267,6 +277,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('h');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
+        
+        //-----just for testing, use card distributor in real implementation-----//
+        ArrayList<Card> testCardList1 = new ArrayList<>();
+        ArrayList<Card> testCardList2 = new ArrayList<>();
+        testCardList1.add(new Card(CardType.Person, "Mrs.Scarlet"));
+        testCardList2.add(new Card(CardType.Person, "Mr.Mustard"));
+        testCardList1.add(new Card(CardType.Weapon, "Dagger"));
+        testCardList2.add(new Card(CardType.Weapon, "Candlestick"));
+        testCardList1.add(new Card(CardType.Weapon, "Revolver"));
+        testCardList2.add(new Card(CardType.Weapon, "Rope"));
+        testCardList1.add(new Card(CardType.Room, "Bathroom"));
+        testCardList2.add(new Card(CardType.Room, "Diningroom"));
+        board.getPlayerList().get(0).setHand(testCardList1);
+        board.getPlayerList().get(1).setHand(testCardList2);
 
         board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 19, 0);
         board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 27, 9);
@@ -290,7 +314,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.incrementCurrentPlayer();
         //board.incrementCurrentPlayer();
         //Combines diceRoller and Board
-        gameBox.getChildren().addAll(diceRollerView, boardView);
+        gameBox.getChildren().addAll(diceRollerView, boardView, showHandBtn);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
@@ -420,6 +444,26 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             thread.start();
         }*/
         //else {
+        showHandBtn.setOnAction(
+        new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+                VBox dialogVbox = new VBox(20);
+                String showHandtxt = new String();
+                showHandtxt += "---Cards---\n";
+                for(Card c: board.getCurrentPlayer().getHand()){
+                    showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+                }
+                dialogVbox.getChildren().add(new Text(showHandtxt));
+                Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                dialog.setScene(dialogScene);
+                dialog.show();
+            }
+         });
+        
         //If token is not AI, then allow player to make movements
         setUpControls();
         //}
