@@ -15,6 +15,7 @@ public class Human extends Player{
     
     public Human(int playerId, String name) {
         super(playerId, name);
+        this.token = super.getToken();
     }
     
     @Override
@@ -24,7 +25,7 @@ public class Human extends Player{
     
     @Override
     public void moveToken(Tile tile) {
-       token.setTokenLocation(tile);
+       this.token.setTokenLocation(tile);
     }
     
 }

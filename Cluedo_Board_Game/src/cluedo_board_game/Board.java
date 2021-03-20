@@ -276,7 +276,7 @@ public class Board implements BoardInterface {
                     playerAdded = true;
                 }
             }
-        }
+        } 
     }
 
     @Override

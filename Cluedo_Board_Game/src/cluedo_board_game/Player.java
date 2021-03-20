@@ -65,6 +65,7 @@ public class Player implements PlayerInterface {
         throw new UnsupportedOperationException("Unsupported Player class for move token"); //To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
     public Boolean isAgent(){
         return null;
     }

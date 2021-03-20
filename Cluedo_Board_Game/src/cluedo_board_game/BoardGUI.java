@@ -78,7 +78,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
-        //Button to swith between Player and AI
+        //Button to switch between Player and AI
         
         
         showHandBtn = new Button("Show Hand");
@@ -465,7 +465,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
          });
         
         //If token is not AI, then allow player to make movements
-        setUpControls();
+        if(!board.getCurrentPlayer().isAgent()){
+            setUpControls();
+        }
+        
         //}
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

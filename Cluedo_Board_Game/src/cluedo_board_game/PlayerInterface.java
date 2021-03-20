@@ -14,4 +14,5 @@ public interface PlayerInterface {
     
     // Moved from Board class
     public void moveToken(Tile tile);
+    public Boolean isAgent();
 }
