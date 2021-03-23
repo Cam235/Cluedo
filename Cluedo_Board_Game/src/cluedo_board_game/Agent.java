@@ -6,14 +6,13 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
  * @author Mazon
  */
 public class Agent extends Player{
-    
-    Token token;
     
     public Agent(int playerId, String name) {
         super(playerId, name);
@@ -27,32 +26,33 @@ public class Agent extends Player{
     
     @Override
     public void moveToken(Tile tile) {
-        /**
-     * Makes random movements for AI token on the board
-     *
-     * public void positionUpdateAI() {
-        * (token.isAgent()) { Random random = new Random(); int movement =
-        * random.nextInt(4); switch (movement) { case 0: moveToken(token,
-        * (token.getTokenLocation().getColIndex()),
-        * (token.getTokenLocation().getRowIndex() - 1));
-        * System.out.println(token.getTokenLocation().getColIndex() + "," +
-        * token.getTokenLocation().getRowIndex()); break; case 1: moveToken(token,
-        * token.getTokenLocation().getColIndex(),
-        * (token.getTokenLocation().getRowIndex() + 1));
-        * System.out.println(token.getTokenLocation().getColIndex() + "," +
-        * token.getTokenLocation().getRowIndex()); break; case 2: moveToken(token,
-        * token.getTokenLocation().getColIndex() - 1,
-        * (token.getTokenLocation().getRowIndex()));
-        * System.out.println(token.getTokenLocation().getColIndex() + "," +
-        * token.getTokenLocation().getRowIndex()); break; case 3: moveToken(token,
-        * token.getTokenLocation().getColIndex() + 1,
-        * (token.getTokenLocation().getRowIndex()));
-        * System.out.println(token.getTokenLocation().getColIndex() + "," +
-        * token.getTokenLocation().getRowIndex()); break; }
-        * System.out.println(counter); updateView(); } }
-     */
-        
-        throw new UnsupportedOperationException("Not supported yet");
+        this.token.setTokenLocation(tile);
+    }
+    
+    @Override
+    public Integer[] getMove(int x, int y){
+        Integer[] coords = new Integer[2];
+        Random random = new Random();
+        int movement = random.nextInt(4);
+        switch (movement) { 
+            case 0:
+                coords[0] = x;
+                coords[1] = y-1;
+                break;
+            case 1:
+                coords[0] = x;
+                coords[1] = y+1;
+                break;
+            case 2:
+                coords[0] = x-1;
+                coords[1] = y;
+                break;
+            default:
+                coords[0] = x+1;
+                coords[1] = y;
+                break;
+        }
+        return coords;           
     }
     
 }

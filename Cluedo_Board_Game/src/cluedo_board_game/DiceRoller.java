@@ -111,5 +111,9 @@ public class DiceRoller implements DiceRollerInterface{
     public int getDiceTotal() {
         return diceNumber + diceNumber2;
     }
+    
+    public Button getRollButton(){
+        return rollButton;
+    }
 
 }

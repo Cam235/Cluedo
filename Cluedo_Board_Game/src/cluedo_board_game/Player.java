@@ -86,6 +86,9 @@ public class Player implements PlayerInterface {
         this.isTurn = isTurn;
     }
     
+    public Integer[] getMove(int x, int y){
+        return null;
+    }
     
       
 }

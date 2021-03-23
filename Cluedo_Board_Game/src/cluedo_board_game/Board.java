@@ -364,8 +364,20 @@ public class Board implements BoardInterface {
      */
     public void positionUpdateCurrentPlayer(int x, int y) {
         try {
+            Room currentPlayerRoom = getRoomOfPlayer(currentPlayer);
+            if(currentPlayerRoom != null){
+                //Spawn at one of the doors
+                Random random = new Random();
+                int doorToExit = random.nextInt(currentPlayerRoom.getRoomDoors().size());
+                //Gets the coordinates of doors 
+                int newX = currentPlayerRoom.getRoomDoors().get(doorToExit).getColIndex();
+                int newY = currentPlayerRoom.getRoomDoors().get(doorToExit).getRowIndex();
+                //Place the player at the door
+                currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                currentPlayer.moveToken(getTileMap()[newX][newY]);
+            }
             //If the tile to be moved is not Wall or occupied,confirm movement
-            if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
+            else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
                 // Loops through all rooms
                 if (getTileMap()[x][y].getIsDoor()) {
                     //Iterate through rooms
@@ -387,32 +399,11 @@ public class Board implements BoardInterface {
                             }
                         }
                     }
-                } else {
-                    //If its not door
-                    boolean roomFound = false; //whether a room that contains the player is found
-                    int i = 0;
-                    while(!roomFound && i < getRooms().size()){
-                        Room room = getRooms().get(i);
-                        //If current players token is in room
-                        if (room.checkTileInRoom(currentPlayer.getToken().getTokenLocation())) {
-                            //Spawn at one of the door
-                            Random random = new Random();
-                            int doorToExit = random.nextInt(room.getRoomDoors().size());
-                            //Gets the coordinates of doors 
-                            int newX = room.getRoomDoors().get(doorToExit).getColIndex();
-                            int newY = room.getRoomDoors().get(doorToExit).getRowIndex();
-                            //Place the player at the door
-                            currentPlayer.getToken().getTokenLocation().setOccupied(false);
-                            currentPlayer.moveToken(getTileMap()[newX][newY]);
-                            roomFound = true;
-                        }
-                        i++;
-                    }
-                    if(!roomFound){
-                        //if neither wall nor door, make just a movement
-                        currentPlayer.getToken().getTokenLocation().setOccupied(false);
-                        currentPlayer.moveToken(getTileMap()[x][y]);
-                    }
+                } 
+                else {
+                    //if neither wall nor door, make just a movement
+                    currentPlayer.getToken().getTokenLocation().setOccupied(false);
+                    currentPlayer.moveToken(getTileMap()[x][y]);
                 }
             } else {
                 //if tile to be moved is wall , then cannot move 
@@ -421,6 +412,23 @@ public class Board implements BoardInterface {
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("You cant go here");
         }
+    }
+    
+    public Room getRoomOfPlayer(Player p){
+        Room room = null;
+        boolean roomFound = false; //whether a room that contains the player is found
+        int i = 0;
+        while(!roomFound && i < getRooms().size()){
+            room = getRooms().get(i);
+            if (room.checkTileInRoom(currentPlayer.getToken().getTokenLocation())) {
+                roomFound = true;
+            }
+            else {
+                room = null;
+            }
+            i++;
+        }
+        return room;
     }
 
 }
