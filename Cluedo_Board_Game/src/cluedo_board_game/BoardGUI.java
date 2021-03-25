@@ -313,30 +313,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Makes random movements for AI token on the board
-     *
-     * public void positionUpdateAI() {//Bunu Implement Etmedim Daha if
-     * (token.isAgent()) { Random random = new Random(); int movement =
-     * random.nextInt(4); switch (movement) { case 0: moveToken(token,
-     * (token.getTokenLocation().getColIndex()),
-     * (token.getTokenLocation().getRowIndex() - 1));
-     * System.out.println(token.getTokenLocation().getColIndex() + "," +
-     * token.getTokenLocation().getRowIndex()); break; case 1: moveToken(token,
-     * token.getTokenLocation().getColIndex(),
-     * (token.getTokenLocation().getRowIndex() + 1));
-     * System.out.println(token.getTokenLocation().getColIndex() + "," +
-     * token.getTokenLocation().getRowIndex()); break; case 2: moveToken(token,
-     * token.getTokenLocation().getColIndex() - 1,
-     * (token.getTokenLocation().getRowIndex()));
-     * System.out.println(token.getTokenLocation().getColIndex() + "," +
-     * token.getTokenLocation().getRowIndex()); break; case 3: moveToken(token,
-     * token.getTokenLocation().getColIndex() + 1,
-     * (token.getTokenLocation().getRowIndex()));
-     * System.out.println(token.getTokenLocation().getColIndex() + "," +
-     * token.getTokenLocation().getRowIndex()); break; }
-     * System.out.println(counter); updateView(); } }
-     */
-    /**
      * Allows player to move token using WASD buttons
      */
     public void setUpControls() {
@@ -419,27 +395,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
-        //Checks if token is agent or player,provides gameplay accordingly 
-        /*
-        if (token.isAgent()) {
-            //Use threads for with assigned method to make random movements
-            Thread thread = new Thread(() -> {
-                Runnable updater = () -> positionUpdateAI();
-                while (isRunning) {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ex) {
-                    }
-                    // UI positionUpdateAI is run on the Application thread
-                    Platform.runLater(updater);
-                    if (!token.isAgent()) {
-                        setUpControls();
-                    }
-                }
-            });
-            thread.start();
-        }*/
-        //else {
+        
         showHandBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
             @Override
@@ -472,13 +428,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 resetDice();
                 //if current player is now ai handle their turn
                 if (board.getCurrentPlayer().isAgent()) {
+                    endTurnBtn.setDisable(true);
                     //-----------thread needed here for gui update during ai turn-------------//
                     //rolls the dice
                     diceRoller.getRollButton().fire();
                     //Starts the thread
                     Thread thread = new Thread(() -> {
                         Runnable updater = () -> handleAgentMove();
-                        while (isRunning) {
+                        while (counter < diceRoller.getDiceTotal()) {
                             try {
                                 Thread.sleep(500);
                             } catch (InterruptedException ex) {
@@ -486,10 +443,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //runs the handleAgentMove() on the Application thread
                             Platform.runLater(updater);
                         }
+                        endTurnBtn.setDisable(false);
+                        //automatically end turn
+                        endTurnBtn.fire();
                     });
-                    thread.start();               
+                    thread.start();
                 }
-                //Deleted the second  diceRoller.fire() method
             }
         });
         setUpControls();
@@ -513,9 +472,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     private void handleAgentMove() {
-        Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-        movementHelper(newCoords[0], newCoords[1]);
-        updateView();
+        try{
+            if (counter < diceRoller.getDiceTotal()) {
+                Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                movementHelper(newCoords[0], newCoords[1]);
+                updateView();
+            }
+        }
+        catch(Exception e){/*Allow FX errors to occur here as they are harmless*/}
     }
 
     @Override
