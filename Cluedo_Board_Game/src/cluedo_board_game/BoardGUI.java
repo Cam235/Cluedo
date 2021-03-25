@@ -64,7 +64,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //To measure steps not surpassing value of dice
     int counter = 0;
     //ImageView of Weapon
-    
+
     private Button showHandBtn;
     private Button endTurnBtn;
     private HBox controlsHbx;
@@ -82,14 +82,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to switch between Player and AI
-        
-        
+
         showHandBtn = new Button("Show Hand");
         endTurnBtn = new Button("End Turn");
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
-        
-        
+
         //Establish Board
         board = new Board(columns, rows);
 
@@ -273,7 +271,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('a');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         board.setCurrentPlayer(board.getPlayerList().get(0));
-        
+
         //-----just for testing, use card distributor in real implementation-----//
         ArrayList<Card> testCardList1 = new ArrayList<>();
         ArrayList<Card> testCardList2 = new ArrayList<>();
@@ -301,7 +299,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 for (Weapon weapon : board.getWeapons()) {
                     //Gets the first placed weapons location
                     if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
-                        ImageView weaponImageView = new ImageView(weapon.getWeaponImage());                   
+                        ImageView weaponImageView = new ImageView(weapon.getWeaponImage());
                         boardView.add(weaponImageView, _c, _r);
                     }
                 }
@@ -343,8 +341,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     public void setUpControls() {
         scene.setOnKeyPressed((KeyEvent event) -> {
-            
-            if(!board.getCurrentPlayer().isAgent()){
+
+            if (!board.getCurrentPlayer().isAgent()) {
                 switch (event.getCode()) {
                     case W://go up
                         movementHelper(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1));
@@ -361,10 +359,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     default://Non valid Ket
                         System.out.println("NOT VALID");
                         break;
-                    }
+                }
                 updateView();
-            }
-            else {
+            } else {
                 System.out.println("Agent Players turn");
             }
         });
@@ -373,29 +370,27 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     private void movementHelper(int x, int y) {
         Tile currentPlayerPos = board.getCurrentPlayer().getToken().getTokenLocation();
-        if(diceRoller.isDiceRolled()){
-            if((counter < diceRoller.getDiceTotal())){
+        if (diceRoller.isDiceRolled()) {
+            if ((counter < diceRoller.getDiceTotal())) {
                 board.positionUpdateCurrentPlayer(x, y);
                 System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
                 if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                     counter++;
                 }
-                if((board.getRoomOfPlayer(board.getCurrentPlayer())) != null){
+                if ((board.getRoomOfPlayer(board.getCurrentPlayer())) != null) {
                     System.out.println("TOKEN IS IN " + board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
                     counter = diceRoller.getDiceTotal();
                 }
-                if(!(counter < diceRoller.getDiceTotal())){
-                //-------reset dice here just for testing-------//
-                    if(!board.getCurrentPlayer().isAgent()){
+                if (!(counter < diceRoller.getDiceTotal())) {
+                    //-------reset dice here just for testing-------//
+                    if (!board.getCurrentPlayer().isAgent()) {
                         resetDice();
                     }
                 }
-            }
-            else {
+            } else {
                 System.out.println("Please End Turn");
             }
-        }
-        else {
+        } else {
             System.out.println("Please Roll the Dice");
         }
     }
@@ -446,54 +441,57 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }*/
         //else {
         showHandBtn.setOnAction(
-        new EventHandler<ActionEvent>() {
+                new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!board.getCurrentPlayer().isAgent()){
+                if (!board.getCurrentPlayer().isAgent()) {
                     final Stage dialog = new Stage();
                     dialog.initModality(Modality.APPLICATION_MODAL);
                     dialog.initOwner(primaryStage);
                     VBox dialogVbox = new VBox(20);
                     String showHandtxt = new String();
                     showHandtxt += "---Cards---\n";
-                    for(Card c: board.getCurrentPlayer().getHand()){
+                    for (Card c : board.getCurrentPlayer().getHand()) {
                         showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
                     }
                     dialogVbox.getChildren().add(new Text(showHandtxt));
                     Scene dialogScene = new Scene(dialogVbox, 300, 200);
                     dialog.setScene(dialogScene);
                     dialog.show();
-                }
-                else{
+                } else {
                     System.out.println("Agent Player Turn");
                 }
             }
-         });
-        
+        });
+        /*Increments the current player*/
         endTurnBtn.setOnAction(
-        new EventHandler<ActionEvent>() {
+                new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 board.incrementCurrentPlayer();
                 resetDice();
-                
                 //if current player is now ai handle their turn
-                if(board.getCurrentPlayer().isAgent()){             
+                if (board.getCurrentPlayer().isAgent()) {
                     //-----------thread needed here for gui update during ai turn-------------//
                     //rolls the dice
                     diceRoller.getRollButton().fire();
-                    //repeatedly move ai until out of moves
-                    while ((counter < diceRoller.getDiceTotal())) {
-                        handleAgentMove();
-                        updateView();
-                    }
-                    //end turn
-                    endTurnBtn.fire();
-                    
+                    //Starts the thread
+                    Thread thread = new Thread(() -> {
+                        Runnable updater = () -> handleAgentMove();
+                        while (isRunning) {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException ex) {
+                            }
+                            //runs the handleAgentMove() on the Application thread
+                            Platform.runLater(updater);
+                        }
+                    });
+                    thread.start();               
                 }
-            }      
-         });
-        
+                //Deleted the second  diceRoller.fire() method
+            }
+        });
         setUpControls();
 
         //For Closing Window on "x" button
@@ -517,9 +515,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private void handleAgentMove() {
         Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
         movementHelper(newCoords[0], newCoords[1]);
-        
+        updateView();
     }
-    
+
     @Override
     public void selectCharacters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -562,8 +560,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             System.out.println("Cannot take this Character");
         }
     }
-    
-    private void resetDice(){
+
+    private void resetDice() {
         System.out.println("Please Roll the Dice");
         //Sets Counter to 0
         counter = 0;
