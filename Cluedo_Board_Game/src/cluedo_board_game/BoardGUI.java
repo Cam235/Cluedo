@@ -432,9 +432,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //-----------thread needed here for gui update during ai turn-------------//
                     //rolls the dice
                     diceRoller.getRollButton().fire();
+                    
+                    //use current agent to make sure thread doesn't try to move the next player 
+                    Player currentAgent = board.getCurrentPlayer();
                     //Starts the thread
                     Thread thread = new Thread(() -> {
-                        Runnable updater = () -> handleAgentMove();
+                        Runnable updater = () -> handleAgentMove(currentAgent);
                         while (counter < diceRoller.getDiceTotal()) {
                             try {
                                 Thread.sleep(500);
@@ -471,15 +474,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     }
 
-    private void handleAgentMove() {
-        try{
-            if (counter < diceRoller.getDiceTotal()) {
-                Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                movementHelper(newCoords[0], newCoords[1]);
-                updateView();
-            }
+    private void handleAgentMove(Player p) {
+        if (counter < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
+            Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+            movementHelper(newCoords[0], newCoords[1]);
+            updateView();
         }
-        catch(Exception e){/*Allow FX errors to occur here as they are harmless*/}
     }
 
     @Override
