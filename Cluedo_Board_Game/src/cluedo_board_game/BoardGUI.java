@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -275,8 +276,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //-----just for testing, use card distributor in real implementation-----//
         ArrayList<Card> testCardList1 = new ArrayList<>();
         ArrayList<Card> testCardList2 = new ArrayList<>();
-        testCardList1.add(new Card(CardType.Person, "Mrs.Scarlet"));
-        testCardList2.add(new Card(CardType.Person, "Mr.Mustard"));
+        testCardList1.add(new Card(CardType.Person, "Miss Scarlett"));
+        testCardList2.add(new Card(CardType.Person, "Colonel Mustard"));
         testCardList1.add(new Card(CardType.Weapon, "Dagger"));
         testCardList2.add(new Card(CardType.Weapon, "Candlestick"));
         testCardList1.add(new Card(CardType.Weapon, "Revolver"));
@@ -286,9 +287,45 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.getPlayerList().get(0).setHand(testCardList1);
         board.getPlayerList().get(1).setHand(testCardList2);
 
-        board.initializePlayerToken(board.getPlayerList().get(0), "Mrs.Scarlet", 19, 0);
-        board.initializePlayerToken(board.getPlayerList().get(1), "Mr.Mustard", 27, 9);
-        //assigns one of the token to one of the player
+        board.initializePlayerToken(board.getPlayerList().get(0), "Miss Scarlett");
+        board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
+
+        /////////////DISPLAY_OF_PLAYER_AND_TOKENS///////////////////
+        //Sets up initial Player Tokens Positions and Colors 
+        for (Player player : board.getPlayerList()) {
+            switch (player.getToken().getName()) {
+                case "Miss Scarlett": // Top Right
+                    player.getToken().setFill(Color.CRIMSON);
+                    player.getToken().setTokenLocation(board.getTileMap()[19][0]);                      
+                    break;
+                case "Colonel Mustard": // Right Top
+                    player.getToken().setFill(Color.DARKORANGE);
+                    player.getToken().setTokenLocation(board.getTileMap()[27][9]);
+                    break;
+                case "Mrs.White": // Bottom right
+                    player.getToken().setFill(Color.WHITE);
+                    player.getToken().setTokenLocation(board.getTileMap()[19][27]);
+                    break;
+                case "Mr.Green": //Bottom Left
+                    player.getToken().setFill(Color.GREEN);
+                    player.getToken().setTokenLocation(board.getTileMap()[7][27]);
+                    break;
+                case "Mrs.Peacock": // Left Bottom
+                    player.getToken().setFill(Color.BLUEVIOLET);
+                    player.getToken().setTokenLocation(board.getTileMap()[0][20]);
+                    break;
+                case "Professor Plum": // Left Top
+                    player.getToken().setFill(Color.PLUM);
+                    player.getToken().setTokenLocation(board.getTileMap()[0][5]);
+                    break;
+                default: //If error
+                    player.getToken().setFill(Color.BLACK);
+                    player.getToken().setTokenLocation(board.getTileMap()[10][0]);
+                    break;
+            }
+        }
+
+        //Sets up display of playerTokens and weapons in board
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 for (Player p : board.getPlayerList()) {
@@ -395,7 +432,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
+
         showHandBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
             @Override
@@ -432,7 +469,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //-----------thread needed here for gui update during ai turn-------------//
                     //rolls the dice
                     diceRoller.getRollButton().fire();
-                    
+
                     //use current agent to make sure thread doesn't try to move the next player 
                     Player currentAgent = board.getCurrentPlayer();
                     //Starts the thread

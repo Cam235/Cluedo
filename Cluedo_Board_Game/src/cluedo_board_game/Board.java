@@ -197,11 +197,11 @@ public class Board implements BoardInterface {
      * @param x
      * @param y
      */
-    public void initializePlayerToken(Player player, String tokenName, int x, int y) {
+    public void initializePlayerToken(Player player, String tokenName) {
         try {
             Token token = new Token(tokenName);
             //Sets tokens location on board
-            token.setTokenLocation(getTileMap()[x][y]);
+            //token.setTokenLocation(getTileMap()[x][y]);
             //Adds the token last
             player.setToken(token);
         } catch (Exception e) {
