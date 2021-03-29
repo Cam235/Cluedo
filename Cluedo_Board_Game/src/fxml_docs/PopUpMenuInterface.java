@@ -1,4 +1,4 @@
-package cluedo_board_game;
+package fxml_docs;
 
 import java.io.IOException;
 import javafx.stage.Stage;

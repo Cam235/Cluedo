@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cluedo_board_game;
+package fxml_docs;
 
+import fxml_docs.PopUpMenu;
 import java.io.FileInputStream;
 import java.io.IOException;
 import javafx.application.Application;
