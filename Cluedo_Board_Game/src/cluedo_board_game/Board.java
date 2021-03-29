@@ -7,6 +7,7 @@ package cluedo_board_game;
 //Hey
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -456,6 +457,26 @@ public class Board implements BoardInterface {
             i++;
         }
         return p;
+    }
+    
+    public void distributeCards(){
+        //use predefined list of card names for now
+        Card[] pCards = {new Card(CardType.Person,"Miss Scarlett"),new Card(CardType.Person,"Colonel Mustard"),new Card(CardType.Person,"Mrs.White"),
+            new Card(CardType.Person,"Mr.Green"),new Card(CardType.Person,"Mrs.Peacock"),new Card(CardType.Person,"Professor Plum")};
+        Card[] wCards = {new Card(CardType.Weapon,"Dagger"),new Card(CardType.Weapon,"Candlestick"),new Card(CardType.Weapon,"Revolver"),
+            new Card(CardType.Weapon,"Rope"),new Card(CardType.Weapon,"Leadpiping"),new Card(CardType.Weapon,"Spanner")};
+        Card[] rCards = {new Card(CardType.Room,"Bathroom"),new Card(CardType.Room,"Diningroom"),new Card(CardType.Room,"kitchen"),
+            new Card(CardType.Room,"ballroom"),new Card(CardType.Room,"conservatory"),new Card(CardType.Room,"gamesroom"),
+            new Card(CardType.Room,"library"),new Card(CardType.Room,"Hallway"),new Card(CardType.Room,"Office")};
+        ArrayList<Card> cList = new ArrayList<>();
+        cList.addAll(Arrays.asList(pCards));
+        cList.addAll(Arrays.asList(wCards));
+        cList.addAll(Arrays.asList(rCards));
+        setCardDistributor(cList);
+        cardDistributor.setEnvelope();
+        cardDistributor.shuffleCards();
+        cardDistributor.dealCards(playerList);
+        
     }
 
 }

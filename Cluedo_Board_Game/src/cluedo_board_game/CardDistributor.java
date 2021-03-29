@@ -118,22 +118,20 @@ public class CardDistributor implements CardDistributorInterface{
     }
     
     /**
-     * Deals the cards in the deck to a given HashMap of players
+     * Deals the cards in the deck to a given list of players
      * 
-     * @param playerMap a HashMap of players to deal the cards to
-     * @return the updated HashMap of players
+     * @param pList
      */
     @Override
-    public HashMap dealCards(HashMap<Integer,Player> playerMap){
-        //create ArrayLists from playerMap values and keys
-        List<Player> pList = new ArrayList<>(playerMap.values());
-        List<Integer> idList = new ArrayList<>(playerMap.keySet());
+    public void dealCards(ArrayList<Player> pList){
         
         ArrayList<ArrayList<Card>> playerHands = new ArrayList<>(); //list of list for the hand of each player
         int i = 0; //incrementor
         
-        pList.forEach((_item) -> { //add a new list to player hands for each player
-            playerHands.add(new ArrayList<>());
+        pList.forEach((p) -> { //add a new list to player hands for each player
+            if(p.getIsPlaying()){
+                playerHands.add(new ArrayList<>());
+            }
         });
         
         while(!finalDeck.isEmpty()){ //while there are still cards to deal
@@ -148,12 +146,12 @@ public class CardDistributor implements CardDistributorInterface{
             }
         }
         
-        //for each player deal them thier hand and add them back to the map
+        //for each player deal them their hand
         for(int j=0; j < pList.size(); j++){
-            pList.get(j).setHand(playerHands.get(j));
-            playerMap.put(idList.get(j), pList.get(j));
+            if(pList.get(j).getIsPlaying()){
+                pList.get(j).setHand(playerHands.remove(0));
+            }
         }
-        return playerMap;
     }
     
 }

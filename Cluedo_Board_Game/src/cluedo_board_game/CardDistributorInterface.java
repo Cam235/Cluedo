@@ -14,5 +14,5 @@ public interface CardDistributorInterface {
     public Card getMurderWeapon();
     public Card getMurderRoom();
     public ArrayList<Card> getFinalDeck();
-    public HashMap dealCards(HashMap<Integer,Player> playerMap);
+    public void dealCards(ArrayList<Player> pList);
 }

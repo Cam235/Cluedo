@@ -272,20 +272,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('a');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
         
-
-        //-----just for testing, use card distributor in real implementation-----//
-        ArrayList<Card> testCardList1 = new ArrayList<>();
-        ArrayList<Card> testCardList2 = new ArrayList<>();
-        testCardList1.add(new Card(CardType.Person, "Miss Scarlett"));
-        testCardList2.add(new Card(CardType.Person, "Colonel Mustard"));
-        testCardList1.add(new Card(CardType.Weapon, "Dagger"));
-        testCardList2.add(new Card(CardType.Weapon, "Candlestick"));
-        testCardList1.add(new Card(CardType.Weapon, "Revolver"));
-        testCardList2.add(new Card(CardType.Weapon, "Rope"));
-        testCardList1.add(new Card(CardType.Room, "Bathroom"));
-        testCardList2.add(new Card(CardType.Room, "Diningroom"));
-        board.getPlayerList().get(0).setHand(testCardList1);
-        board.getPlayerList().get(1).setHand(testCardList2);
+        
+        board.distributeCards();
 
         board.initializePlayerToken(board.getPlayerList().get(0), "Miss Scarlett");
         board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
