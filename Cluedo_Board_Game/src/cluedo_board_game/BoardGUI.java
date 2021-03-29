@@ -271,7 +271,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('h');
         testPlayerTypesList.add('a');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
-        board.setCurrentPlayer(board.getPlayerList().get(0));
+        
 
         //-----just for testing, use card distributor in real implementation-----//
         ArrayList<Card> testCardList1 = new ArrayList<>();
@@ -289,6 +289,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         board.initializePlayerToken(board.getPlayerList().get(0), "Miss Scarlett");
         board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
+        
+        board.orderPlayerList();
+        board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size()-1));
+        board.incrementCurrentPlayer();
 
         /////////////DISPLAY_OF_PLAYER_AND_TOKENS///////////////////
         //Sets up initial Player Tokens Positions and Colors 
@@ -432,6 +436,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        setUpControls();
 
         showHandBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -465,33 +471,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 resetDice();
                 //if current player is now ai handle their turn
                 if (board.getCurrentPlayer().isAgent()) {
-                    endTurnBtn.setDisable(true);
-                    //-----------thread needed here for gui update during ai turn-------------//
-                    //rolls the dice
-                    diceRoller.getRollButton().fire();
-
-                    //use current agent to make sure thread doesn't try to move the next player 
-                    Player currentAgent = board.getCurrentPlayer();
-                    //Starts the thread
-                    Thread thread = new Thread(() -> {
-                        Runnable updater = () -> handleAgentMove(currentAgent);
-                        while (counter < diceRoller.getDiceTotal()) {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException ex) {
-                            }
-                            //runs the handleAgentMove() on the Application thread
-                            Platform.runLater(updater);
-                        }
-                        endTurnBtn.setDisable(false);
-                        //automatically end turn
-                        endTurnBtn.fire();
-                    });
-                    thread.start();
+                    handleAgentTurn();
                 }
             }
         });
-        setUpControls();
 
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -501,6 +484,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 System.exit(0);
             }
         });
+        
+        if(board.getCurrentPlayer().isAgent()){
+            handleAgentTurn();
+        }
     }
 
     /**
@@ -509,6 +496,32 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     public static void main(String[] args) {
         launch(args);
 
+    }
+    
+    private void handleAgentTurn(){
+        //----agent just moves for now----//
+        endTurnBtn.setDisable(true);
+        //rolls the dice
+        diceRoller.getRollButton().fire();
+
+        //use current agent to make sure thread doesn't try to move the next player 
+        Player currentAgent = board.getCurrentPlayer();
+        //Starts the thread
+        Thread thread = new Thread(() -> {
+            Runnable updater = () -> handleAgentMove(currentAgent);
+            while (counter < diceRoller.getDiceTotal()) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                }
+                //runs the handleAgentMove() on the Application thread
+                Platform.runLater(updater);
+            }
+            endTurnBtn.setDisable(false);
+            //automatically end turn
+            endTurnBtn.fire();
+        });
+        thread.start();
     }
 
     private void handleAgentMove(Player p) {

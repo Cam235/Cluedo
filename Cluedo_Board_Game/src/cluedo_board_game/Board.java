@@ -296,7 +296,19 @@ public class Board implements BoardInterface {
 
     @Override
     public void orderPlayerList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ArrayList<Player> tempList = new ArrayList<>();
+        String[] playerNames = { "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum" };
+        for(String name: playerNames){
+            if(getPlayerByCharacterName(name)!=null){
+                tempList.add(getPlayerByCharacterName(name));
+            }
+            else{
+                //in actual game this should never happen
+                System.out.println("missing character " + name);
+            }
+        }
+        playerList = new ArrayList<>();
+        playerList = tempList;
     }
 
     @Override
@@ -352,6 +364,7 @@ public class Board implements BoardInterface {
         positionUpdateCurrentPlayer(newX, newY);
 
     }
+    
 
     /**
      * Method to move token on specified location on board Method can be
@@ -429,6 +442,20 @@ public class Board implements BoardInterface {
             i++;
         }
         return room;
+    }
+    
+    public Player getPlayerByCharacterName(String cName){
+        Boolean found = false;
+        int i = 0;
+        Player p = null;
+        while(!found && i < playerList.size()){
+            if(playerList.get(i).getToken().getName() == cName){
+                p = playerList.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return p;
     }
 
 }
