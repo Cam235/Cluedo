@@ -24,17 +24,17 @@ import javafx.stage.Stage;
  *
  * @author Anilz
  */
-public class PlayerSelectionBox extends Application {
+public class PlayerSelectionBox  {
 
     //Fields of Selection
-    String playerName;
-    String selectedCharacter;
-    String selectedPlayerType;
+    private String playerName;
+    private char selectedPlayerType;
+    private String selectedCharacter;
 
-    String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    Button printSelectionsButton;
-    RadioButton agentButton;
-    RadioButton humanButton;
+    public static String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    private Button printSelectionsButton;
+    private RadioButton agentButton;
+    private RadioButton humanButton;
 
     public Parent selectionContent() {
         HBox characterSelectBox = new HBox();
@@ -53,33 +53,60 @@ public class PlayerSelectionBox extends Application {
         agentButton.setToggleGroup(radioGroup);
         humanButton.setToggleGroup(radioGroup);
 
-        printSelectionsButton = new Button("PrintSelections");
-        printSelectionsButton.setOnAction(e -> System.out.println(playerTextField.getText() + "is an " + selectedPlayerType + " and plays with " + combobox.getValue()));
+        printSelectionsButton = new Button("ApproveSelections");
+        printSelectionsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                playerName = playerTextField.getText();
+                selectedPlayerType = agentButton.isSelected()? 'a' : 'h';
+                selectedCharacter = (String) combobox.getValue();
+                System.out.println(playerName + "is an " + selectedPlayerType + " and plays with " + selectedCharacter);
+
+            }
+        });
         characterSelectBox.getChildren().addAll(playerTextField, combobox, agentButton, humanButton, printSelectionsButton);
 
         return characterSelectBox;
     }
-
+/*
     @Override
     public void start(Stage primaryStage) {
 
         Scene scene = new Scene(selectionContent());
-        if (agentButton.isSelected()) {
-            selectedPlayerType = "Human";
-        } else if (humanButton.isSelected()) {
-            selectedPlayerType = "Non-Human";
-        }
-
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    */
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public char getPlayerType() {
+        return selectedPlayerType;
+    }
+
+    public String getCharacter() {
+        return selectedCharacter;
+    }
+
+    public String[] getCharacters() {
+        return characters;
+    }
+    
+    
+    
+    
+    
+    
 
     /**
      * @param args the command line arguments
-     */
+     
     public static void main(String[] args) {
         launch(args);
     }
+    * */
 
 }

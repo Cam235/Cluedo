@@ -89,7 +89,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Text alertTxt;
 
     //NO of player SelectionBoxes
-    private int playerSelectionBoxesNo = 2;
+    private int playerSelectionBoxesNumber = 2;
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Boolean to declare wheter game started or not
@@ -97,37 +97,31 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //Button to Start Game
     Button startButton;
 
-    public HBox CreateSelectionBox() {
-        HBox characterSelectBox = new HBox();
-        TextField playerTextField = new TextField("Write name here...");
-        ComboBox combobox = new ComboBox(FXCollections.observableArrayList(characters));
-        RadioButton agentButton = new RadioButton("Agent");
-        RadioButton humanButton = new RadioButton("Human");
-        //To toggle between radio buttons
-        ToggleGroup radioGroup = new ToggleGroup();
-        agentButton.setToggleGroup(radioGroup);
-        humanButton.setToggleGroup(radioGroup);
-        characterSelectBox.getChildren().addAll(playerTextField, combobox, agentButton, humanButton);
-        return characterSelectBox;
-    }
+    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<PlayerSelectionBox>();
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
-        VBox totalSelectBoxes = new VBox();
-        for (int i = 0; i < playerSelectionBoxesNo; i++) {
-            totalSelectBoxes.getChildren().add(CreateSelectionBox());
+        VBox selectionBoxesView = new VBox();
+        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
+            PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
+            selectionBoxesList.add(newSelectionBox);
+            selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
         }
+
         //Adds player buttons
         Button addPlayerButton = new Button("+Add Player");
         addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (playerSelectionBoxesNo < 6) {
-                    totalSelectBoxes.getChildren().add(CreateSelectionBox());
-                    playerSelectionBoxesNo++;
-                    System.out.println(playerSelectionBoxesNo);
-                    System.out.println("List number:" + totalSelectBoxes.getChildren().size());
-                    System.out.println(playerSelectionBoxesNo);
+                if (playerSelectionBoxesNumber < 6) {
+                    PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
+
+                    selectionBoxesList.add(newSelectionBox);
+                    selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
+                    playerSelectionBoxesNumber++;
+                    System.out.println(playerSelectionBoxesNumber);
+                    System.out.println(selectionBoxesList.size());
+                    System.out.println("List number:" + selectionBoxesView.getChildren().size());
                 } else {
                     System.out.println("Too much mate!");
                 }
@@ -138,11 +132,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         removePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (playerSelectionBoxesNo > 1) {
-                    totalSelectBoxes.getChildren().remove(totalSelectBoxes.getChildren().size() - 1);
-                    playerSelectionBoxesNo--;
-                    System.out.println(playerSelectionBoxesNo);
-                    System.out.println("List no:" + totalSelectBoxes.getChildren().size());
+                if (playerSelectionBoxesNumber > 2) {
+                    selectionBoxesList.remove(selectionBoxesList.size() - 1);
+                    selectionBoxesView.getChildren().remove(selectionBoxesView.getChildren().size() - 1);
+                    playerSelectionBoxesNumber--;
+                    System.out.println(playerSelectionBoxesNumber);
+                    System.out.println(selectionBoxesList.size());
+                    System.out.println("List no:" + selectionBoxesView.getChildren().size());
                 } else {
                     System.out.println("Too few allready!");
                 }
@@ -156,7 +152,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
 
-        actualPreGame.getChildren().addAll(totalSelectBoxes, addPlayerButton, removePlayerButton, startButton);
+        actualPreGame.getChildren().addAll(selectionBoxesView, addPlayerButton, removePlayerButton, startButton);
         return actualPreGame;
     }
 
@@ -368,18 +364,26 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //initialise one token and one player
         List<String> playerNamesList = new ArrayList<>();
         List<Character> playerTypesList = new ArrayList<>();
-        for (int i = 0; i < playerSelectionBoxesNo; i++) {
-            playerNamesList.add("Player 1");
-            // playerNamesList.add("Agent 1");        
-            playerTypesList.add('a');
-            // playerTypesList.add('a');
+        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
+            //if (i < playerSelectionBoxesNumber) {
+                playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
+                playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
+                System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
+           /* }else{              
+                playerNamesList.add("nonplayer");
+                playerTypesList.add('a');
+                System.out.println(playerNamesList.get(i) + " is " + playerTypesList.get(i));
+            }*/
         }
         board.addPlayers(playerNamesList, playerTypesList);
-        Random r = new Random();
-        for (int i = 0; i < playerSelectionBoxesNo; i++) {
-            board.initializePlayerToken(board.getPlayerList().get(i), characters[i]);
+        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
+            board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getCharacter());
         }
-        // board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
+        
+        /*for(int i = playerSelectionBoxesNumber;i<6;i++){
+            board.getPlayerList().get(i).isPlaying=false;
+        }*/
+
         board.distributeCards();
         board.orderPlayerList();
         board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
