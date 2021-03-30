@@ -371,7 +371,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (int i = 0; i < playerSelectionBoxesNo; i++) {
             playerNamesList.add("Player 1");
             // playerNamesList.add("Agent 1");        
-            playerTypesList.add('h');
+            playerTypesList.add('a');
             // playerTypesList.add('a');
         }
         board.addPlayers(playerNamesList, playerTypesList);
@@ -379,7 +379,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (int i = 0; i < playerSelectionBoxesNo; i++) {
             board.initializePlayerToken(board.getPlayerList().get(i), characters[i]);
         }
-
         // board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
         board.distributeCards();
         board.orderPlayerList();
@@ -545,62 +544,59 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 setUpBoard();
                 gameScene = new Scene(gameBox);
                 primaryStage.setScene(gameScene);
+                setUpControls();
                 //Starts the game
+                /*Increments the current player*/
+                endTurnBtn.setOnAction(
+                        new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        board.incrementCurrentPlayer();
+                        resetDice();
+                        //if current player is now ai handle their turn
+                        if (board.getCurrentPlayer().isAgent()) {
+                            handleAgentTurn();
+                        }
+                    }
+                });
+                //Shows Your hand
+                showHandBtn.setOnAction(
+                        new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (!board.getCurrentPlayer().isAgent()) {
+                            final Stage dialog = new Stage();
+                            dialog.initModality(Modality.APPLICATION_MODAL);
+                            dialog.initOwner(primaryStage);
+                            VBox dialogVbox = new VBox(20);
+                            String showHandtxt = new String();
+                            showHandtxt += "---Cards---\n";
+                            for (Card c : board.getCurrentPlayer().getHand()) {
+                                showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+                            }
+                            dialogVbox.getChildren().add(new Text(showHandtxt));
+                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                            dialog.setScene(dialogScene);
+                            dialog.show();
+                        } else {
+                            System.out.println("Agent Player Turn");
+                            alertTxt.setText("Agent Player Turn");
+                        }
+                    }
+                });
+                if (board.getCurrentPlayer().isAgent()) {
+                    handleAgentTurn();
+                }
             }
         });
-        if (startButton.isDisabled()) {
-            setUpControls();
-            showHandBtn.setOnAction(
-                    new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (!board.getCurrentPlayer().isAgent()) {
-                        final Stage dialog = new Stage();
-                        dialog.initModality(Modality.APPLICATION_MODAL);
-                        dialog.initOwner(primaryStage);
-                        VBox dialogVbox = new VBox(20);
-                        String showHandtxt = new String();
-                        showHandtxt += "---Cards---\n";
-                        for (Card c : board.getCurrentPlayer().getHand()) {
-                            showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
-                        }
-                        dialogVbox.getChildren().add(new Text(showHandtxt));
-                        Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                        dialog.setScene(dialogScene);
-                        dialog.show();
-                    } else {
-                        System.out.println("Agent Player Turn");
-                        alertTxt.setText("Agent Player Turn");
-                    }
-                }
-            });
-            /*Increments the current player*/
-            endTurnBtn.setOnAction(
-                    new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    board.incrementCurrentPlayer();
-                    resetDice();
-                    //if current player is now ai handle their turn
-                    if (board.getCurrentPlayer().isAgent()) {
-                        handleAgentTurn();
-                    }
-                }
-            });
-            //For Closing Window on "x" button
-            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent t) {
-                    Platform.exit();
-                    System.exit(0);
-                }
-            });
-
-            if (board.getCurrentPlayer().isAgent()) {
-                handleAgentTurn();
+        //For Closing Window on "x" button
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+                System.exit(0);
             }
-        }
-
+        });
     }
 
     /**
