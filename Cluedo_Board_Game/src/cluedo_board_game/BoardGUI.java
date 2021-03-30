@@ -89,13 +89,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Text alertTxt;
 
     //NO of player SelectionBoxes
-    private int activePlayerNumber = 2;
+    private int playerSelectionBoxesNo = 2;
     //Combobox Values
-    private String characters[] = {"Scarlet", "Mustard", "White", "Peacock", "Green", "Purple"};
+    private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Boolean to declare wheter game started or not
     private boolean gameStarted;
+    //Button to Start Game
     Button startButton;
-    
+
     public HBox CreateSelectionBox() {
         HBox characterSelectBox = new HBox();
         TextField playerTextField = new TextField("Write name here...");
@@ -110,10 +111,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         return characterSelectBox;
     }
 
-    public VBox CreatePreContent() {
+    public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
         VBox totalSelectBoxes = new VBox();
-        for (int i = 0; i < activePlayerNumber; i++) {
+        for (int i = 0; i < playerSelectionBoxesNo; i++) {
             totalSelectBoxes.getChildren().add(CreateSelectionBox());
         }
         //Adds player buttons
@@ -121,11 +122,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (activePlayerNumber < 6) {
+                if (playerSelectionBoxesNo < 6) {
                     totalSelectBoxes.getChildren().add(CreateSelectionBox());
-                    activePlayerNumber++;
-                    System.out.println(activePlayerNumber);
-                    System.out.println("List no:" + totalSelectBoxes.getChildren().size());
+                    playerSelectionBoxesNo++;
+                    System.out.println(playerSelectionBoxesNo);
+                    System.out.println("List number:" + totalSelectBoxes.getChildren().size());
+                    System.out.println(playerSelectionBoxesNo);
                 } else {
                     System.out.println("Too much mate!");
                 }
@@ -136,10 +138,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         removePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (activePlayerNumber > 2) {
+                if (playerSelectionBoxesNo > 1) {
                     totalSelectBoxes.getChildren().remove(totalSelectBoxes.getChildren().size() - 1);
-                    activePlayerNumber--;
-                    System.out.println(activePlayerNumber);
+                    playerSelectionBoxesNo--;
+                    System.out.println(playerSelectionBoxesNo);
                     System.out.println("List no:" + totalSelectBoxes.getChildren().size());
                 } else {
                     System.out.println("Too few allready!");
@@ -158,35 +160,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         return actualPreGame;
     }
 
-    /**
-     * Creates Board, initialize Token at specified location and put in the
-     * boardView Creates DiceRoller object Combines 2 different classes in VBox
-     *
-     * @return
-     */
-    @Override
-    public VBox setUpBoard() {
-        gameBox = new VBox();
-        //DiceRoller added to play with dice
-        diceRoller = new DiceRoller();
-        VBox diceRollerView = diceRoller.createContent();
-        //Button to switch between Player and AI
-
-        showHandBtn = new Button("Show Hand");
-        endTurnBtn = new Button("End Turn");
-        controlsHbx = new HBox();
-        controlsHbx.setAlignment(Pos.CENTER);
-
-        gameViewHbx = new HBox();
-        alertTxtPane = new FlowPane();
-        alertTxtPane.setPrefSize(300, 200);
-        alertTxtPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        alertTxtPane.setAlignment(Pos.CENTER);
-        alertTxt = new Text();
-
-        //Establish Board
-        board = new Board(columns, rows);
-
+    private void setUpWeapons() {
         //------------------------CREATES WEAPONS---------------------------//
         //DO not yet place anywhere
         // Dagger, candlestick, revolver, rope, lead piping and spanner.
@@ -200,7 +174,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (Weapon weapon : board.getWeapons()) {
             weapon.setWeaponImage(new Image("/weaponImages/" + weapon.getName() + ".png", 20, 20, false, false));
         }
+    }
 
+    private void setUpRooms() {
         //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
         ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
@@ -318,7 +294,38 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
         Room office = board.initializeRoom("Office", officeSpace, officeDoors);
+    }
 
+    /**
+     * Creates Board, initialize Token at specified location and put in the
+     * boardView Creates DiceRoller object Combines 2 different classes in VBox
+     *
+     * @return
+     */
+    @Override
+    public VBox setUpBoard() {
+        gameBox = new VBox();
+        //DiceRoller added to play with dice
+        diceRoller = new DiceRoller();
+        VBox diceRollerView = diceRoller.createContent();
+        //Button to switch between Player and AI
+        showHandBtn = new Button("Show Hand");
+        endTurnBtn = new Button("End Turn");
+        controlsHbx = new HBox();
+        controlsHbx.setAlignment(Pos.CENTER);
+
+        gameViewHbx = new HBox();
+        alertTxtPane = new FlowPane();
+        alertTxtPane.setPrefSize(300, 200);
+        alertTxtPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        alertTxtPane.setAlignment(Pos.CENTER);
+        alertTxt = new Text();
+        //Establish Board
+        board = new Board(columns, rows);
+        //Create Weapons on board
+        setUpWeapons();
+        //Create Rooms on board
+        setUpRooms();
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
         Collections.shuffle(board.getWeapons());
@@ -359,19 +366,22 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Initialize the Token on specified location
         // for testing Purposes
         //initialise one token and one player
-        List<String> testPlayerNamesList = new ArrayList<>();
-        testPlayerNamesList.add("Player 1");
-        testPlayerNamesList.add("Agent 1");
-        List<Character> testPlayerTypesList = new ArrayList<>();
-        testPlayerTypesList.add('h');
-        testPlayerTypesList.add('a');
-        board.addPlayers(testPlayerNamesList, testPlayerTypesList);
+        List<String> playerNamesList = new ArrayList<>();
+        List<Character> playerTypesList = new ArrayList<>();
+        for (int i = 0; i < playerSelectionBoxesNo; i++) {
+            playerNamesList.add("Player 1");
+            // playerNamesList.add("Agent 1");        
+            playerTypesList.add('h');
+            // playerTypesList.add('a');
+        }
+        board.addPlayers(playerNamesList, playerTypesList);
+        Random r = new Random();
+        for (int i = 0; i < playerSelectionBoxesNo; i++) {
+            board.initializePlayerToken(board.getPlayerList().get(i), characters[i]);
+        }
 
+        // board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
         board.distributeCards();
-
-        board.initializePlayerToken(board.getPlayerList().get(0), "Miss Scarlett");
-        board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
-
         board.orderPlayerList();
         board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
         board.incrementCurrentPlayer();
@@ -522,67 +532,75 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        Scene preGameScene = new Scene(CreatePreContent());
+        Scene preGameScene = new Scene(CreatePreGameContent());
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
-        
-        //For setting gameScene and showing labels
-        setUpBoard();       
-        gameScene = new Scene(gameBox);      
-        setUpControls();
-        //Starts the game
-        startButton.setOnAction(e ->primaryStage.setScene(gameScene));
-        showHandBtn.setOnAction(
-                new EventHandler<ActionEvent>() {
+        //startButton.setOnAction(e -> primaryStage.setScene(gameScene));
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                if (!board.getCurrentPlayer().isAgent()) {
-                    final Stage dialog = new Stage();
-                    dialog.initModality(Modality.APPLICATION_MODAL);
-                    dialog.initOwner(primaryStage);
-                    VBox dialogVbox = new VBox(20);
-                    String showHandtxt = new String();
-                    showHandtxt += "---Cards---\n";
-                    for (Card c : board.getCurrentPlayer().getHand()) {
-                        showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+            public void handle(ActionEvent e) {
+                startButton.setDisable(true);
+                //For setting gameScene and showing labels
+                setUpBoard();
+                gameScene = new Scene(gameBox);
+                primaryStage.setScene(gameScene);
+                //Starts the game
+            }
+        });
+        if (startButton.isDisabled()) {
+            setUpControls();
+            showHandBtn.setOnAction(
+                    new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (!board.getCurrentPlayer().isAgent()) {
+                        final Stage dialog = new Stage();
+                        dialog.initModality(Modality.APPLICATION_MODAL);
+                        dialog.initOwner(primaryStage);
+                        VBox dialogVbox = new VBox(20);
+                        String showHandtxt = new String();
+                        showHandtxt += "---Cards---\n";
+                        for (Card c : board.getCurrentPlayer().getHand()) {
+                            showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+                        }
+                        dialogVbox.getChildren().add(new Text(showHandtxt));
+                        Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                        dialog.setScene(dialogScene);
+                        dialog.show();
+                    } else {
+                        System.out.println("Agent Player Turn");
+                        alertTxt.setText("Agent Player Turn");
                     }
-                    dialogVbox.getChildren().add(new Text(showHandtxt));
-                    Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                    dialog.setScene(dialogScene);
-                    dialog.show();
-                } else {
-                    System.out.println("Agent Player Turn");
-                    alertTxt.setText("Agent Player Turn");
                 }
-            }
-        });
-        /*Increments the current player*/
-        endTurnBtn.setOnAction(
-                new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                board.incrementCurrentPlayer();
-                resetDice();
-                //if current player is now ai handle their turn
-                if (board.getCurrentPlayer().isAgent()) {
-                    handleAgentTurn();
+            });
+            /*Increments the current player*/
+            endTurnBtn.setOnAction(
+                    new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    board.incrementCurrentPlayer();
+                    resetDice();
+                    //if current player is now ai handle their turn
+                    if (board.getCurrentPlayer().isAgent()) {
+                        handleAgentTurn();
+                    }
                 }
-            }
-        });
-        
-        //For Closing Window on "x" button
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent t) {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
+            });
+            //For Closing Window on "x" button
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent t) {
+                    Platform.exit();
+                    System.exit(0);
+                }
+            });
 
-        if (board.getCurrentPlayer().isAgent()) {
-            handleAgentTurn();
+            if (board.getCurrentPlayer().isAgent()) {
+                handleAgentTurn();
+            }
         }
+
     }
 
     /**
