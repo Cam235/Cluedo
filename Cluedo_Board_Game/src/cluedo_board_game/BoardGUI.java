@@ -23,6 +23,12 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -69,6 +75,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Button showHandBtn;
     private Button endTurnBtn;
     private HBox controlsHbx;
+    
+    private HBox gameViewHbx;
+    private FlowPane alertTxtPane;
+    private Text alertTxt;
 
     /**
      * Creates Board, initialize Token at specified location and put in the
@@ -88,6 +98,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         endTurnBtn = new Button("End Turn");
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
+        
+        gameViewHbx = new HBox();
+        alertTxtPane = new FlowPane();
+        alertTxtPane.setPrefSize(300, 200);
+        alertTxtPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        alertTxtPane.setAlignment(Pos.CENTER);
+        alertTxt = new Text();
 
         //Establish Board
         board = new Board(columns, rows);
@@ -265,8 +282,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         // for testing Purposes
         //initialise one token and one player
         List<String> testPlayerNamesList = new ArrayList<>();
-        testPlayerNamesList.add("p1");
-        testPlayerNamesList.add("p2");
+        testPlayerNamesList.add("Player 1");
+        testPlayerNamesList.add("Agent 1");
         List<Character> testPlayerTypesList = new ArrayList<>();
         testPlayerTypesList.add('h');
         testPlayerTypesList.add('a');
@@ -334,9 +351,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         }
+        //Combines Gui elements
         controlsHbx.getChildren().addAll(showHandBtn, endTurnBtn);
-        //Combines diceRoller and Board
-        gameBox.getChildren().addAll(diceRollerView, boardView, controlsHbx);
+        alertTxtPane.getChildren().add(alertTxt);
+        gameViewHbx.getChildren().addAll(boardView, alertTxtPane);
+        gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
@@ -362,12 +381,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         movementHelper((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
                         break;
                     default://Non valid Ket
-                        System.out.println("NOT VALID");
+                        alertTxt.setText("Not Valid Key");
+                        System.out.println("Not Valid Key");
                         break;
                 }
                 updateView();
             } else {
                 System.out.println("Agent Players turn");
+                alertTxt.setText("Agent Players Turn");
             }
         });
 
@@ -379,11 +400,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             if ((counter < diceRoller.getDiceTotal())) {
                 board.positionUpdateCurrentPlayer(x, y);
                 System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                alertTxt.setText(board.getCurrentPlayer().getName() + " Moves To " + board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
                 if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                     counter++;
                 }
+                else {
+                    alertTxt.setText("Invalid Move");
+                }
                 if ((board.getRoomOfPlayer(board.getCurrentPlayer())) != null) {
                     System.out.println("TOKEN IS IN " + board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
+                    alertTxt.setText(board.getCurrentPlayer().getName() + " Is In " + board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
                     counter = diceRoller.getDiceTotal();
                 }
                 if (!(counter < diceRoller.getDiceTotal())) {
@@ -394,9 +420,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             } else {
                 System.out.println("Please End Turn");
+                alertTxt.setText("Please End Turn");
             }
         } else {
             System.out.println("Please Roll the Dice");
+            alertTxt.setText("Please Roll the Dice");
         }
     }
 
@@ -447,6 +475,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     dialog.show();
                 } else {
                     System.out.println("Agent Player Turn");
+                    alertTxt.setText("Agent Player Turn");
                 }
             }
         });
@@ -564,7 +593,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     private void resetDice() {
-        System.out.println("Please Roll the Dice");
         //Sets Counter to 0
         counter = 0;
         //Set Dice Rolled to false and Enables DiceRoller
