@@ -14,12 +14,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -47,8 +52,11 @@ import javafx.stage.WindowEvent;
  */
 public class BoardGUI extends Application implements BoardGUIInterface {
 
+    //Scene for preGame player selection, and game gameScene
+    Scene preGameScene;
+    Scene gameScene;
     //Made Scene Global,for methods access
-    Scene scene;
+
     //Used to Combine Board movements with Dice Image
     private VBox gameBox;
     //Pane will be used for Board
@@ -75,10 +83,80 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Button showHandBtn;
     private Button endTurnBtn;
     private HBox controlsHbx;
-    
+
     private HBox gameViewHbx;
     private FlowPane alertTxtPane;
     private Text alertTxt;
+
+    //NO of player SelectionBoxes
+    private int activePlayerNumber = 2;
+    //Combobox Values
+    private String characters[] = {"Scarlet", "Mustard", "White", "Peacock", "Green", "Purple"};
+    //Boolean to declare wheter game started or not
+    private boolean gameStarted;
+    Button startButton;
+    
+    public HBox CreateSelectionBox() {
+        HBox characterSelectBox = new HBox();
+        TextField playerTextField = new TextField("Write name here...");
+        ComboBox combobox = new ComboBox(FXCollections.observableArrayList(characters));
+        RadioButton agentButton = new RadioButton("Agent");
+        RadioButton humanButton = new RadioButton("Human");
+        //To toggle between radio buttons
+        ToggleGroup radioGroup = new ToggleGroup();
+        agentButton.setToggleGroup(radioGroup);
+        humanButton.setToggleGroup(radioGroup);
+        characterSelectBox.getChildren().addAll(playerTextField, combobox, agentButton, humanButton);
+        return characterSelectBox;
+    }
+
+    public VBox CreatePreContent() {
+        VBox actualPreGame = new VBox();
+        VBox totalSelectBoxes = new VBox();
+        for (int i = 0; i < activePlayerNumber; i++) {
+            totalSelectBoxes.getChildren().add(CreateSelectionBox());
+        }
+        //Adds player buttons
+        Button addPlayerButton = new Button("+Add Player");
+        addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (activePlayerNumber < 6) {
+                    totalSelectBoxes.getChildren().add(CreateSelectionBox());
+                    activePlayerNumber++;
+                    System.out.println(activePlayerNumber);
+                    System.out.println("List no:" + totalSelectBoxes.getChildren().size());
+                } else {
+                    System.out.println("Too much mate!");
+                }
+            }
+        });
+        //Remove Player Select Box
+        Button removePlayerButton = new Button("- Remove Player");
+        removePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (activePlayerNumber > 2) {
+                    totalSelectBoxes.getChildren().remove(totalSelectBoxes.getChildren().size() - 1);
+                    activePlayerNumber--;
+                    System.out.println(activePlayerNumber);
+                    System.out.println("List no:" + totalSelectBoxes.getChildren().size());
+                } else {
+                    System.out.println("Too few allready!");
+                }
+            }
+        });
+        startButton = new Button("Start Game");
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gameStarted = true;
+            }
+        });
+
+        actualPreGame.getChildren().addAll(totalSelectBoxes, addPlayerButton, removePlayerButton, startButton);
+        return actualPreGame;
+    }
 
     /**
      * Creates Board, initialize Token at specified location and put in the
@@ -98,7 +176,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         endTurnBtn = new Button("End Turn");
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
-        
+
         gameViewHbx = new HBox();
         alertTxtPane = new FlowPane();
         alertTxtPane.setPrefSize(300, 200);
@@ -288,15 +366,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         testPlayerTypesList.add('h');
         testPlayerTypesList.add('a');
         board.addPlayers(testPlayerNamesList, testPlayerTypesList);
-        
-        
+
         board.distributeCards();
 
         board.initializePlayerToken(board.getPlayerList().get(0), "Miss Scarlett");
         board.initializePlayerToken(board.getPlayerList().get(1), "Colonel Mustard");
-        
+
         board.orderPlayerList();
-        board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size()-1));
+        board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
         board.incrementCurrentPlayer();
 
         /////////////DISPLAY_OF_PLAYER_AND_TOKENS///////////////////
@@ -305,7 +382,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             switch (player.getToken().getName()) {
                 case "Miss Scarlett": // Top Right
                     player.getToken().setFill(Color.CRIMSON);
-                    player.getToken().setTokenLocation(board.getTileMap()[19][0]);                      
+                    player.getToken().setTokenLocation(board.getTileMap()[19][0]);
                     break;
                 case "Colonel Mustard": // Right Top
                     player.getToken().setFill(Color.DARKORANGE);
@@ -364,7 +441,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * Allows player to move token using WASD buttons
      */
     public void setUpControls() {
-        scene.setOnKeyPressed((KeyEvent event) -> {
+        gameScene.setOnKeyPressed((KeyEvent event) -> {
 
             if (!board.getCurrentPlayer().isAgent()) {
                 switch (event.getCode()) {
@@ -403,8 +480,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 alertTxt.setText(board.getCurrentPlayer().getName() + " Moves To " + board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
                 if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
                     counter++;
-                }
-                else {
+                } else {
                     alertTxt.setText("Invalid Move");
                 }
                 if ((board.getRoomOfPlayer(board.getCurrentPlayer())) != null) {
@@ -446,15 +522,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        setUpBoard();
-        //For setting scene and showing labels
-        scene = new Scene(gameBox);
+        Scene preGameScene = new Scene(CreatePreContent());
         primaryStage.setTitle("Play it Broo");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(preGameScene);
         primaryStage.show();
         
+        //For setting gameScene and showing labels
+        setUpBoard();       
+        gameScene = new Scene(gameBox);      
         setUpControls();
-
+        //Starts the game
+        startButton.setOnAction(e ->primaryStage.setScene(gameScene));
         showHandBtn.setOnAction(
                 new EventHandler<ActionEvent>() {
             @Override
@@ -492,7 +570,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         });
-
+        
         //For Closing Window on "x" button
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
@@ -501,8 +579,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 System.exit(0);
             }
         });
-        
-        if(board.getCurrentPlayer().isAgent()){
+
+        if (board.getCurrentPlayer().isAgent()) {
             handleAgentTurn();
         }
     }
@@ -514,8 +592,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         launch(args);
 
     }
-    
-    private void handleAgentTurn(){
+
+    private void handleAgentTurn() {
         //----agent just moves for now----//
         endTurnBtn.setDisable(true);
         //rolls the dice
