@@ -391,6 +391,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         board.distributeCards();
         board.orderPlayerList();
+        //Sets the current player to last player, then increments to start from beginning
         board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
         board.incrementCurrentPlayer();
 
