@@ -137,7 +137,7 @@ public class CardDistributor implements CardDistributorInterface{
         while(!finalDeck.isEmpty()){ //while there are still cards to deal
             playerHands.get(i).add(finalDeck.remove(0)); //remove a card from final deck and add it to a hand 
             //wrap i around to first player if i=last player index
-            if(i == pList.size()-1){ 
+            if(i == playerHands.size()-1){ 
                 i=0;
             }
             //else increment i

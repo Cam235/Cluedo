@@ -7,6 +7,7 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -145,12 +146,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
         startButton = new Button("Start Game");
-        startButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                gameStarted = true;
-            }
-        });
+        
 
         actualPreGame.getChildren().addAll(selectionBoxesView, addPlayerButton, removePlayerButton, startButton);
         return actualPreGame;
@@ -379,11 +375,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         //Adds players and types ,creates the board
         board.addPlayers(playerNamesList, playerTypesList);
+        
+        ArrayList<String> tempCharacterNames = new ArrayList<>();
+        
+        tempCharacterNames.addAll(Arrays.asList(characters));
+        
+
         //Can create only playing players
         for (int i = 0; i < 6; i++) {
             if (i < playerSelectionBoxesNumber) {
                 board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getCharacter());
+                tempCharacterNames.remove(selectionBoxesList.get(i).getCharacter());
             } else {
+                board.initializePlayerToken(board.getPlayerList().get(i),tempCharacterNames.remove(0));
                 board.getPlayerList().get(i).setIsPlaying(false);
                 
             }
