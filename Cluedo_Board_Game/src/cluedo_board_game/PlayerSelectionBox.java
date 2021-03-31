@@ -24,7 +24,12 @@ import javafx.stage.Stage;
  *
  * @author Anilz
  */
-public class PlayerSelectionBox  {
+public class PlayerSelectionBox {
+
+    TextField playerTextField;
+    ComboBox combobox;
+    RadioButton agentButton;
+    RadioButton humanButton;
 
     //Fields of Selection
     private String playerName;
@@ -32,43 +37,76 @@ public class PlayerSelectionBox  {
     private String selectedCharacter;
 
     public static String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    private Button printSelectionsButton;
-    private RadioButton agentButton;
-    private RadioButton humanButton;
+    //  private Button printSelectionsButton;
 
     public Parent selectionContent() {
         HBox characterSelectBox = new HBox();
         //Textfield Value
-        TextField playerTextField = new TextField();
-        playerName = playerTextField.getText();
+        playerTextField = new TextField();
+        playerTextField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                playerName = playerTextField.getText();
+                System.out.println(playerName);
+            }
+        });
 
-        ComboBox combobox = new ComboBox(FXCollections.observableArrayList(characters));
+        combobox = new ComboBox(FXCollections.observableArrayList(characters));
         combobox.setPromptText("Choose Character...");
+        combobox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                selectedCharacter = (String) combobox.getValue();
+                System.out.println(selectedCharacter);
+            }
+        });
 
         agentButton = new RadioButton("Agent");
+        agentButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                selectedPlayerType = 'a';
+            }
+        });
+        
         humanButton = new RadioButton("Human");
-
+        humanButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                selectedPlayerType = 'h';
+            }
+        });
+        
+        //Initially select agent button
+        //agentButton.setSelected(true);
         //To toggle between radio buttons
         ToggleGroup radioGroup = new ToggleGroup();
         agentButton.setToggleGroup(radioGroup);
         humanButton.setToggleGroup(radioGroup);
-
+        /*
         printSelectionsButton = new Button("ApproveSelections");
-        printSelectionsButton.setOnAction(new EventHandler<ActionEvent>() {
+
+        printSelectionsButton.setOnAction(
+                new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(ActionEvent event
+            ) {
                 playerName = playerTextField.getText();
-                selectedPlayerType = agentButton.isSelected()? 'a' : 'h';
+                selectedPlayerType = agentButton.isSelected() ? 'a' : 'h';
                 selectedCharacter = (String) combobox.getValue();
                 System.out.println(playerName + "is an " + selectedPlayerType + " and plays with " + selectedCharacter);
 
             }
-        });
-        characterSelectBox.getChildren().addAll(playerTextField, combobox, agentButton, humanButton, printSelectionsButton);
+        }
+        );
+         */
+        characterSelectBox.getChildren()
+                .addAll(playerTextField, combobox, agentButton, humanButton);
 
         return characterSelectBox;
     }
-/*
+
+    /*
     @Override
     public void start(Stage primaryStage) {
 
@@ -77,8 +115,7 @@ public class PlayerSelectionBox  {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    */
-
+     */
     public String getPlayerName() {
         return playerName;
     }
@@ -87,26 +124,18 @@ public class PlayerSelectionBox  {
         return selectedPlayerType;
     }
 
-    public String getCharacter() {
+    public String getPlayerCharacter() {
         return selectedCharacter;
     }
 
     public String[] getCharacters() {
         return characters;
     }
-    
-    
-    
-    
-    
-    
 
     /**
      * @param args the command line arguments
-     
-    public static void main(String[] args) {
-        launch(args);
-    }
-    * */
-
+     *
+     * public static void main(String[] args) { launch(args); }
+     *
+     */
 }

@@ -146,7 +146,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
         startButton = new Button("Start Game");
-        
 
         actualPreGame.getChildren().addAll(selectionBoxesView, addPlayerButton, removePlayerButton, startButton);
         return actualPreGame;
@@ -375,21 +374,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         //Adds players and types ,creates the board
         board.addPlayers(playerNamesList, playerTypesList);
-        
+
         ArrayList<String> tempCharacterNames = new ArrayList<>();
-        
+
         tempCharacterNames.addAll(Arrays.asList(characters));
-        
 
         //Can create only playing players
         for (int i = 0; i < 6; i++) {
             if (i < playerSelectionBoxesNumber) {
-                board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getCharacter());
-                tempCharacterNames.remove(selectionBoxesList.get(i).getCharacter());
+                board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
+                tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
             } else {
-                board.initializePlayerToken(board.getPlayerList().get(i),tempCharacterNames.remove(0));
+                board.initializePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
                 board.getPlayerList().get(i).setIsPlaying(false);
-                
+
             }
         }
 
@@ -549,57 +547,80 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setTitle("Play it Broo");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
-        //startButton.setOnAction(e -> primaryStage.setScene(gameScene));
+
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                startButton.setDisable(true);
-                //For setting gameScene and showing labels
-                setUpBoard();
-                gameScene = new Scene(gameBox);
-                primaryStage.setScene(gameScene);
-                setUpControls();
-                //Starts the game
-                /*Increments the current player*/
-                endTurnBtn.setOnAction(
-                        new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        board.incrementCurrentPlayer();
-                        resetDice();
-                        //if current player is now ai handle their turn
-                        if (board.getCurrentPlayer().isAgent()) {
-                            handleAgentTurn();
-                        }
+                boolean IsInitializable = true;
+                ArrayList<String> characterRepetitionchecklist = new ArrayList<String>();
+                //Checks if any variable is missing
+                for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
+                    playerselectionbox.playerTextField.fireEvent(e); // Gets value of textField
+                    //Checks unfilled variables 
+                    if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
+                        //In any errors, prevents initialization of the game
+                        System.out.println("Please fill charater details correctly");
+                        IsInitializable = false;
+                        break;
                     }
-                });
-                //Shows Your hand
-                showHandBtn.setOnAction(
-                        new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (!board.getCurrentPlayer().isAgent()) {
-                            final Stage dialog = new Stage();
-                            dialog.initModality(Modality.APPLICATION_MODAL);
-                            dialog.initOwner(primaryStage);
-                            VBox dialogVbox = new VBox(20);
-                            String showHandtxt = new String();
-                            showHandtxt += "---Cards---\n";
-                            for (Card c : board.getCurrentPlayer().getHand()) {
-                                showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+                    //Checks for repetition
+                    if (!characterRepetitionchecklist.contains(playerselectionbox.getPlayerCharacter())) {
+                        characterRepetitionchecklist.add(playerselectionbox.getPlayerCharacter());
+                    } else {
+                        System.out.println("Cannot take the same characters");
+                        IsInitializable = false;
+                    }
+                }
+                //when setup fullfils all requirements, game can be started
+                if (IsInitializable) {
+                    startButton.setDisable(true);
+                    //For setting gameScene and showing labels
+                    setUpBoard();
+                    gameScene = new Scene(gameBox);
+                    primaryStage.setScene(gameScene);
+                    setUpControls();
+                    //Starts the game
+                    /*Increments the current player*/
+                    endTurnBtn.setOnAction(
+                            new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            board.incrementCurrentPlayer();
+                            resetDice();
+                            //if current player is now ai handle their turn
+                            if (board.getCurrentPlayer().isAgent()) {
+                                handleAgentTurn();
                             }
-                            dialogVbox.getChildren().add(new Text(showHandtxt));
-                            Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                            dialog.setScene(dialogScene);
-                            dialog.show();
-                        } else {
-                            System.out.println("Agent Player Turn");
-                            alertTxt.setText("Agent Player Turn");
                         }
+                    });
+                    //Shows Your hand
+                    showHandBtn.setOnAction(
+                            new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if (!board.getCurrentPlayer().isAgent()) {
+                                final Stage dialog = new Stage();
+                                dialog.initModality(Modality.APPLICATION_MODAL);
+                                dialog.initOwner(primaryStage);
+                                VBox dialogVbox = new VBox(20);
+                                String showHandtxt = new String();
+                                showHandtxt += "---Cards---\n";
+                                for (Card c : board.getCurrentPlayer().getHand()) {
+                                    showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+                                }
+                                dialogVbox.getChildren().add(new Text(showHandtxt));
+                                Scene dialogScene = new Scene(dialogVbox, 300, 200);
+                                dialog.setScene(dialogScene);
+                                dialog.show();
+                            } else {
+                                System.out.println("Agent Player Turn");
+                                alertTxt.setText("Agent Player Turn");
+                            }
+                        }
+                    });
+                    if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
+                        handleAgentTurn();
                     }
-                });
-                if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
-                    handleAgentTurn();
                 }
             }
         });
