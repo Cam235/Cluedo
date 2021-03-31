@@ -359,30 +359,35 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
 
-        //Initialize the Token on specified location
-        // for testing Purposes
-        //initialise one token and one player
+        //Initialize PlayerName List
         List<String> playerNamesList = new ArrayList<>();
+        //Initialize Player Type list
         List<Character> playerTypesList = new ArrayList<>();
-        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
-            //if (i < playerSelectionBoxesNumber) {
+        //Iterate through total player number ( 6 )
+        for (int i = 0; i < 6; i++) {
+            //If player is defined in selection boxes , then receive selection boxes
+            if (i < playerSelectionBoxesNumber) {
                 playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
                 playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
                 System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
-           /* }else{              
+            } else {
+                //If selection boxes are less than 6, create non-players,to fill up to 6
                 playerNamesList.add("nonplayer");
                 playerTypesList.add('a');
                 System.out.println(playerNamesList.get(i) + " is " + playerTypesList.get(i));
-            }*/
+            }
         }
+        //Adds players and types ,creates the board
         board.addPlayers(playerNamesList, playerTypesList);
-        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
-            board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getCharacter());
+        //Can create only playing players
+        for (int i = 0; i < 6; i++) {
+            if (i < playerSelectionBoxesNumber) {
+                board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getCharacter());
+            } else {
+                board.getPlayerList().get(i).setIsPlaying(false);
+                
+            }
         }
-        
-        /*for(int i = playerSelectionBoxesNumber;i<6;i++){
-            board.getPlayerList().get(i).isPlaying=false;
-        }*/
 
         board.distributeCards();
         board.orderPlayerList();
@@ -588,7 +593,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         }
                     }
                 });
-                if (board.getCurrentPlayer().isAgent()) {
+                if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                     handleAgentTurn();
                 }
             }
