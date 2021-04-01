@@ -41,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -88,6 +89,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private HBox gameViewHbx;
     private FlowPane alertTxtPane;
     private Text alertTxt;
+    // text for pregame guidence
+    private Text preGameText;
 
     //NO of player SelectionBoxes
     private int playerSelectionBoxesNumber = 2;
@@ -96,7 +99,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //Boolean to declare wheter game started or not
     private boolean gameStarted;
     //Button to Start Game
-    Button startButton;
+    private Button startButton;
+
 
     ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<PlayerSelectionBox>();
 
@@ -147,8 +151,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
         startButton = new Button("Start Game");
-
-        actualPreGame.getChildren().addAll(selectionBoxesView, addPlayerButton, removePlayerButton, startButton);
+        //Put player buttons into one
+        HBox preSetupButtons = new HBox();
+        preSetupButtons.getChildren().addAll(addPlayerButton, removePlayerButton,startButton);
+        //Display a text for guidance 
+        preGameText = new Text("Please fill player details");
+        FlowPane preGameTextPane = new FlowPane(preGameText);
+        
+        
+        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons , preGameTextPane);
+        //Set up position of nodes 
+        selectionBoxesView.setAlignment(Pos.CENTER);
+        preSetupButtons.setAlignment(Pos.CENTER);
+        preGameTextPane.setAlignment(Pos.CENTER);
         return actualPreGame;
     }
 
@@ -522,8 +537,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(CreatePreGameContent());
-        primaryStage.setTitle("Clue!");
+        preGameScene = new Scene(CreatePreGameContent(),600,300);        
+        primaryStage.setTitle("Please Choose Characters!");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
 
@@ -538,7 +553,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //Checks unfilled variables 
                     if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
                         //In any errors, prevents initialization of the game
-                        System.out.println("Please fill charater details correctly");
+                        preGameText.setText("Please fill player details completely !!!");
                         IsInitializable = false;
                         break;
                     }
@@ -546,7 +561,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if (!characterRepetitionchecklist.contains(playerselectionbox.getPlayerCharacter())) {
                         characterRepetitionchecklist.add(playerselectionbox.getPlayerCharacter());
                     } else {
-                        System.out.println("Cannot take the same characters");
+                        preGameText.setText("A character cannot be chosen more than once !!!");
                         IsInitializable = false;
                     }
                 }
@@ -556,6 +571,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //For setting gameScene and showing labels
                     setUpBoard();
                     gameScene = new Scene(gameBox);
+                    primaryStage.setTitle("Cluedo!!!");
                     primaryStage.setScene(gameScene);
                     setUpControls();
                     //Starts the game
