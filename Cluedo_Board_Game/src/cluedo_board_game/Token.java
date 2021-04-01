@@ -71,24 +71,4 @@ public class Token extends Circle implements TokenInterface{
         tokenLocation.setOccupied(true);
     }
 
-    /**
-     *
-     * @return whether token is agent or not
-     
-    @Override
-    public boolean isAgent() {
-        return agent;
-    }
-    */
-    /**
-     *  
-     * @param isAgent set token to agent if true, else player controls
-  
-    @Override
-    public void setAgent(boolean isAgent) {
-        this.agent = isAgent;
-    }
-       */
-    
-
 }

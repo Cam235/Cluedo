@@ -41,8 +41,10 @@ public class PlayerSelectionBox {
 
     public Parent selectionContent() {
         HBox characterSelectBox = new HBox();
+        characterSelectBox.setSpacing(10);
         //Textfield Value
         playerTextField = new TextField();
+        playerTextField.setPromptText("Player Name...");
         playerTextField.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

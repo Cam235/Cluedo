@@ -24,8 +24,7 @@ public interface BoardInterface {
     public void incrementCurrentPlayer();
     
     // Moved from BoardGUI class
-    public void positionUpdateAI();
-    public void positionUpdatePlayer();
+    public void moveCurrentPlayer(int x, int y, boolean diceRolled, int diceTotal);
     
     // New methods
     public void orderPlayerList(); // Orders the player list such that it's ordered in priority of the characters as said in the requirements: 

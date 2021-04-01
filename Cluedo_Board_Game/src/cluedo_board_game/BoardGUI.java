@@ -78,7 +78,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //DiceRoll object to step as much as dice Values
     private DiceRoller diceRoller;
     //To measure steps not surpassing value of dice
-    int counter = 0;
+    //int counter = 0;
     //ImageView of Weapon
 
     private Button showHandBtn;
@@ -102,6 +102,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
+        actualPreGame.setPrefSize(600, 279);
         VBox selectionBoxesView = new VBox();
         for (int i = 0; i < playerSelectionBoxesNumber; i++) {
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
@@ -307,7 +308,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         gameViewHbx = new HBox();
         alertTxtPane = new FlowPane();
-        alertTxtPane.setPrefSize(300, 200);
+        alertTxtPane.setPrefSize(350, 300);
         alertTxtPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         alertTxtPane.setAlignment(Pos.CENTER);
         alertTxt = new Text();
@@ -463,25 +464,36 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
-
             if (!board.getCurrentPlayer().isAgent()) {
                 switch (event.getCode()) {
                     case W://go up
-                        movementHelper(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1));
+                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
+                                (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        alertTxt.setText(board.getAlertMsg());
                         break;
                     case S:// go down
-                        movementHelper(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1));
+                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
+                                (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        alertTxt.setText(board.getAlertMsg());
                         break;
                     case A://go left
-                        movementHelper((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1), 
+                                board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        alertTxt.setText(board.getAlertMsg());
                         break;
                     case D:// go right
-                        movementHelper((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1), 
+                                board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        alertTxt.setText(board.getAlertMsg());
                         break;
                     default://Non valid Ket
                         alertTxt.setText("Not Valid Key");
                         System.out.println("Not Valid Key");
                         break;
+                }
+                //--------------reset dice here just for testing -------------//
+                if(!(board.getCounter() < diceRoller.getDiceTotal())){
+                    resetDice();
                 }
                 updateView();
             } else {
@@ -490,39 +502,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
 
-    }
-
-    private void movementHelper(int x, int y) {
-        Tile currentPlayerPos = board.getCurrentPlayer().getToken().getTokenLocation();
-        if (diceRoller.isDiceRolled()) {
-            if ((counter < diceRoller.getDiceTotal())) {
-                board.positionUpdateCurrentPlayer(x, y);
-                System.out.println(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                alertTxt.setText(board.getCurrentPlayer().getName() + " Moves To " + board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                if (!currentPlayerPos.equals(board.getCurrentPlayer().getToken().getTokenLocation())) {
-                    counter++;
-                } else {
-                    alertTxt.setText("Invalid Move");
-                }
-                if ((board.getRoomOfPlayer(board.getCurrentPlayer())) != null) {
-                    System.out.println("TOKEN IS IN " + board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
-                    alertTxt.setText(board.getCurrentPlayer().getName() + " Is In " + board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
-                    counter = diceRoller.getDiceTotal();
-                }
-                if (!(counter < diceRoller.getDiceTotal())) {
-                    //-------reset dice here just for testing-------//
-                    if (!board.getCurrentPlayer().isAgent()) {
-                        resetDice();
-                    }
-                }
-            } else {
-                System.out.println("Please End Turn");
-                alertTxt.setText("Please End Turn");
-            }
-        } else {
-            System.out.println("Please Roll the Dice");
-            alertTxt.setText("Please Roll the Dice");
-        }
     }
 
     /**
@@ -543,8 +522,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        Scene preGameScene = new Scene(CreatePreGameContent());
-        primaryStage.setTitle("Play it Broo");
+        preGameScene = new Scene(CreatePreGameContent());
+        primaryStage.setTitle("Clue!");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
 
@@ -587,6 +566,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         public void handle(ActionEvent event) {
                             board.incrementCurrentPlayer();
                             resetDice();
+                            alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();
@@ -653,7 +633,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Starts the thread
         Thread thread = new Thread(() -> {
             Runnable updater = () -> handleAgentMove(currentAgent);
-            while (counter < diceRoller.getDiceTotal()) {
+            while (board.getCounter() < diceRoller.getDiceTotal()) {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException ex) {
@@ -669,9 +649,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     private void handleAgentMove(Player p) {
-        if (counter < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
+        if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-            movementHelper(newCoords[0], newCoords[1]);
+            board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
             updateView();
         }
     }
@@ -686,25 +666,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /*
-     * Initialize token on specific locations
-     *
-     * @param tokenName
-     * @param x
-     * @param y
-     * @return
-     
-    public Token initializePlayerToken(Player player, String tokenName, int x, int y) {
-        try {
-            player.setToken(new Token(tokenName));
-            player.getToken().setTokenLocation(board.getTileMap()[x][y]);
-            return player.getToken();
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("You can't initialize here ");
-            return null;
-        }
-    }
-     */
     /**
      * Assigns the existing token on board on some player
      *
@@ -721,7 +682,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     private void resetDice() {
         //Sets Counter to 0
-        counter = 0;
+        board.setCounter(0);
         //Set Dice Rolled to false and Enables DiceRoller
         diceRoller.setDiceRolled(false);
         diceRoller.enableDiceRollerButton();
