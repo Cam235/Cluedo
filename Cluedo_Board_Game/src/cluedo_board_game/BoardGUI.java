@@ -395,7 +395,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         tempCharacterNames.addAll(Arrays.asList(characters));
 
-        //Can create only playing players
+        //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
             if (i < playerSelectionBoxesNumber) {
                 board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());

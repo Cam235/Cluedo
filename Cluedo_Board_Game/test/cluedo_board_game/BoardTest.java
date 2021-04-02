@@ -48,7 +48,7 @@ public class BoardTest {
         String testNonOccupiedMap = "";
         for (int _h = 0; _h < h; _h++) {
             for (int _w = 0; _w < w; _w++) {
-                testNonOccupiedMap += "X";
+                testNonOccupiedMap += "R";
             }
             testNonOccupiedMap += "\n";
         }
@@ -135,10 +135,14 @@ public class BoardTest {
     @Test
     public void testaddPlayers() {
         List<String> playerNames = new ArrayList<>();
+        List<Character> playerTypes = new ArrayList<>();
+        for(int i = 0; i < 3; i++){
+            playerTypes.add('h');
+        }
         playerNames.add("p1");
         playerNames.add("p2");
         playerNames.add("p3");
-        board.addPlayers(playerNames);
+        board.addPlayers(playerNames,playerTypes);
         assertEquals(3, board.getPlayerList().size());       
     }
 }
