@@ -29,6 +29,12 @@ public class Agent extends Player{
         this.token.setTokenLocation(tile);
     }
     
+    /**
+     * generates a random set of coords adjacent to the coords x y for agent movement
+     * @param x x axis coord
+     * @param y y axis coord
+     * @return random coords adjacent to x y
+     */
     @Override
     public Integer[] getMove(int x, int y){
         Integer[] coords = new Integer[2];

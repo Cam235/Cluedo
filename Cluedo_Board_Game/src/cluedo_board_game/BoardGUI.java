@@ -171,12 +171,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //------------------------CREATES WEAPONS---------------------------//
         //DO not yet place anywhere
         // Dagger, candlestick, revolver, rope, lead piping and spanner.
-        board.initializeWeapon("Dagger");
-        board.initializeWeapon("Candlestick");
-        board.initializeWeapon("Revolver");
-        board.initializeWeapon("Rope");
-        board.initializeWeapon("Leadpiping");
-        board.initializeWeapon("Spanner");
+        board.initialiseWeapon("Dagger");
+        board.initialiseWeapon("Candlestick");
+        board.initialiseWeapon("Revolver");
+        board.initialiseWeapon("Rope");
+        board.initialiseWeapon("Leadpiping");
+        board.initialiseWeapon("Spanner");
         //Sets up Images of weapons
         for (Weapon weapon : board.getWeapons()) {
             weapon.setWeaponImage(new Image("/weaponImages/" + weapon.getName() + ".png", 20, 20, false, false));
@@ -194,7 +194,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile bathroomDoor = board.getTileMap()[22][21];
         bathroomDoors.add(bathroomDoor);
-        Room bathroom = board.initializeRoom("Bathroom", bathroomSpace, bathroomDoors);
+        Room bathroom = board.initialiseRoom("Bathroom", bathroomSpace, bathroomDoors);
 
         ArrayList<Tile> diningroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> diningroomDoors = new ArrayList<Tile>();
@@ -207,7 +207,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile diningroomDoor2 = board.getTileMap()[20][11];
         diningroomDoors.add(diningroomDoor);
         diningroomDoors.add(diningroomDoor2);
-        Room diningroom = board.initializeRoom("Diningroom", diningroomSpace, diningroomDoors);
+        Room diningroom = board.initialiseRoom("Diningroom", diningroomSpace, diningroomDoors);
 
         ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
         ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
@@ -218,7 +218,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile kitchenDoor = board.getTileMap()[21][7];
         kitchenDoors.add(kitchenDoor);
-        Room kitchen = board.initializeRoom("kitchen", kitchenSpace, kitchenDoors);
+        Room kitchen = board.initialiseRoom("kitchen", kitchenSpace, kitchenDoors);
 
         ArrayList<Tile> ballroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> ballroomDoors = new ArrayList<Tile>();
@@ -235,7 +235,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         ballroomDoors.add(ballroomDoor2);
         ballroomDoors.add(ballroomDoor3);
         ballroomDoors.add(ballroomDoor4);
-        Room ballroom = board.initializeRoom("ballroom", ballroomSpace, ballroomDoors);
+        Room ballroom = board.initialiseRoom("ballroom", ballroomSpace, ballroomDoors);
 
         ArrayList<Tile> conservatorySpace = new ArrayList<Tile>();
         ArrayList<Tile> conservatoryDoors = new ArrayList<Tile>();
@@ -246,7 +246,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile conservatoryDoor = board.getTileMap()[5][22];
         conservatoryDoors.add(conservatoryDoor);
-        Room conservatory = board.initializeRoom("conservatory", conservatorySpace, conservatoryDoors);
+        Room conservatory = board.initialiseRoom("conservatory", conservatorySpace, conservatoryDoors);
 
         ArrayList<Tile> gamesroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> gamesroomDoors = new ArrayList<Tile>();
@@ -259,7 +259,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile gamesroomDoor2 = board.getTileMap()[6][18];
         gamesroomDoors.add(gamesroomDoor);
         gamesroomDoors.add(gamesroomDoor2);
-        Room gamesroom = board.initializeRoom("gamesroom", gamesroomSpace, gamesroomDoors);
+        Room gamesroom = board.initialiseRoom("gamesroom", gamesroomSpace, gamesroomDoors);
 
         ArrayList<Tile> librarySpace = new ArrayList<Tile>();
         ArrayList<Tile> libraryDoors = new ArrayList<Tile>();
@@ -272,7 +272,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile libraryDoor2 = board.getTileMap()[7][9];
         libraryDoors.add(libraryDoor);
         libraryDoors.add(libraryDoor2);
-        Room library = board.initializeRoom("library", librarySpace, libraryDoors);
+        Room library = board.initialiseRoom("library", librarySpace, libraryDoors);
 
         // HALLWAY STUFF
         ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
@@ -288,7 +288,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         hallwayDoors.add(hallwayDoor1);
         hallwayDoors.add(hallwayDoor2);
         hallwayDoors.add(hallwayDoor3);
-        board.initializeRoom("Hallway", hallwaySpace, hallwayDoors);
+        board.initialiseRoom("Hallway", hallwaySpace, hallwayDoors);
 
         //OFFICE
         ArrayList<Tile> officeSpace = new ArrayList<Tile>();
@@ -300,11 +300,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
-        Room office = board.initializeRoom("Office", officeSpace, officeDoors);
+        Room office = board.initialiseRoom("Office", officeSpace, officeDoors);
     }
 
     /**
-     * Creates Board, initialize Token at specified location and put in the
+     * Creates Board, initialise Token at specified location and put in the
      * boardView Creates DiceRoller object Combines 2 different classes in VBox
      *
      * @return
@@ -370,9 +370,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
 
-        //Initialize PlayerName List
+        //Initialise PlayerName List
         List<String> playerNamesList = new ArrayList<>();
-        //Initialize Player Type list
+        //Initialise Player Type list
         List<Character> playerTypesList = new ArrayList<>();
         //Iterate through total player number ( 6 )
         for (int i = 0; i < 6; i++) {
@@ -398,10 +398,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
             if (i < playerSelectionBoxesNumber) {
-                board.initializePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
+                board.initialisePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
                 tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
             } else {
-                board.initializePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
+                board.initialisePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
                 board.getPlayerList().get(i).setIsPlaying(false);
 
             }
@@ -475,8 +475,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Allows player to move token using WASD buttons
+     * sets up handlers for key presses during game play, including human player movement controls
      */
+    @Override
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
             if (!board.getCurrentPlayer().isAgent()) {
@@ -545,16 +546,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                boolean IsInitializable = true;
+                boolean IsInitialisable = true;
                 ArrayList<String> characterRepetitionchecklist = new ArrayList<String>();
                 //Checks if any variable is missing
                 for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
                     playerselectionbox.playerTextField.fireEvent(e); // Gets value of textField
                     //Checks unfilled variables 
                     if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
-                        //In any errors, prevents initialization of the game
+                        //In any errors, prevents initialisation of the game
                         preGameText.setText("Please fill player details completely !!!");
-                        IsInitializable = false;
+                        IsInitialisable = false;
                         break;
                     }
                     //Checks for repetition
@@ -562,11 +563,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         characterRepetitionchecklist.add(playerselectionbox.getPlayerCharacter());
                     } else {
                         preGameText.setText("A character cannot be chosen more than once !!!");
-                        IsInitializable = false;
+                        IsInitialisable = false;
                     }
                 }
                 //when setup fullfils all requirements, game can be started
-                if (IsInitializable) {
+                if (IsInitialisable) {
                     startButton.setDisable(true);
                     //For setting gameScene and showing labels
                     setUpBoard();
@@ -576,8 +577,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     setUpControls();
                     //Starts the game
                     /*Increments the current player*/
-                    endTurnBtn.setOnAction(
-                            new EventHandler<ActionEvent>() {
+                    endTurnBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
                             board.incrementCurrentPlayer();
@@ -590,28 +590,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         }
                     });
                     //Shows Your hand
-                    showHandBtn.setOnAction(
-                            new EventHandler<ActionEvent>() {
+                    showHandBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            if (!board.getCurrentPlayer().isAgent()) {
-                                final Stage dialog = new Stage();
-                                dialog.initModality(Modality.APPLICATION_MODAL);
-                                dialog.initOwner(primaryStage);
-                                VBox dialogVbox = new VBox(20);
-                                String showHandtxt = new String();
-                                showHandtxt += "---Cards---\n";
-                                for (Card c : board.getCurrentPlayer().getHand()) {
-                                    showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
-                                }
-                                dialogVbox.getChildren().add(new Text(showHandtxt));
-                                Scene dialogScene = new Scene(dialogVbox, 300, 200);
-                                dialog.setScene(dialogScene);
-                                dialog.show();
-                            } else {
-                                System.out.println("Agent Player Turn");
-                                alertTxt.setText("Agent Player Turn");
-                            }
+                            displayCardList(primaryStage);
                         }
                     });
                     if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
@@ -638,6 +620,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     }
 
+    /**
+     * controls the actions of an agent player during its turn
+     */
     private void handleAgentTurn() {
         //----agent just moves for now----//
         endTurnBtn.setDisable(true);
@@ -664,6 +649,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         thread.start();
     }
 
+    /**
+     * handles movement of agent player p, calls updateView() after each move
+     * to see agent moves in real time on the board
+     * @param p 
+     */
     private void handleAgentMove(Player p) {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
@@ -677,9 +667,30 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * opens a dialog on the stage pStage to show a list of player cards
+     * @param pStage 
+     */
     @Override
-    public void displayCardList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void displayCardList(Stage pStage) {
+        if (!board.getCurrentPlayer().isAgent()) {
+            final Stage dialog = new Stage();
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(pStage);
+            VBox dialogVbox = new VBox(20);
+            String showHandtxt = new String();
+            showHandtxt += "---Cards---\n";
+            for (Card c : board.getCurrentPlayer().getHand()) {
+                showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
+            }
+            dialogVbox.getChildren().add(new Text(showHandtxt));
+            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+            dialog.setScene(dialogScene);
+            dialog.show();
+        } else {
+            System.out.println("Agent Player Turn");
+            alertTxt.setText("Agent Player Turn");
+        }
     }
 
     /**
@@ -696,6 +707,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
     }
 
+    /**
+     * resets the dice and counter
+     */
     private void resetDice() {
         //Sets Counter to 0
         board.setCounter(0);

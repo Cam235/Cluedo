@@ -13,7 +13,7 @@ public interface BoardInterface {
     public int getColumns();
     public int getRows();
     public ArrayList<Room> getRooms();
-    public Room initializeRoom(String name, ArrayList<Tile> roomSpace, 
+    public Room initialiseRoom(String name, ArrayList<Tile> roomSpace, 
             ArrayList<Tile> roomDoors);
     //public void initializeToken(String tokenName, int x, int y);
     @Override
@@ -34,7 +34,7 @@ public interface BoardInterface {
                                    // Rev Green: Green (bottom left)
                                    // Mrs Peacock: Blue (left bottom)
                                    // Prof Plum: Purple (left top)
-    public void initializeWeapons(); // Initializes each weapon to be in each room, i.e. have their own tile with a room set, 
+    public void initialiseWeapons(); // Initializes each weapon to be in each room, i.e. have their own tile with a room set, 
                                      // no two weapons MUST not occupy the same room initially.
                                      // Tiles for each weapon can be set my iterating through the rooms' roomSpace attribute and randomly assign the tile.
 

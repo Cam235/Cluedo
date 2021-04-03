@@ -93,13 +93,13 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * Initialize a new weapon and add to the list Then returns to the
-     * Initialized weapon
+     * Initialise a new weapon and add to the list Then returns to the
+     * Initialised weapon
      *
      * @param weapon
      * @return
      */
-    public Weapon initializeWeapon(String weapon) {
+    public Weapon initialiseWeapon(String weapon) {
         weapons.add(new Weapon(weapon));
         return weapons.get(weapons.size() - 1);
     }
@@ -132,7 +132,7 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * Initilize a new Room taking parameters of
+     * Initialise a new Room taking parameters of
      *
      * @param name
      * @param roomSpace
@@ -140,7 +140,7 @@ public class Board implements BoardInterface {
      * @return newRoom
      */
     @Override
-    public Room initializeRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
+    public Room initialiseRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
         try {
             //Creates Room
             Room newRoom = new Room(name, roomSpace);
@@ -187,20 +187,18 @@ public class Board implements BoardInterface {
             }
             return newRoom;
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("You can't initialize here ");
+            System.out.println("You can't initialise here ");
             return null;
         }
     }
 
     /**
-     * Initialize token for each playing and non-playing players of board
+     * Initialise token for each playing and non-playing players of board
      *
      * @param player
      * @param tokenName
-     * @param x
-     * @param y
      */
-    public void initializePlayerToken(Player player, String tokenName) {
+    public void initialisePlayerToken(Player player, String tokenName) {
         try {
             Token token = new Token(tokenName);
             //Sets tokens location on board
@@ -208,7 +206,7 @@ public class Board implements BoardInterface {
             //Adds the token last
             player.setToken(token);
         } catch (Exception e) {
-            System.out.println("Cannot initialize");
+            System.out.println("Cannot initialise");
 
         }
     }
@@ -319,49 +317,62 @@ public class Board implements BoardInterface {
         }
     }
 
+    /**
+     * orders the player list based on the name of their character token
+     * in the order: "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
+     */
     @Override
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
+        //creates array of character names in appropriate order
         String[] playerNames = { "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum" };
+        //gets each player in the correct order using playerNames and stores them in list
         for(String name: playerNames){
             if(getPlayerByCharacterName(name)!=null){
                 tempList.add(getPlayerByCharacterName(name));
             }
+            //if any player is missing alert console
             else{
                 //in actual game this should never happen
                 System.out.println("missing character " + name);
             }
         }
+        //reset Player list then set it to tempList
         playerList = new ArrayList<>();
         playerList = tempList;
     }
 
     @Override
-    public void initializeWeapons() {
+    public void initialiseWeapons() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
-     * increments the current Player
+     * increments the current Player to the next playing player
      */
     @Override
     public void incrementCurrentPlayer() {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }
 
-    public Player getNextActivePlayer(Player player) {
-        if (playerList.contains(player)) {
+    /**
+     * returns the next playing player from a given player p
+     * @param p
+     * @return the next playing player
+     */
+    public Player getNextActivePlayer(Player p) {
+        if (playerList.contains(p)) {
             int i = 0;
             do{
-                if (playerList.indexOf(player) == playerList.size() - 1) {
-                    player = playerList.get(0);
+                if (playerList.indexOf(p) == playerList.size() - 1) {
+                    p = playerList.get(0);
                 } else {
-                    player = playerList.get(playerList.indexOf(player) + 1);
+                    p = playerList.get(playerList.indexOf(p) + 1);
                 }
                 i++;
-            } while (!player.getIsPlaying() && i < playerList.size());
-            if(player.getIsPlaying()){
-                return player;
+            } while (!p.getIsPlaying() && i < playerList.size());
+            if(p.getIsPlaying()){
+                return p;
             }
             else{
                 System.out.println("No remaining active players");
@@ -381,6 +392,10 @@ public class Board implements BoardInterface {
         this.currentPlayer = currentPlayer;
     }
 
+    /**
+     * moves the current player to a random space in a given room
+     * @param room 
+     */
     public void currentPlayerEntersRoom(Room room) {
         //When hits 
         int index = (int) (Math.random() * room.getRoomSpace().size());
@@ -453,6 +468,11 @@ public class Board implements BoardInterface {
         }
     }
     
+    /**
+     * returns the current room of player p if they are in a room, null otherwise
+     * @param p
+     * @return null or player p's room
+     */
     public Room getRoomOfPlayer(Player p){
         Room room = null;
         boolean roomFound = false; //whether a room that contains the player is found
@@ -470,12 +490,17 @@ public class Board implements BoardInterface {
         return room;
     }
     
+    /**
+     * returns a player p given a character name cName or null if the player doesn't exist
+     * @param cName
+     * @return null or Player p
+     */
     public Player getPlayerByCharacterName(String cName){
         Boolean found = false;
         int i = 0;
         Player p = null;
         while(!found && i < playerList.size()){
-            if(playerList.get(i).getToken().getName() == cName){
+            if(playerList.get(i).getToken().getName().equals(cName)){
                 p = playerList.get(i);
                 found = true;
             }
@@ -484,6 +509,10 @@ public class Board implements BoardInterface {
         return p;
     }
     
+    /**
+     * utilises the card distributor object to distribute cards to each playing player fairly,
+     * current build uses a predefined list of card names 
+     */
     public void distributeCards(){
         //use predefined list of card names for now
         Card[] pCards = {new Card(CardType.Person,"Miss Scarlett"),new Card(CardType.Person,"Colonel Mustard"),new Card(CardType.Person,"Mrs.White"),

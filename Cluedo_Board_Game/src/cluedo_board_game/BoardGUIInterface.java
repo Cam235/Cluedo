@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 public interface BoardGUIInterface {
     public VBox setUpBoard();
     
-    // Change to initializeTokens() - spawn all tokens onto the board
     
     // Move these to Board class
     //public void positionUpdateAI();
@@ -22,7 +21,6 @@ public interface BoardGUIInterface {
     
     //New methods
     public void selectCharacters(); // Allow user to select number of players, which characters and toggle if AI or not.
-    public void displayCardList(); // Displays card list in front of current player, after done, use setter on Board object.
+    public void displayCardList(Stage pstage); // Displays card list of current player
     
-   // public Token initializePlayerToken(Player player, String tokenName, int x, int y);
 }

@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 public class PlayerSelectionBox {
 
     TextField playerTextField;
-    ComboBox combobox;
+    ComboBox<String> combobox;
     RadioButton agentButton;
     RadioButton humanButton;
 
@@ -53,7 +53,7 @@ public class PlayerSelectionBox {
             }
         });
 
-        combobox = new ComboBox(FXCollections.observableArrayList(characters));
+        combobox = new ComboBox<>(FXCollections.observableArrayList(characters));
         combobox.setPromptText("Choose Character...");
         combobox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
