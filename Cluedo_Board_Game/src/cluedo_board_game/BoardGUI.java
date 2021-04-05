@@ -87,8 +87,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private HBox controlsHbx;
 
     private HBox gameViewHbx;
-    private FlowPane alertTxtPane;
+    private VBox alertsVbx;
     private Text alertTxt;
+    private Text counterTxt;
     // text for pregame guidence
     private Text preGameText;
 
@@ -322,11 +323,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsHbx.setAlignment(Pos.CENTER);
 
         gameViewHbx = new HBox();
-        alertTxtPane = new FlowPane();
-        alertTxtPane.setPrefSize(350, 300);
-        alertTxtPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        alertTxtPane.setAlignment(Pos.CENTER);
+        alertsVbx = new VBox();
+        alertsVbx.setPrefSize(350, 300);
+        alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        alertsVbx.setAlignment(Pos.CENTER);
         alertTxt = new Text();
+        counterTxt = new Text();
         //Establish Board
         board = new Board(columns, rows);
         //Create Weapons on board
@@ -467,8 +469,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         //Combines Gui elements
         controlsHbx.getChildren().addAll(showHandBtn, endTurnBtn);
-        alertTxtPane.getChildren().add(alertTxt);
-        gameViewHbx.getChildren().addAll(boardView, alertTxtPane);
+        alertsVbx.getChildren().addAll(alertTxt, counterTxt);
+        gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
@@ -485,22 +487,22 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     case W://go up
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
-                        alertTxt.setText(board.getAlertMsg());
+                        updateMovementAlerts();
                         break;
                     case S:// go down
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
-                        alertTxt.setText(board.getAlertMsg());
+                        updateMovementAlerts();
                         break;
                     case A://go left
                         board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1), 
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
-                        alertTxt.setText(board.getAlertMsg());
+                        updateMovementAlerts();
                         break;
                     case D:// go right
                         board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1), 
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
-                        alertTxt.setText(board.getAlertMsg());
+                        updateMovementAlerts();
                         break;
                     default://Non valid Ket
                         alertTxt.setText("Not Valid Key");
@@ -583,6 +585,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             board.incrementCurrentPlayer();
                             resetDice();
                             alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
+                            counterTxt.setText("Please Roll The Dice");
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();
@@ -658,6 +661,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             Integer[] newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+            counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
             updateView();
         }
     }
@@ -716,6 +720,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Set Dice Rolled to false and Enables DiceRoller
         diceRoller.setDiceRolled(false);
         diceRoller.enableDiceRollerButton();
+    }
+
+    private void updateMovementAlerts() {
+        if(diceRoller.isDiceRolled()){
+            counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
+        }
+        alertTxt.setText(board.getAlertMsg());
     }
 
 }

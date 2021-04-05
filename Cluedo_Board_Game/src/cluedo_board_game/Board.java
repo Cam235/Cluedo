@@ -426,7 +426,7 @@ public class Board implements BoardInterface {
                 int newY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
                 //Place the player at the door
                 p.getToken().getTokenLocation().setOccupied(false);
-                p.moveToken(getTileMap()[newX][newY]);
+                p.moveToken(getDoorExit(getTileMap()[newX][newY]));
             }
             //If the tile to be moved is not Wall or occupied,confirm movement
             else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
@@ -543,6 +543,45 @@ public class Board implements BoardInterface {
 
     public String getAlertMsg() {
         return alertMsg;
+    }
+    
+    public Tile getDoorExit(Tile door){
+        if(!door.getIsDoor()){
+            System.out.println("Tile is not a door");
+            return null;
+        }
+        else{
+            if(getRoomOfTile(tileMap[door.getColIndex() + 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() + 1][door.getRowIndex()].getIsWall()){
+                return(tileMap[door.getColIndex() + 1][door.getRowIndex()]);
+            }
+            else if(getRoomOfTile(tileMap[door.getColIndex() - 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() - 1][door.getRowIndex()].getIsWall()){
+                return(tileMap[door.getColIndex() - 1][door.getRowIndex()]);
+            }
+            else if(getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() + 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() + 1].getIsWall()){
+                return(tileMap[door.getColIndex()][door.getRowIndex() + 1]);
+            }
+            else if(getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() - 1]) == null  && !tileMap[door.getColIndex()][door.getRowIndex() - 1].getIsWall()){
+                return(tileMap[door.getColIndex()][door.getRowIndex() - 1]);
+            }
+            else{
+                System.out.println("No valid tile to move to");
+                return null;
+            }
+        }
+    }
+    
+    private Room getRoomOfTile(Tile t){
+        boolean found = false;
+        int i = 0;
+        Room r = null;
+        while(!found && i < rooms.size()){
+            if(rooms.get(i).getRoomSpace().contains(t) || rooms.get(i).getRoomDoors().contains(t)){
+                r = rooms.get(i);
+                found = true;
+            }
+            i++;
+        }
+        return r;
     }
     
 }

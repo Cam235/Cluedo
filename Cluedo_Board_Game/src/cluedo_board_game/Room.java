@@ -17,7 +17,6 @@ public class Room implements RoomInterface {
     private String roomName;
     private ArrayList<Tile> roomSpace; //for inside of room
     private ArrayList<Tile> roomDoors = new ArrayList<Tile>(); // roomdoors
-    //private Weapon roomWeapon = null; // for weapons of the room( will convert into arrayList
     private ArrayList<Weapon> roomWeapons = new ArrayList<Weapon>();
 
     /**
@@ -156,5 +155,7 @@ public class Room implements RoomInterface {
         }
 
     }
+    
+    
 
 }
