@@ -426,7 +426,9 @@ public class Board implements BoardInterface {
                 int newY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
                 //Place the player at the door
                 p.getToken().getTokenLocation().setOccupied(false);
-                p.moveToken(getDoorExit(getTileMap()[newX][newY]));
+                if(!getDoorExit(getTileMap()[newX][newY]).IsOccupied()){
+                    p.moveToken(getDoorExit(getTileMap()[newX][newY]));
+                }
             }
             //If the tile to be moved is not Wall or occupied,confirm movement
             else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
