@@ -634,7 +634,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
-                                    System.out.println(suggestionPanel.getSuggestedSuspect() + " " +suggestionPanel.getSuggestedRoom()+ " " + suggestionPanel.getSuggestedWeapon() );
+                                    if(suggestionPanel.getSuggestedSuspect()!=null && suggestionPanel.getSuggestedRoom()!=null && suggestionPanel.getSuggestedWeapon()!=null){
+                                        String currentplayerName = board.getCurrentPlayer().getName();
+                                        alertTxt.setText("Player "+currentplayerName+ " suggested "+ suggestionPanel.getSuggestedSuspect() 
+                                                + " murdered in " + suggestionPanel.getSuggestedRoom() + "with a" +suggestionPanel.getSuggestedWeapon());
+                                        suggestionStage.close();
+                                        
+                                    } else{
+                                        System.out.println("Please fill all suggestion boxes");
+                                    }
+ 
                                 }
                             });
 
