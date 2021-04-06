@@ -113,40 +113,56 @@ public class Room implements RoomInterface {
                 if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    roomDoors.add(roomDoor);
+                    if(!roomDoors.contains(roomDoor)){
+                        roomDoors.add(roomDoor);
+                    }
                 } else {
                     //System.out.println("Door is not near this tile of "+ roomName);
                 }

@@ -524,13 +524,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Updates Tokens view on the board by removing token image on previous and
-     * adding token image on existing position
+     * Updates GUI by removing all the tokens and tile text from boardView then adding them back
+     * again in their updated positions/states
      */
+    @Override
     public void updateView() {
         for (Player p : board.getPlayerList()) {
             boardView.getChildren().remove(p.getToken());
             boardView.add(p.getToken(), p.getToken().getTokenLocation().getColIndex(), p.getToken().getTokenLocation().getRowIndex());
+        }
+        for (Room r: board.getRooms()){
+            for (Tile t: r.getRoomDoors()){
+                boardView.getChildren().remove(t.getText());
+                boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
+            }
         }
     }
 
@@ -587,6 +594,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             resetDice();
                             alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                             counterTxt.setText("Please Roll The Dice");
+                            
+                            for(Room r: board.getRooms()){
+                                for(int i = 0; i < r.getRoomDoors().size(); i++){
+                                    if(board.getRoomOfPlayer(board.getCurrentPlayer()) != r){
+                                        r.getRoomDoors().get(i).getText().setText("");
+                                    }
+                                    else{
+                                        r.getRoomDoors().get(i).getText().setText("" + (i+1));
+                                    }
+                                }
+                            }
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();

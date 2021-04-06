@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import javafx.scene.text.Text;
 
 /**
  * Represents board of the game
@@ -398,9 +399,12 @@ public class Board implements BoardInterface {
      */
     public void currentPlayerEntersRoom(Room room) {
         //move player to a random free tile in the room
-        int index = (int) (Math.random() * room.getFreeSpace().size());
-        int newX = room.getFreeSpace().get(index).getColIndex();
-        int newY = room.getFreeSpace().get(index).getRowIndex();
+        int i = (int) (Math.random() * room.getFreeSpace().size());
+        int newX = room.getFreeSpace().get(i).getColIndex();
+        int newY = room.getFreeSpace().get(i).getRowIndex();
+        for(int j = 0; j < room.getRoomDoors().size(); j++){
+            room.getRoomDoors().get(j).setText("" + (j+1));
+        }
         movePlayer(currentPlayer, newX, newY);
     }
     
@@ -426,6 +430,9 @@ public class Board implements BoardInterface {
                 //Place the player at the door
                 p.getToken().getTokenLocation().setOccupied(false);
                 if(!getDoorExit(getTileMap()[newX][newY]).IsOccupied()){
+                    for(Tile t: playerRoom.getRoomDoors()){
+                        t.setText("");
+                    }
                     p.moveToken(getDoorExit(getTileMap()[newX][newY]));
                 }
             }
