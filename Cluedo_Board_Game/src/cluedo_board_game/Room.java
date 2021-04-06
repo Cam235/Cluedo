@@ -156,6 +156,18 @@ public class Room implements RoomInterface {
 
     }
     
-    
+    /**
+     * returns all the non-occupied tiles in roomSpace
+     * @return arrayList of non occupied tiles
+     */
+    public ArrayList<Tile> getFreeSpace() {
+        ArrayList<Tile> freeSpace = new ArrayList<>();
+        for(Tile t: roomSpace){
+            if(!t.IsOccupied()){
+                freeSpace.add(t);
+            }
+        }
+        return freeSpace;
+    }
 
 }

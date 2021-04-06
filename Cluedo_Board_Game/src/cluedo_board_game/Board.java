@@ -397,12 +397,11 @@ public class Board implements BoardInterface {
      * @param room 
      */
     public void currentPlayerEntersRoom(Room room) {
-        //When hits 
-        int index = (int) (Math.random() * room.getRoomSpace().size());
-        int newX = room.getRoomSpace().get(index).getColIndex();
-        int newY = room.getRoomSpace().get(index).getRowIndex();
+        //move player to a random free tile in the room
+        int index = (int) (Math.random() * room.getFreeSpace().size());
+        int newX = room.getFreeSpace().get(index).getColIndex();
+        int newY = room.getFreeSpace().get(index).getRowIndex();
         movePlayer(currentPlayer, newX, newY);
-
     }
     
 
@@ -521,9 +520,9 @@ public class Board implements BoardInterface {
             new Card(CardType.Person,"Mr.Green"),new Card(CardType.Person,"Mrs.Peacock"),new Card(CardType.Person,"Professor Plum")};
         Card[] wCards = {new Card(CardType.Weapon,"Dagger"),new Card(CardType.Weapon,"Candlestick"),new Card(CardType.Weapon,"Revolver"),
             new Card(CardType.Weapon,"Rope"),new Card(CardType.Weapon,"Leadpiping"),new Card(CardType.Weapon,"Spanner")};
-        Card[] rCards = {new Card(CardType.Room,"Bathroom"),new Card(CardType.Room,"Diningroom"),new Card(CardType.Room,"kitchen"),
-            new Card(CardType.Room,"ballroom"),new Card(CardType.Room,"conservatory"),new Card(CardType.Room,"gamesroom"),
-            new Card(CardType.Room,"library"),new Card(CardType.Room,"Hallway"),new Card(CardType.Room,"Office")};
+        Card[] rCards = {new Card(CardType.Room,"Bathroom"),new Card(CardType.Room,"Diningroom"),new Card(CardType.Room,"Kitchen"),
+            new Card(CardType.Room,"Ballroom"),new Card(CardType.Room,"Conservatory"),new Card(CardType.Room,"Gamesroom"),
+            new Card(CardType.Room,"Library"),new Card(CardType.Room,"Hallway"),new Card(CardType.Room,"Office")};
         ArrayList<Card> cList = new ArrayList<>();
         cList.addAll(Arrays.asList(pCards));
         cList.addAll(Arrays.asList(wCards));
