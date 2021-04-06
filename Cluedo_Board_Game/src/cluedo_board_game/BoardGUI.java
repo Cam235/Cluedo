@@ -646,13 +646,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                                 int pointer = (i+ board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
                                                 // System.out.println(board.getPlayerList().get(poinSter) );
                                                 if ((board.getPlayerList().get(pointer).getHand() != null) && !board.getPlayerList().get(pointer).equals(board.getCurrentPlayer())) {
+                                                    //Shuffles to get different card values each time
+                                                    Collections.shuffle(board.getPlayerList().get(pointer).getHand());
                                                     for (Card card : board.getPlayerList().get(pointer).getHand()) {
                                                         if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                                                 || card.getName().equals(suggestionPanel.getSuggestedWeapon())
-                                                                || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
-                                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " does have card");
+                                                                || card.getName().equals(suggestionPanel.getSuggestedRoom())) {                                                            
+                                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you "+ card.getName() + " card");
                                                             suggestedCardFound = true;
                                                             break;
+                                                            
                                                         }
                                                     }
                                                 }
