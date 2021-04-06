@@ -95,15 +95,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     //NO of player SelectionBoxes
     private int playerSelectionBoxesNumber = 2;
+    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<PlayerSelectionBox>();
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Boolean to declare wheter game started or not
-    private boolean gameStarted;
+    //private boolean gameStarted;
     //Button to Start Game
     private Button startButton;
+    
+    private Button suggestionBtn;
 
 
-    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<PlayerSelectionBox>();
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -219,7 +221,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile kitchenDoor = board.getTileMap()[21][7];
         kitchenDoors.add(kitchenDoor);
-        Room kitchen = board.initialiseRoom("kitchen", kitchenSpace, kitchenDoors);
+        Room kitchen = board.initialiseRoom("Kitchen", kitchenSpace, kitchenDoors);
 
         ArrayList<Tile> ballroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> ballroomDoors = new ArrayList<Tile>();
@@ -236,7 +238,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         ballroomDoors.add(ballroomDoor2);
         ballroomDoors.add(ballroomDoor3);
         ballroomDoors.add(ballroomDoor4);
-        Room ballroom = board.initialiseRoom("ballroom", ballroomSpace, ballroomDoors);
+        Room ballroom = board.initialiseRoom("Ballroom", ballroomSpace, ballroomDoors);
 
         ArrayList<Tile> conservatorySpace = new ArrayList<Tile>();
         ArrayList<Tile> conservatoryDoors = new ArrayList<Tile>();
@@ -247,7 +249,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         Tile conservatoryDoor = board.getTileMap()[5][22];
         conservatoryDoors.add(conservatoryDoor);
-        Room conservatory = board.initialiseRoom("conservatory", conservatorySpace, conservatoryDoors);
+        Room conservatory = board.initialiseRoom("Conservatory", conservatorySpace, conservatoryDoors);
 
         ArrayList<Tile> gamesroomSpace = new ArrayList<Tile>();
         ArrayList<Tile> gamesroomDoors = new ArrayList<Tile>();
@@ -260,7 +262,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile gamesroomDoor2 = board.getTileMap()[6][18];
         gamesroomDoors.add(gamesroomDoor);
         gamesroomDoors.add(gamesroomDoor2);
-        Room gamesroom = board.initialiseRoom("gamesroom", gamesroomSpace, gamesroomDoors);
+        Room gamesroom = board.initialiseRoom("Gamesroom", gamesroomSpace, gamesroomDoors);
 
         ArrayList<Tile> librarySpace = new ArrayList<Tile>();
         ArrayList<Tile> libraryDoors = new ArrayList<Tile>();
@@ -273,7 +275,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile libraryDoor2 = board.getTileMap()[7][9];
         libraryDoors.add(libraryDoor);
         libraryDoors.add(libraryDoor2);
-        Room library = board.initialiseRoom("library", librarySpace, libraryDoors);
+        Room library = board.initialiseRoom("Library", librarySpace, libraryDoors);
 
         // HALLWAY STUFF
         ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
@@ -317,10 +319,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to switch between Player and AI
+        suggestionBtn = new Button("Make Suggestion");
         showHandBtn = new Button("Show Hand");
         endTurnBtn = new Button("End Turn");
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
+        
+        
 
         gameViewHbx = new HBox();
         alertsVbx = new VBox();
@@ -468,7 +473,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn, endTurnBtn);
+        controlsHbx.getChildren().addAll(showHandBtn,suggestionBtn, endTurnBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);

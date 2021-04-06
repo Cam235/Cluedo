@@ -36,7 +36,7 @@ public class PlayerSelectionBox {
     private char selectedPlayerType;
     private String selectedCharacter;
 
-    public static String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    public String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //  private Button printSelectionsButton;
 
     public Parent selectionContent() {
