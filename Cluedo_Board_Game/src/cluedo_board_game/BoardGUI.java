@@ -524,8 +524,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Updates GUI by removing all the tokens and tile text from boardView then adding them back
-     * again in their updated positions/states
+     * Updates GUI by removing all the tokens and tile text from boardView then
+     * adding them back again in their updated positions/states
      */
     @Override
     public void updateView() {
@@ -533,8 +533,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             boardView.getChildren().remove(p.getToken());
             boardView.add(p.getToken(), p.getToken().getTokenLocation().getColIndex(), p.getToken().getTokenLocation().getRowIndex());
         }
-        for (Room r: board.getRooms()){
-            for (Tile t: r.getRoomDoors()){
+        for (Room r : board.getRooms()) {
+            for (Tile t : r.getRoomDoors()) {
                 boardView.getChildren().remove(t.getText());
                 boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
             }
@@ -577,15 +577,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                 }
                 //when setup fullfils all requirements, game can be started
-                if (IsInitialisable) {
+                if (IsInitialisable) { //Starts the game
                     startButton.setDisable(true);
                     //For setting gameScene and showing labels
                     setUpBoard();
                     gameScene = new Scene(gameBox);
                     primaryStage.setTitle("Cluedo!!!");
                     primaryStage.setScene(gameScene);
-                    setUpControls();
-                    //Starts the game
+                    setUpControls();                    
                     /*Increments the current player*/
                     endTurnBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -594,14 +593,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             resetDice();
                             alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                             counterTxt.setText("Please Roll The Dice");
-                            
-                            for(Room r: board.getRooms()){
-                                for(int i = 0; i < r.getRoomDoors().size(); i++){
-                                    if(board.getRoomOfPlayer(board.getCurrentPlayer()) != r){
+
+                            for (Room r : board.getRooms()) {
+                                for (int i = 0; i < r.getRoomDoors().size(); i++) {
+                                    if (board.getRoomOfPlayer(board.getCurrentPlayer()) != r) {
                                         r.getRoomDoors().get(i).getText().setText("");
-                                    }
-                                    else{
-                                        r.getRoomDoors().get(i).getText().setText("" + (i+1));
+                                    } else {
+                                        r.getRoomDoors().get(i).getText().setText("" + (i + 1));
                                     }
                                 }
                             }
@@ -618,38 +616,42 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             displayCardList(primaryStage);
                         }
                     });
-
                     suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            //Create new Stage for popup
-                            Stage suggestionStage = new Stage();
-                            suggestionStage.initModality(Modality.APPLICATION_MODAL);
-                            // Create new suggestionpanel put panel into new scene
-                            SuggestionPanel suggestionPanel = new SuggestionPanel();
-                            Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent());
-                            suggestionStage.setScene(suggestionScene);
-                            suggestionStage.show();
-                            //On click of submit button,suggestion takes place
-                            suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
-                                @Override
-                                public void handle(ActionEvent event) {
-                                    if(suggestionPanel.getSuggestedSuspect()!=null && suggestionPanel.getSuggestedRoom()!=null && suggestionPanel.getSuggestedWeapon()!=null){
-                                        String currentplayerName = board.getCurrentPlayer().getName();
-                                        alertTxt.setText("Player "+currentplayerName+ " suggested "+ suggestionPanel.getSuggestedSuspect() 
-                                                + " murdered in " + suggestionPanel.getSuggestedRoom() + "with a" +suggestionPanel.getSuggestedWeapon());
-                                        suggestionStage.close();
-                                        
-                                    } else{
-                                        System.out.println("Please fill all suggestion boxes");
-                                    }
- 
-                                }
-                            });
 
+                            if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
+                                //Create new Stage for popup
+                                Stage suggestionStage = new Stage();
+                                suggestionStage.initModality(Modality.APPLICATION_MODAL);
+                                // Create new suggestionpanel put panel into new scene
+                                SuggestionPanel suggestionPanel = new SuggestionPanel();
+                                String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
+                                //Checks if the player is in some room
+                                Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName));
+                                suggestionStage.setScene(suggestionScene);
+                                suggestionStage.show();
+                                //On click of submit button,suggestion takes place
+                                suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
+                                            String currentplayerName = board.getCurrentPlayer().getName();
+                                            alertTxt.setText("Player " + currentplayerName + " suggested " + suggestionPanel.getSuggestedSuspect()
+                                                    + " murdered in " + suggestionRoomName + " with a " + suggestionPanel.getSuggestedWeapon());
+                                            suggestionStage.close();
+
+                                        } else {
+                                            System.out.println("Please fill all suggestion boxes");
+                                        }
+                                    }
+                                });
+                            } else {
+                                alertTxt.setText("Cannot make suggestion outside of rooms");
+                            }
                         }
                     });
-
+                    
                     if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
