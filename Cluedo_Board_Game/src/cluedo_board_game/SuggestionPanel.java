@@ -36,12 +36,13 @@ public class SuggestionPanel {
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     //String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library"};
 
-    Button submitButton; // Gets the submit button
+    Button submitButton; // The submit button of th game
 
     public VBox createSuggestionContent(String roomName) {
-        suggestedRoom = roomName;
         Label playerSuggestext = new Label("Player is making suggestion!");
+        
         //For Room--Static , will display the name room entered
+        suggestedRoom = roomName;
         Label roomLabel = new Label("Room :   ");
         //ComboBox roomBox = new ComboBox(FXCollections.observableArrayList(rooms));
         Text roomText = new Text(suggestedRoom);

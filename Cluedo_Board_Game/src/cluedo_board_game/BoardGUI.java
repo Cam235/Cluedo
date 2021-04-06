@@ -584,7 +584,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     gameScene = new Scene(gameBox);
                     primaryStage.setTitle("Cluedo!!!");
                     primaryStage.setScene(gameScene);
-                    setUpControls();                    
+                    setUpControls();
                     /*Increments the current player*/
                     endTurnBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
@@ -640,32 +640,58 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                             alertTxt.setText("Player " + currentplayerName + " suggested " + suggestionPanel.getSuggestedSuspect()
                                                     + " murdered in " + suggestionRoomName + " with a " + suggestionPanel.getSuggestedWeapon());
                                             suggestionStage.close();
-
+                                            //Loop to get hand of nearest player
+                                            boolean suggestedCardFound = false;
+                                            for (int i = 0; i < board.getPlayerList().size(); i++) {
+                                                int pointer = (i+ board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
+                                                // System.out.println(board.getPlayerList().get(poinSter) );
+                                                if ((board.getPlayerList().get(pointer).getHand() != null) && !board.getPlayerList().get(pointer).equals(board.getCurrentPlayer())) {
+                                                    for (Card card : board.getPlayerList().get(pointer).getHand()) {
+                                                        if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
+                                                                || card.getName().equals(suggestionPanel.getSuggestedWeapon())
+                                                                || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
+                                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " does have card");
+                                                            suggestedCardFound = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if(!suggestedCardFound){
+                                                counterTxt.setText("Other players do not have suggested cards");
+                                            }
                                         } else {
                                             System.out.println("Please fill all suggestion boxes");
                                         }
                                     }
-                                });
+                                }
+                                );
                             } else {
                                 alertTxt.setText("Cannot make suggestion outside of rooms");
                             }
                         }
-                    });
-                    
-                    if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
+                    }
+                    );
+
+                    if (board.getCurrentPlayer()
+                            .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
                 }
             }
-        });
+        }
+        );
         //For Closing Window on "x" button
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        primaryStage.setOnCloseRequest(
+                new EventHandler<WindowEvent>() {
             @Override
-            public void handle(WindowEvent t) {
+            public void handle(WindowEvent t
+            ) {
                 Platform.exit();
                 System.exit(0);
             }
-        });
+        }
+        );
     }
 
     /**
