@@ -102,10 +102,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //private boolean gameStarted;
     //Button to Start Game
     private Button startButton;
-    
+//
     private Button suggestionBtn;
-
-
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -156,13 +154,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         startButton = new Button("Start Game");
         //Put player buttons into one
         HBox preSetupButtons = new HBox();
-        preSetupButtons.getChildren().addAll(addPlayerButton, removePlayerButton,startButton);
+        preSetupButtons.getChildren().addAll(addPlayerButton, removePlayerButton, startButton);
         //Display a text for guidance 
         preGameText = new Text("Please fill player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
-        
-        
-        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons , preGameTextPane);
+
+        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons, preGameTextPane);
         //Set up position of nodes 
         selectionBoxesView.setAlignment(Pos.CENTER);
         preSetupButtons.setAlignment(Pos.CENTER);
@@ -324,8 +321,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         endTurnBtn = new Button("End Turn");
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
-        
-        
 
         gameViewHbx = new HBox();
         alertsVbx = new VBox();
@@ -473,7 +468,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn,suggestionBtn, endTurnBtn);
+        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, endTurnBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
@@ -482,7 +477,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * sets up handlers for key presses during game play, including human player movement controls
+     * sets up handlers for key presses during game play, including human player
+     * movement controls
      */
     @Override
     public void setUpControls() {
@@ -490,22 +486,22 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             if (!board.getCurrentPlayer().isAgent()) {
                 switch (event.getCode()) {
                     case W://go up
-                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
+                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
                     case S:// go down
-                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), 
+                        board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
                     case A://go left
-                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1), 
+                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() - 1),
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
                     case D:// go right
-                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1), 
+                        board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1),
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
@@ -515,7 +511,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         break;
                 }
                 //--------------reset dice here just for testing -------------//
-                if(!(board.getCounter() < diceRoller.getDiceTotal())){
+                if (!(board.getCounter() < diceRoller.getDiceTotal())) {
                     resetDice();
                 }
                 updateView();
@@ -545,7 +541,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(CreatePreGameContent(),600,300);        
+        preGameScene = new Scene(CreatePreGameContent(), 600, 300);
         primaryStage.setTitle("Please Choose Characters!");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
@@ -604,6 +600,29 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             displayCardList(primaryStage);
                         }
                     });
+
+                    suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            //Create new Stage for popup
+                            Stage suggestionStage = new Stage();
+                            suggestionStage.initModality(Modality.APPLICATION_MODAL);
+                            // Create new suggestionpanel put panel into new scene
+                            SuggestionPanel suggestionPanel = new SuggestionPanel();
+                            Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent());
+                            suggestionStage.setScene(suggestionScene);
+                            suggestionStage.show();
+                            //On click of submit button,suggestion takes place
+                            suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent event) {
+                                    System.out.println(suggestionPanel.getSuggestedSuspect() + " " +suggestionPanel.getSuggestedRoom()+ " " + suggestionPanel.getSuggestedWeapon() );
+                                }
+                            });
+
+                        }
+                    });
+
                     if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
@@ -658,9 +677,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * handles movement of agent player p, calls updateView() after each move
-     * to see agent moves in real time on the board
-     * @param p 
+     * handles movement of agent player p, calls updateView() after each move to
+     * see agent moves in real time on the board
+     *
+     * @param p
      */
     private void handleAgentMove(Player p) {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
@@ -678,7 +698,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     /**
      * opens a dialog on the stage pStage to show a list of player cards
-     * @param pStage 
+     *
+     * @param pStage
      */
     @Override
     public void displayCardList(Stage pStage) {
@@ -707,15 +728,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      *
      * @param player
      * @param token
+     *
+     * public void assignTokenToPlayer(Player player, Token token) { try {
+     * player.setToken(token); } catch (Exception e) {
+     * System.out.println("Cannot take this Character"); } }
+     *
      */
-    public void assignTokenToPlayer(Player player, Token token) {
-        try {
-            player.setToken(token);
-        } catch (Exception e) {
-            System.out.println("Cannot take this Character");
-        }
-    }
-
     /**
      * resets the dice and counter
      */
@@ -728,7 +746,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     private void updateMovementAlerts() {
-        if(diceRoller.isDiceRolled()){
+        if (diceRoller.isDiceRolled()) {
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
         }
         alertTxt.setText(board.getAlertMsg());
