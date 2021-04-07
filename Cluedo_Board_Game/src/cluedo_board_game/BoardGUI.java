@@ -23,6 +23,7 @@ import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -163,7 +164,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Display a text for guidance 
         preGameText = new Text("Please fill player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
-
         actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons, preGameTextPane);
         //Set up position of nodes 
         selectionBoxesView.setAlignment(Pos.CENTER);
@@ -528,7 +528,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //Close the suggestionStage
                     suggestionStage.close();
                     //set suggested card is not found at someones hand yet
-                    boolean suggestedCardFound = false;
+                    boolean suggestedCardsFound = false;
                     //Loop to get hand of players starting from one player after the current player
                     for (int i = 0; i < board.getPlayerList().size(); i++) {
                         //A pointer with  modulus operator is used to iterate through all other players until index hits the current player again  
@@ -539,30 +539,50 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             Collections.shuffle(board.getPlayerList().get(pointer).getHand());
                             //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
                             //the card found is shown to player through counterTxt
-                            ArrayList<String> suggestedCardPossession;
+                            ArrayList<String> suggestedCardPossessions = new ArrayList<String>();
                             for (Card card : board.getPlayerList().get(pointer).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
                                         || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    //Different Texts depends on whether player is agent or human
-                                    if (board.getPlayerList().get(pointer).isAgent()) {
-                                        counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + card.getName() + " card");
-                                        //Add suggested player into room
-                                        suggestedCardFound = true;
-                                        break;
-                                        
-                                    }else if(!board.getPlayerList().get(pointer).isAgent()){
-                                        counterTxt.setText(board.getPlayerList().get(pointer).getName() + "is not agent and shows you " + card.getName() + " card");
-                                        //Add suggested player into room
-                                        suggestedCardFound = true;
-                                        break;
-                                    }
+                                    //suggestedCardFound = true;
+                                    suggestedCardPossessions.add(card.getName());
                                 }
+                            }
+                            //If suggested card/s appear in players hand,break the loop
+                            if (!suggestedCardPossessions.isEmpty()) {
+                                suggestedCardsFound = true;
+                                //If responding player is agent,automatically shows first value of arrayList
+                                if (board.getPlayerList().get(pointer).isAgent()) {
+                                    counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + suggestedCardPossessions.get(0) + " card");
+                                    //If player is human,post suggestion panel appears,where combobox value represents the card to be shown
+                                } else {
+                                    //Post suggestion panel is created after suggestion panel is submitted properly
+                                    HBox postSuggestionContent = new HBox();
+                                    Label postSuggestionLabel = new Label(board.getPlayerList().get(pointer).getName() + " shows you :");
+                                    ComboBox postSuggestionCombobox = new ComboBox(FXCollections.observableArrayList(suggestedCardPossessions));
+                                    Button postSuggestionButton = new Button("Show Card");
+                                    postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
+                                    postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + postSuggestionCombobox.getValue() + " card");
+                                            suggestionStage.close();
+                                        }
+                                    });
+                                    postSuggestionContent.setSpacing(20);
+                                    Scene postSuggestionScene = new Scene(postSuggestionContent);
+                                    suggestionStage.setScene(postSuggestionScene);
+                                    suggestionStage.setTitle("Please show a card!");
+                                    suggestionStage.show();
+                                }
+                                break;
+                            } else {
+                                suggestedCardsFound = false;
                             }
                         }
                     }
                     //If other players do not have the suggested cards,counterTxt gives a message
-                    if (!suggestedCardFound) {
+                    if (!suggestedCardsFound) {
                         counterTxt.setText("Other players do not have suggested cards");
                     }
                 } else {
@@ -579,6 +599,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * movement controls
      */
     @Override
+
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
             if (!board.getCurrentPlayer().isAgent()) {
@@ -736,7 +757,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 suggestionPanel = new SuggestionPanel();
                                 // gets name of current players room as parameter to create content of suggestionPanel
                                 String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
-                                //Put suggested panel content into new scene and shows with popup suggestionStage
+                                //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
                                 Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName));
                                 suggestionStage.setScene(suggestionScene);
                                 suggestionStage.show();
