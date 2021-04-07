@@ -598,6 +598,22 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
+                    case DIGIT1:
+                        board.currentPlayerExitsRoom(1, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        updateMovementAlerts();
+                        break;
+                    case DIGIT2:
+                        board.currentPlayerExitsRoom(2, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        updateMovementAlerts();
+                        break;
+                    case DIGIT3:
+                        board.currentPlayerExitsRoom(3, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        updateMovementAlerts();
+                        break;
+                    case DIGIT4:
+                        board.currentPlayerExitsRoom(4, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
+                        updateMovementAlerts();
+                        break;
                     default://Non valid Ket
                         alertTxt.setText("Not Valid Key");
                         System.out.println("Not Valid Key");
@@ -617,20 +633,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Updates GUI by removing all the tokens and tile text from boardView then
-     * adding them back again in their updated positions/states
+     * Updates GUI by removing all the tokens from boardView then
+     * adding them back again in their updated positions
      */
     @Override
     public void updateView() {
         for (Player p : board.getPlayerList()) {
             boardView.getChildren().remove(p.getToken());
             boardView.add(p.getToken(), p.getToken().getTokenLocation().getColIndex(), p.getToken().getTokenLocation().getRowIndex());
-        }
-        for (Room r : board.getRooms()) {
-            for (Tile t : r.getRoomDoors()) {
-                boardView.getChildren().remove(t.getText());
-                boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
-            }
         }
     }
 
@@ -736,6 +746,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if (board.getCurrentPlayer()
                             .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
+                    }
+                }
+                //add door text objects to board
+                for (Room r : board.getRooms()) {
+                    for (Tile t : r.getRoomDoors()) {
+                        boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
                     }
                 }
             }

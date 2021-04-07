@@ -301,15 +301,20 @@ public class Board implements BoardInterface {
         Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
         if (diceRolled) {
             if ((counter < diceTotal)) {
-                alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
-                movePlayer(currentPlayer, x, y);
-                System.out.println(getCurrentPlayer().getToken().getTokenLocation().getColIndex() + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
-                    counter++;
+                if(getRoomOfPlayer(currentPlayer) != null && !currentPlayer.isAgent()){
+                    alertMsg = "Choose door number to exit";
                 }
-                if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
-                    alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
-                    counter = diceTotal;
+                else{
+                    movePlayer(currentPlayer, x, y);
+                    alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex() 
+                            + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
+                    if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
+                        counter++;
+                    }
+                    if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
+                        alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
+                        counter = diceTotal;
+                    }
                 }
             } else {
                 alertMsg = "Please End Turn";
@@ -429,7 +434,7 @@ public class Board implements BoardInterface {
 
     /**
      * move a specified player p to a specified set of coordinates x and y only
-     * allows valid moves and handles player enter/exit room
+     * allows valid moves and handles agent player enter/exit room
      *
      * @param p
      * @param x
@@ -438,51 +443,46 @@ public class Board implements BoardInterface {
     public void movePlayer(Player p, int x, int y) {
         try {
             Room playerRoom = getRoomOfPlayer(p);
-            if (playerRoom != null) {
-                //Spawn at one of the doors
+            //if agent player is exiting room get a random door from room doors
+            if (playerRoom != null && p.isAgent()) {
                 Random random = new Random();
                 int doorToExit = random.nextInt(playerRoom.getRoomDoors().size());
-                //Gets the coordinates of doors 
-                int newX = playerRoom.getRoomDoors().get(doorToExit).getColIndex();
-                int newY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
-                //Place the player at the door
+                int exitX = playerRoom.getRoomDoors().get(doorToExit).getColIndex();
+                int exitY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
+                //use the coordinates of the door exit to move player
                 p.getToken().getTokenLocation().setOccupied(false);
-                if (!getDoorExit(getTileMap()[newX][newY]).IsOccupied()) {
+                if (!getDoorExit(getTileMap()[exitX][exitY]).IsOccupied()) {
+                    //also remove door text
                     for (Tile t : playerRoom.getRoomDoors()) {
                         t.setText("");
                     }
-                    p.moveToken(getDoorExit(getTileMap()[newX][newY]));
+                    p.moveToken(getDoorExit(getTileMap()[exitX][exitY]));
                 }
-            } //If the tile to be moved is not Wall or occupied,confirm movement
+            } //If the tile to be moved is not wall or occupied
             else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
-                // Loops through all rooms
+                //if the tile is a door
                 if (getTileMap()[x][y].getIsDoor()) {
-                    //Iterate through rooms
+                    //find the room that the door belongs to
                     for (Room room : getRooms()) {
-                        //If the board tile to be moved is door then of specified room
                         if (room.getRoomDoors().contains(getTileMap()[x][y])) {
-                            //And if the player has not in room yet,then move to room
+                            //if the player is not yet in the room
                             if (!room.getRoomSpace().contains(p.getToken().getTokenLocation())) {
-                                //Prints which room of entry
-                                System.out.println("You are entering the " + room.getRoomName());
-                                //Hit the door And spawn player at random location in room
+                                //allow player to enter room
                                 currentPlayerEntersRoom(room);
-                                //Ends token movements
                             } else {
-                                //If is in the player is in the room and about to move to door,let player move
-                                //If it is already in room, then do not spawn in room
+                                //if the player is exiting the room then allow them to move
                                 p.getToken().getTokenLocation().setOccupied(false);
                                 p.moveToken(getTileMap()[x][y]);
                             }
                         }
                     }
                 } else {
-                    //if neither wall nor door, make just a movement
+                    //if the tile is not a wall or door then just make move
                     p.getToken().getTokenLocation().setOccupied(false);
                     p.moveToken(getTileMap()[x][y]);
                 }
             } else {
-                //if tile to be moved is wall , then cannot move 
+                //if the tile to be moved is a wall don't move 
                 System.out.println("You cannot go through Wall or Occupied Tile");
                 alertMsg = "You cannot go through walls or occupied tiles!";
             }
@@ -604,6 +604,49 @@ public class Board implements BoardInterface {
             i++;
         }
         return r;
+    }
+
+    public void currentPlayerExitsRoom(int i, boolean diceRolled, int diceTotal) {
+        Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
+        if (diceRolled) {
+            if ((counter < diceTotal)) {
+                Room r = getRoomOfPlayer(currentPlayer);
+                if(r != null){
+                    if(i <= r.getRoomDoors().size()){
+                        int x = getDoorExit(r.getRoomDoors().get(i - 1)).getColIndex();
+                        int y = getDoorExit(r.getRoomDoors().get(i - 1)).getRowIndex();
+                        if(!tileMap[x][y].IsOccupied()){
+                            movePlayer(currentPlayer, x, y);
+                            alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
+                                    + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
+                            for (Tile t : r.getRoomDoors()) {
+                                t.setText("");
+                            }
+                            if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
+                                counter++;
+                            }
+                            if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
+                                alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
+                                counter = diceTotal;
+                            }
+                        }
+                        else {
+                            alertMsg = "Door is blocked!";
+                        }
+                    }
+                    else {
+                        alertMsg = "Operation not currently valid";
+                    }
+                }
+                else {
+                    alertMsg = "Operation not currently valid";
+                }
+            } else {
+                alertMsg = "Please End Turn";
+            }
+        } else {
+            alertMsg = "Please Roll the Dice";
+        }
     }
 
 }
