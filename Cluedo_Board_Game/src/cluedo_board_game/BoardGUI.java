@@ -539,14 +539,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             Collections.shuffle(board.getPlayerList().get(pointer).getHand());
                             //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
                             //the card found is shown to player through counterTxt
+                            ArrayList<String> suggestedCardPossession;
                             for (Card card : board.getPlayerList().get(pointer).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
                                         || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + card.getName() + " card");
-                                    //Add suggested player into room
-                                    suggestedCardFound = true;
-                                    break;
+                                    //Different Texts depends on whether player is agent or human
+                                    if (board.getPlayerList().get(pointer).isAgent()) {
+                                        counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + card.getName() + " card");
+                                        //Add suggested player into room
+                                        suggestedCardFound = true;
+                                        break;
+                                        
+                                    }else if(!board.getPlayerList().get(pointer).isAgent()){
+                                        counterTxt.setText(board.getPlayerList().get(pointer).getName() + "is not agent and shows you " + card.getName() + " card");
+                                        //Add suggested player into room
+                                        suggestedCardFound = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -628,8 +638,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Updates GUI by removing all the tokens from boardView then
-     * adding them back again in their updated positions
+     * Updates GUI by removing all the tokens from boardView then adding them
+     * back again in their updated positions
      */
     @Override
     public void updateView() {
