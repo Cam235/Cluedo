@@ -494,6 +494,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //Set suggestion alertText as 
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
+                    //Call suggested token into room
+                    for(Player p : board.getPlayerList()){
+                        if(p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())){
+                            for(Room r : board.getRooms()){
+                                if(r.getRoomName().equals(suggestionPanel.getSuggestedRoom())){
+                                    
+                                    Tile tileToCall = r.getFreeSpace().get(0);
+                                    int row = tileToCall.getRowIndex();
+                                    int col = tileToCall.getColIndex();
+                                    board.movePlayer(p, col, row);
+                                    updateView();
+                                    break;
+                                }
+                            }
+                            
+                        }
+                    }
+                    
                     //Close the suggestionStage
                     suggestionStage.close();
                     //set suggested card is not found at someones hand yet
@@ -513,6 +531,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
                                         || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
                                     counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + card.getName() + " card");
+                                    //Add suggested player into room
                                     suggestedCardFound = true;
                                     break;
                                 }
