@@ -102,8 +102,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //private boolean gameStarted;
     //Button to Start Game
     private Button startButton;
-//
+
+    //Suggest button which opens
     private Button suggestionBtn;
+    //the suggestion Panel and stage
+    SuggestionPanel suggestionPanel;
+    Stage suggestionStage;
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -475,6 +479,58 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
+    
+    /**
+     * private method to actions after suggestion
+     * 
+     */
+    private void suggestionHelper() {
+        //On click of submit button,suggestion takes place
+        suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //if combobox values are not empty start iterating
+                if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
+                    //Set suggestion alertText as 
+                    alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
+                            + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
+                    //Close the suggestionStage
+                    suggestionStage.close();
+                    //set suggested card is not found at someones hand yet
+                    boolean suggestedCardFound = false;
+                    //Loop to get hand of players starting from one player after the current player
+                    for (int i = 0; i < board.getPlayerList().size(); i++) {
+                        //A pointer with  modulus operator is used to iterate through all other players until index hits the current player again  
+                        int pointer = (i + board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
+                        // Gets the nearest player which is not a non-playing player ,and not a currentPlayer
+                        if ((board.getPlayerList().get(pointer).getHand() != null) && !board.getPlayerList().get(pointer).equals(board.getCurrentPlayer())) {
+                            //Shuffles players hand
+                            Collections.shuffle(board.getPlayerList().get(pointer).getHand());
+                            //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
+                            //the card found is shown to player through counterTxt
+                            for (Card card : board.getPlayerList().get(pointer).getHand()) {
+                                if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
+                                        || card.getName().equals(suggestionPanel.getSuggestedWeapon())
+                                        || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
+                                    counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + card.getName() + " card");
+                                    suggestedCardFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    //If other players do not have the suggested cards,counterTxt gives a message
+                    if (!suggestedCardFound) {
+                        counterTxt.setText("Other players do not have suggested cards");
+                    }
+                } else {
+                    System.out.println("Please fill all suggestion boxes");
+                }
+            }
+        }
+        );
+
+    }
 
     /**
      * sets up handlers for key presses during game play, including human player
@@ -619,63 +675,27 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-
+                            //Allows suggestion if player is in room
                             if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
                                 //Create new Stage for popup
-                                Stage suggestionStage = new Stage();
+                                suggestionStage = new Stage();
                                 suggestionStage.initModality(Modality.APPLICATION_MODAL);
-                                // Create new suggestionpanel put panel into new scene
-                                SuggestionPanel suggestionPanel = new SuggestionPanel();
+                                // Create new suggestion panel 
+                                suggestionPanel = new SuggestionPanel();
+                                // gets name of current players room as parameter to create content of suggestionPanel
                                 String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
-                                //Checks if the player is in some room
+                                //Put suggested panel content into new scene and shows with popup suggestionStage
                                 Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName));
                                 suggestionStage.setScene(suggestionScene);
                                 suggestionStage.show();
-                                //On click of submit button,suggestion takes place
-                                suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent event) {
-                                        if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
-                                            String currentplayerName = board.getCurrentPlayer().getName();
-                                            alertTxt.setText("Player " + currentplayerName + " suggested " + suggestionPanel.getSuggestedSuspect()
-                                                    + " murdered in " + suggestionRoomName + " with a " + suggestionPanel.getSuggestedWeapon());
-                                            suggestionStage.close();
-                                            //Loop to get hand of nearest player
-                                            boolean suggestedCardFound = false;
-                                            for (int i = 0; i < board.getPlayerList().size(); i++) {
-                                                int pointer = (i+ board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
-                                                // System.out.println(board.getPlayerList().get(poinSter) );
-                                                if ((board.getPlayerList().get(pointer).getHand() != null) && !board.getPlayerList().get(pointer).equals(board.getCurrentPlayer())) {
-                                                    //Shuffles to get different card values each time
-                                                    Collections.shuffle(board.getPlayerList().get(pointer).getHand());
-                                                    for (Card card : board.getPlayerList().get(pointer).getHand()) {
-                                                        if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
-                                                                || card.getName().equals(suggestionPanel.getSuggestedWeapon())
-                                                                || card.getName().equals(suggestionPanel.getSuggestedRoom())) {                                                            
-                                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you "+ card.getName() + " card");
-                                                            suggestedCardFound = true;
-                                                            break;
-                                                            
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            if(!suggestedCardFound){
-                                                counterTxt.setText("Other players do not have suggested cards");
-                                            }
-                                        } else {
-                                            System.out.println("Please fill all suggestion boxes");
-                                        }
-                                    }
-                                }
-                                );
+                                //Calls private method to start submission suggestion process 
+                                suggestionHelper();
                             } else {
                                 alertTxt.setText("Cannot make suggestion outside of rooms");
                             }
                         }
                     }
                     );
-
                     if (board.getCurrentPlayer()
                             .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
