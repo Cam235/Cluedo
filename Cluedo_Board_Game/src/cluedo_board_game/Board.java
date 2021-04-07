@@ -411,7 +411,7 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * summons and moves player token into Room
+     * summons and places player token into free space in Room
      *
      * @param player
      * @param room
@@ -421,10 +421,9 @@ public class Board implements BoardInterface {
         int i = (int) (Math.random() * room.getFreeSpace().size());
         int newX = room.getFreeSpace().get(i).getColIndex();
         int newY = room.getFreeSpace().get(i).getRowIndex();
-        for (int j = 0; j < room.getRoomDoors().size(); j++) {
-            room.getRoomDoors().get(j).setText("" + (j + 1));
-        }
-        movePlayer(player, newX, newY);
+        player.getToken().getTokenLocation().setOccupied(false);
+        player.moveToken(getTileMap()[newX][newY]);
+        //movePlayer(player, newX, newY);
     }
 
     /**

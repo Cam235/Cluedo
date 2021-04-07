@@ -500,10 +500,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         if (p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())) {
                             for (Room r : board.getRooms()) {
                                 if (r.getRoomName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    Tile tileToCall = r.getFreeSpace().get(0);
-                                    int row = tileToCall.getRowIndex();
-                                    int col = tileToCall.getColIndex();
-                                    board.movePlayer(p, col, row);
+                                    board.callPlayerToRoom(p, r);
                                     updateView();
                                     break;
                                 }
@@ -517,14 +514,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             if (weapon.getName().equals(suggestionPanel.getSuggestedWeapon()) && room.getRoomName().equals(suggestionPanel.getSuggestedRoom())
                                     && !room.getRoomWeapons().contains(weapon)) {
                                 board.placeWeaponToRoom(room, weapon);
-                                for(ImageView weaponImageView : weaponImageViews){
-                                    if(weaponImageView.getImage().equals(weapon.getWeaponImage())){
+                                for (ImageView weaponImageView : weaponImageViews) {
+                                    if (weaponImageView.getImage().equals(weapon.getWeaponImage())) {
                                         boardView.getChildren().remove(weaponImageView);
-                                        boardView.add(weaponImageView, weapon.getWeaponLocation().getColIndex(),weapon.getWeaponLocation().getRowIndex());
+                                        boardView.add(weaponImageView, weapon.getWeaponLocation().getColIndex(), weapon.getWeaponLocation().getRowIndex());
                                     }
                                 }
-                                //ImageView newLocationView = new ImageView(w.getWeaponImage());                                
-                                //boardView.add(newLocationView, w.getWeaponLocation().getColIndex(), w.getWeaponLocation().getRowIndex());
 
                             }
                         }
