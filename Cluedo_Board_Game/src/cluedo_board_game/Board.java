@@ -278,7 +278,7 @@ public class Board implements BoardInterface {
                     playerAdded = true;
                 }
             }
-        } 
+        }
     }
 
     @Override
@@ -287,13 +287,14 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * moves the current player to coordinates x y as long as dice is rolled and counter is less that dice total,
-     * increments counter if move is made, max out counter if player enters room
-     * 
+     * moves the current player to coordinates x y as long as dice is rolled and
+     * counter is less that dice total, increments counter if move is made, max
+     * out counter if player enters room
+     *
      * @param x
      * @param y
      * @param diceRolled
-     * @param diceTotal 
+     * @param diceTotal
      */
     @Override
     public void moveCurrentPlayer(int x, int y, boolean diceRolled, int diceTotal) {
@@ -319,21 +320,21 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * orders the player list based on the name of their character token
-     * in the order: "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
+     * orders the player list based on the name of their character token in the
+     * order: "Miss Scarlett","Colonel
+     * Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
      */
     @Override
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
         //creates array of character names in appropriate order
-        String[] playerNames = { "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum" };
+        String[] playerNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
         //gets each player in the correct order using playerNames and stores them in list
-        for(String name: playerNames){
-            if(getPlayerByCharacterName(name)!=null){
+        for (String name : playerNames) {
+            if (getPlayerByCharacterName(name) != null) {
                 tempList.add(getPlayerByCharacterName(name));
-            }
-            //if any player is missing alert console
-            else{
+            } //if any player is missing alert console
+            else {
                 //in actual game this should never happen
                 System.out.println("missing character " + name);
             }
@@ -358,13 +359,14 @@ public class Board implements BoardInterface {
 
     /**
      * returns the next playing player from a given player p
+     *
      * @param p
      * @return the next playing player
      */
     public Player getNextActivePlayer(Player p) {
         if (playerList.contains(p)) {
             int i = 0;
-            do{
+            do {
                 if (playerList.indexOf(p) == playerList.size() - 1) {
                     p = playerList.get(0);
                 } else {
@@ -372,10 +374,9 @@ public class Board implements BoardInterface {
                 }
                 i++;
             } while (!p.getIsPlaying() && i < playerList.size());
-            if(p.getIsPlaying()){
+            if (p.getIsPlaying()) {
                 return p;
-            }
-            else{
+            } else {
                 System.out.println("No remaining active players");
                 return null;
             }
@@ -395,23 +396,40 @@ public class Board implements BoardInterface {
 
     /**
      * moves the current player to a random space in a given room
-     * @param room 
+     *
+     * @param room
      */
     public void currentPlayerEntersRoom(Room room) {
         //move player to a random free tile in the room
         int i = (int) (Math.random() * room.getFreeSpace().size());
         int newX = room.getFreeSpace().get(i).getColIndex();
         int newY = room.getFreeSpace().get(i).getRowIndex();
-        for(int j = 0; j < room.getRoomDoors().size(); j++){
-            room.getRoomDoors().get(j).setText("" + (j+1));
+        for (int j = 0; j < room.getRoomDoors().size(); j++) {
+            room.getRoomDoors().get(j).setText("" + (j + 1));
         }
         movePlayer(currentPlayer, newX, newY);
     }
-    
 
     /**
-     * move a specified player p to a specified set of coordinates x and y
-     * only allows valid moves and handles player enter/exit room
+     * summons and moves player token into Room
+     *
+     * @param player
+     * @param room
+     */
+    public void callPlayerToRoom(Player player, Room room) {
+        //move player to a random free tile in the room
+        int i = (int) (Math.random() * room.getFreeSpace().size());
+        int newX = room.getFreeSpace().get(i).getColIndex();
+        int newY = room.getFreeSpace().get(i).getRowIndex();
+        for (int j = 0; j < room.getRoomDoors().size(); j++) {
+            room.getRoomDoors().get(j).setText("" + (j + 1));
+        }
+        movePlayer(player, newX, newY);
+    }
+
+    /**
+     * move a specified player p to a specified set of coordinates x and y only
+     * allows valid moves and handles player enter/exit room
      *
      * @param p
      * @param x
@@ -420,7 +438,7 @@ public class Board implements BoardInterface {
     public void movePlayer(Player p, int x, int y) {
         try {
             Room playerRoom = getRoomOfPlayer(p);
-            if(playerRoom != null){
+            if (playerRoom != null) {
                 //Spawn at one of the doors
                 Random random = new Random();
                 int doorToExit = random.nextInt(playerRoom.getRoomDoors().size());
@@ -429,14 +447,13 @@ public class Board implements BoardInterface {
                 int newY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
                 //Place the player at the door
                 p.getToken().getTokenLocation().setOccupied(false);
-                if(!getDoorExit(getTileMap()[newX][newY]).IsOccupied()){
-                    for(Tile t: playerRoom.getRoomDoors()){
+                if (!getDoorExit(getTileMap()[newX][newY]).IsOccupied()) {
+                    for (Tile t : playerRoom.getRoomDoors()) {
                         t.setText("");
                     }
                     p.moveToken(getDoorExit(getTileMap()[newX][newY]));
                 }
-            }
-            //If the tile to be moved is not Wall or occupied,confirm movement
+            } //If the tile to be moved is not Wall or occupied,confirm movement
             else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
                 // Loops through all rooms
                 if (getTileMap()[x][y].getIsDoor()) {
@@ -459,8 +476,7 @@ public class Board implements BoardInterface {
                             }
                         }
                     }
-                } 
-                else {
+                } else {
                     //if neither wall nor door, make just a movement
                     p.getToken().getTokenLocation().setOccupied(false);
                     p.moveToken(getTileMap()[x][y]);
@@ -475,40 +491,43 @@ public class Board implements BoardInterface {
             alertMsg = "Invalid Move!";
         }
     }
-    
+
     /**
-     * returns the current room of player p if they are in a room, null otherwise
+     * returns the current room of player p if they are in a room, null
+     * otherwise
+     *
      * @param p
      * @return null or player p's room
      */
-    public Room getRoomOfPlayer(Player p){
+    public Room getRoomOfPlayer(Player p) {
         Room room = null;
         boolean roomFound = false; //whether a room that contains the player is found
         int i = 0;
-        while(!roomFound && i < getRooms().size()){
+        while (!roomFound && i < getRooms().size()) {
             room = getRooms().get(i);
             if (room.checkTileInRoom(currentPlayer.getToken().getTokenLocation())) {
                 roomFound = true;
-            }
-            else {
+            } else {
                 room = null;
             }
             i++;
         }
         return room;
     }
-    
+
     /**
-     * returns a player p given a character name cName or null if the player doesn't exist
+     * returns a player p given a character name cName or null if the player
+     * doesn't exist
+     *
      * @param cName
      * @return null or Player p
      */
-    public Player getPlayerByCharacterName(String cName){
+    public Player getPlayerByCharacterName(String cName) {
         Boolean found = false;
         int i = 0;
         Player p = null;
-        while(!found && i < playerList.size()){
-            if(playerList.get(i).getToken().getName().equals(cName)){
+        while (!found && i < playerList.size()) {
+            if (playerList.get(i).getToken().getName().equals(cName)) {
                 p = playerList.get(i);
                 found = true;
             }
@@ -516,20 +535,20 @@ public class Board implements BoardInterface {
         }
         return p;
     }
-    
+
     /**
-     * utilises the card distributor object to distribute cards to each playing player fairly,
-     * current build uses a predefined list of card names 
+     * utilises the card distributor object to distribute cards to each playing
+     * player fairly, current build uses a predefined list of card names
      */
-    public void distributeCards(){
+    public void distributeCards() {
         //use predefined list of card names for now
-        Card[] pCards = {new Card(CardType.Person,"Miss Scarlett"),new Card(CardType.Person,"Colonel Mustard"),new Card(CardType.Person,"Mrs.White"),
-            new Card(CardType.Person,"Mr.Green"),new Card(CardType.Person,"Mrs.Peacock"),new Card(CardType.Person,"Professor Plum")};
-        Card[] wCards = {new Card(CardType.Weapon,"Dagger"),new Card(CardType.Weapon,"Candlestick"),new Card(CardType.Weapon,"Revolver"),
-            new Card(CardType.Weapon,"Rope"),new Card(CardType.Weapon,"Leadpiping"),new Card(CardType.Weapon,"Spanner")};
-        Card[] rCards = {new Card(CardType.Room,"Bathroom"),new Card(CardType.Room,"Diningroom"),new Card(CardType.Room,"Kitchen"),
-            new Card(CardType.Room,"Ballroom"),new Card(CardType.Room,"Conservatory"),new Card(CardType.Room,"Gamesroom"),
-            new Card(CardType.Room,"Library"),new Card(CardType.Room,"Hallway"),new Card(CardType.Room,"Office")};
+        Card[] pCards = {new Card(CardType.Person, "Miss Scarlett"), new Card(CardType.Person, "Colonel Mustard"), new Card(CardType.Person, "Mrs.White"),
+            new Card(CardType.Person, "Mr.Green"), new Card(CardType.Person, "Mrs.Peacock"), new Card(CardType.Person, "Professor Plum")};
+        Card[] wCards = {new Card(CardType.Weapon, "Dagger"), new Card(CardType.Weapon, "Candlestick"), new Card(CardType.Weapon, "Revolver"),
+            new Card(CardType.Weapon, "Rope"), new Card(CardType.Weapon, "Leadpiping"), new Card(CardType.Weapon, "Spanner")};
+        Card[] rCards = {new Card(CardType.Room, "Bathroom"), new Card(CardType.Room, "Diningroom"), new Card(CardType.Room, "Kitchen"),
+            new Card(CardType.Room, "Ballroom"), new Card(CardType.Room, "Conservatory"), new Card(CardType.Room, "Gamesroom"),
+            new Card(CardType.Room, "Library"), new Card(CardType.Room, "Hallway"), new Card(CardType.Room, "Office")};
         ArrayList<Card> cList = new ArrayList<>();
         cList.addAll(Arrays.asList(pCards));
         cList.addAll(Arrays.asList(wCards));
@@ -538,7 +557,7 @@ public class Board implements BoardInterface {
         cardDistributor.setEnvelope();
         cardDistributor.shuffleCards();
         cardDistributor.dealCards(playerList);
-        
+
     }
 
     public int getCounter() {
@@ -552,38 +571,33 @@ public class Board implements BoardInterface {
     public String getAlertMsg() {
         return alertMsg;
     }
-    
-    public Tile getDoorExit(Tile door){
-        if(!door.getIsDoor()){
+
+    public Tile getDoorExit(Tile door) {
+        if (!door.getIsDoor()) {
             System.out.println("Tile is not a door");
             return null;
-        }
-        else{
-            if(getRoomOfTile(tileMap[door.getColIndex() + 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() + 1][door.getRowIndex()].getIsWall()){
-                return(tileMap[door.getColIndex() + 1][door.getRowIndex()]);
-            }
-            else if(getRoomOfTile(tileMap[door.getColIndex() - 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() - 1][door.getRowIndex()].getIsWall()){
-                return(tileMap[door.getColIndex() - 1][door.getRowIndex()]);
-            }
-            else if(getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() + 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() + 1].getIsWall()){
-                return(tileMap[door.getColIndex()][door.getRowIndex() + 1]);
-            }
-            else if(getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() - 1]) == null  && !tileMap[door.getColIndex()][door.getRowIndex() - 1].getIsWall()){
-                return(tileMap[door.getColIndex()][door.getRowIndex() - 1]);
-            }
-            else{
+        } else {
+            if (getRoomOfTile(tileMap[door.getColIndex() + 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() + 1][door.getRowIndex()].getIsWall()) {
+                return (tileMap[door.getColIndex() + 1][door.getRowIndex()]);
+            } else if (getRoomOfTile(tileMap[door.getColIndex() - 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() - 1][door.getRowIndex()].getIsWall()) {
+                return (tileMap[door.getColIndex() - 1][door.getRowIndex()]);
+            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() + 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() + 1].getIsWall()) {
+                return (tileMap[door.getColIndex()][door.getRowIndex() + 1]);
+            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() - 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() - 1].getIsWall()) {
+                return (tileMap[door.getColIndex()][door.getRowIndex() - 1]);
+            } else {
                 System.out.println("No valid tile to move to");
                 return null;
             }
         }
     }
-    
-    private Room getRoomOfTile(Tile t){
+
+    private Room getRoomOfTile(Tile t) {
         boolean found = false;
         int i = 0;
         Room r = null;
-        while(!found && i < rooms.size()){
-            if(rooms.get(i).getRoomSpace().contains(t) || rooms.get(i).getRoomDoors().contains(t)){
+        while (!found && i < rooms.size()) {
+            if (rooms.get(i).getRoomSpace().contains(t) || rooms.get(i).getRoomDoors().contains(t)) {
                 r = rooms.get(i);
                 found = true;
             }
@@ -591,5 +605,5 @@ public class Board implements BoardInterface {
         }
         return r;
     }
-    
+
 }

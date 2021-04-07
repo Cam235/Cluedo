@@ -79,8 +79,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //DiceRoll object to step as much as dice Values
     private DiceRoller diceRoller;
     //To measure steps not surpassing value of dice
-    //int counter = 0;
+
     //ImageView of Weapon
+    ArrayList<ImageView> weaponImageViews = new ArrayList<>();
 
     private Button showHandBtn;
     private Button endTurnBtn;
@@ -465,8 +466,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 for (Weapon weapon : board.getWeapons()) {
                     //Gets the first placed weapons location
                     if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
-                        ImageView weaponImageView = new ImageView(weapon.getWeaponImage());
-                        boardView.add(weaponImageView, _c, _r);
+                        weaponImageViews.add(new ImageView(weapon.getWeaponImage()));
+                        boardView.add(weaponImageViews.get(weaponImageViews.size() - 1), _c, _r);
                     }
                 }
             }
@@ -479,10 +480,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
-    
+
     /**
      * private method to actions after suggestion
-     * 
+     *
      */
     private void suggestionHelper() {
         //On click of submit button,suggestion takes place
@@ -495,11 +496,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
                     //Call suggested token into room
-                    for(Player p : board.getPlayerList()){
-                        if(p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())){
-                            for(Room r : board.getRooms()){
-                                if(r.getRoomName().equals(suggestionPanel.getSuggestedRoom())){
-                                    
+                    for (Player p : board.getPlayerList()) {
+                        if (p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())) {
+                            for (Room r : board.getRooms()) {
+                                if (r.getRoomName().equals(suggestionPanel.getSuggestedRoom())) {
                                     Tile tileToCall = r.getFreeSpace().get(0);
                                     int row = tileToCall.getRowIndex();
                                     int col = tileToCall.getColIndex();
@@ -508,10 +508,28 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     break;
                                 }
                             }
-                            
                         }
                     }
-                    
+                    //Call suggested weapon into room
+                    for (Room room : board.getRooms()) {
+                        for (Weapon weapon : board.getWeapons()) {
+                            //If room does not have already have suggested object
+                            if (weapon.getName().equals(suggestionPanel.getSuggestedWeapon()) && room.getRoomName().equals(suggestionPanel.getSuggestedRoom())
+                                    && !room.getRoomWeapons().contains(weapon)) {
+                                board.placeWeaponToRoom(room, weapon);
+                                for(ImageView weaponImageView : weaponImageViews){
+                                    if(weaponImageView.getImage().equals(weapon.getWeaponImage())){
+                                        boardView.getChildren().remove(weaponImageView);
+                                        boardView.add(weaponImageView, weapon.getWeaponLocation().getColIndex(),weapon.getWeaponLocation().getRowIndex());
+                                    }
+                                }
+                                //ImageView newLocationView = new ImageView(w.getWeaponImage());                                
+                                //boardView.add(newLocationView, w.getWeaponLocation().getColIndex(), w.getWeaponLocation().getRowIndex());
+
+                            }
+                        }
+                    }
+
                     //Close the suggestionStage
                     suggestionStage.close();
                     //set suggested card is not found at someones hand yet
