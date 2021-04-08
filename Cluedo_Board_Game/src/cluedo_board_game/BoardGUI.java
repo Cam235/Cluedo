@@ -101,16 +101,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Boolean to declare wheter game started or not
-    //private boolean gameStarted;
     //Button to Start Game
     private Button startButton;
     private Button passageBtn; 
-    
-    //Suggest button which opens
+
+    //Suggest button 
     private Button suggestionBtn;
+    //Accuse button
+    private Button accusationBtn;
     //the suggestion Panel and stage
     SuggestionPanel suggestionPanel;
     Stage suggestionStage;
+    
+    //for acqusationPanel and Stage
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -328,6 +331,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         VBox diceRollerView = diceRoller.createContent();
         //Button to switch between Player and AI
         suggestionBtn = new Button("Make Suggestion");
+        accusationBtn = new Button("Make Accusation");
         showHandBtn = new Button("Show Hand");
         endTurnBtn = new Button("End Turn");
         passageBtn = new Button("Take passage");
@@ -490,8 +494,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * private method to actions after suggestion
-     *
+     * private method to actions after suggestion is done
+     * Shows card automatically if responding player is agent, else opens a post suggestion window for responding human player to  
+     * choose which card to show
      */
     private void suggestionHelper() {
         //On click of submit button,suggestion takes place
@@ -607,7 +612,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * movement controls
      */
     @Override
-
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
             if (!board.getCurrentPlayer().isAgent()) {
@@ -693,7 +697,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                boolean IsInitialisable = true;
+                boolean gameStarting = true;
                 ArrayList<String> characterRepetitionchecklist = new ArrayList<String>();
                 //Checks if any variable is missing
                 for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
@@ -702,7 +706,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
                         //In any errors, prevents initialisation of the game
                         preGameText.setText("Please fill player details completely !!!");
-                        IsInitialisable = false;
+                        gameStarting = false;
                         break;
                     }
                     //Checks for repetition
@@ -710,11 +714,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         characterRepetitionchecklist.add(playerselectionbox.getPlayerCharacter());
                     } else {
                         preGameText.setText("A character cannot be chosen more than once !!!");
-                        IsInitialisable = false;
+                        gameStarting = false;
                     }
                 }
                 //when setup fullfils all requirements, game can be started
-                if (IsInitialisable) { //Starts the game
+                if (gameStarting) { //Starts the game
                     startButton.setDisable(true);
                     //For setting gameScene and showing labels
                     setUpBoard();
