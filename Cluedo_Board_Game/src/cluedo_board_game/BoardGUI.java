@@ -72,7 +72,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //IsGameRunning
     boolean isRunning = true;
     //Size of tiles
-    public static final int Tile_Size = 20;
+    public static final int TILE_SIZE = 20;
     //public static final int Token_Radius = 15;
     //Number of Rows and Column
     private final int columns = 28;
@@ -97,14 +97,15 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     //NO of player SelectionBoxes
     private int playerSelectionBoxesNumber = 2;
-    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<PlayerSelectionBox>();
+    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Boolean to declare wheter game started or not
     //private boolean gameStarted;
     //Button to Start Game
     private Button startButton;
-
+    private Button passageBtn; 
+    
     //Suggest button which opens
     private Button suggestionBtn;
     //the suggestion Panel and stage
@@ -306,6 +307,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
         Room office = board.initialiseRoom("Office", officeSpace, officeDoors);
+        
+        office.setPassageExit(bathroom);
+        bathroom.setPassageExit(office);
+        kitchen.setPassageExit(conservatory);
+        conservatory.setPassageExit(kitchen);
     }
 
     /**
@@ -324,6 +330,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         suggestionBtn = new Button("Make Suggestion");
         showHandBtn = new Button("Show Hand");
         endTurnBtn = new Button("End Turn");
+        passageBtn = new Button("Take passage");
+        passageBtn.setVisible(false);
         controlsHbx = new HBox();
         controlsHbx.setAlignment(Pos.CENTER);
 
@@ -356,8 +364,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Set up the Image of Board
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                board.getTileMap()[_c][_r].setWidth(Tile_Size);
-                board.getTileMap()[_c][_r].setHeight(Tile_Size);
+                board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
+                board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
                 if (board.getTileMap()[_c][_r].getIsWall()) {
                     board.getTileMap()[_c][_r].setFill(Color.BLUE);
                     board.getTileMap()[_c][_r].setStroke(Color.BLUE);
@@ -473,7 +481,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, endTurnBtn);
+        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, endTurnBtn, passageBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
@@ -500,7 +508,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         if (p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())) {
                             for (Room r : board.getRooms()) {
                                 if (r.getRoomName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    board.callPlayerToRoom(p, r);
+                                    board.playerEntersRoom(p, r);
                                     updateView();
                                     break;
                                 }
@@ -531,16 +539,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     boolean suggestedCardsFound = false;
                     //Loop to get hand of players starting from one player after the current player
                     for (int i = 0; i < board.getPlayerList().size(); i++) {
-                        //A pointer with  modulus operator is used to iterate through all other players until index hits the current player again  
-                        int pointer = (i + board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
+                        //pointer j is used to iterate through all other players until index hits the current player again  
+                        int j = (i + board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
                         // Gets the nearest player which is not a non-playing player ,and not a currentPlayer
-                        if ((board.getPlayerList().get(pointer).getHand() != null) && !board.getPlayerList().get(pointer).equals(board.getCurrentPlayer())) {
+                        if ((board.getPlayerList().get(j).getHand() != null) && !board.getPlayerList().get(j).equals(board.getCurrentPlayer())) {
                             //Shuffles players hand
-                            Collections.shuffle(board.getPlayerList().get(pointer).getHand());
+                            Collections.shuffle(board.getPlayerList().get(j).getHand());
                             //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
                             //the card found is shown to player through counterTxt
                             ArrayList<String> suggestedCardPossessions = new ArrayList<String>();
-                            for (Card card : board.getPlayerList().get(pointer).getHand()) {
+                            for (Card card : board.getPlayerList().get(j).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
                                         || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
@@ -552,20 +560,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             if (!suggestedCardPossessions.isEmpty()) {
                                 suggestedCardsFound = true;
                                 //If responding player is agent,automatically shows first value of arrayList
-                                if (board.getPlayerList().get(pointer).isAgent()) {
-                                    counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + suggestedCardPossessions.get(0) + " card");
+                                if (board.getPlayerList().get(j).isAgent()) {
+                                    counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + suggestedCardPossessions.get(0) + " card");
                                     //If player is human,post suggestion panel appears,where combobox value represents the card to be shown
                                 } else {
                                     //Post suggestion panel is created after suggestion panel is submitted properly
                                     HBox postSuggestionContent = new HBox();
-                                    Label postSuggestionLabel = new Label(board.getPlayerList().get(pointer).getName() + " shows you :");
+                                    Label postSuggestionLabel = new Label(board.getPlayerList().get(j).getName() + " shows you :");
                                     ComboBox postSuggestionCombobox = new ComboBox(FXCollections.observableArrayList(suggestedCardPossessions));
                                     Button postSuggestionButton = new Button("Show Card");
                                     postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
                                     postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            counterTxt.setText(board.getPlayerList().get(pointer).getName() + " shows you " + postSuggestionCombobox.getValue() + " card");
+                                            counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + postSuggestionCombobox.getValue() + " card");
                                             suggestionStage.close();
                                         }
                                     });
@@ -718,6 +726,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     endTurnBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+                            Player p = board.getCurrentPlayer();
                             board.incrementCurrentPlayer();
                             resetDice();
                             alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
@@ -725,13 +734,25 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
                             for (Room r : board.getRooms()) {
                                 for (int i = 0; i < r.getRoomDoors().size(); i++) {
-                                    if (board.getRoomOfPlayer(board.getCurrentPlayer()) != r) {
-                                        r.getRoomDoors().get(i).getText().setText("");
+                                    r.getRoomDoors().get(i).getText().setText("");
+                                }
+                            }
+                            
+                            Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
+                            if(currentPlayerRoom != null){
+                                for (int i = 0; i < currentPlayerRoom.getRoomDoors().size(); i++) {
+                                    currentPlayerRoom.getRoomDoors().get(i).getText().setText("" + (i + 1));
+                                }
+                                if(!board.getCurrentPlayer().isAgent()){
+                                    if (p.isAgent()) {
+                                        Runnable enablePassageRunnable = () -> enablePassageBtn();
+                                        Platform.runLater(enablePassageRunnable);
                                     } else {
-                                        r.getRoomDoors().get(i).getText().setText("" + (i + 1));
+                                        enablePassageBtn();
                                     }
                                 }
                             }
+                            
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();
@@ -769,8 +790,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         }
                     }
                     );
-                    if (board.getCurrentPlayer()
-                            .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
+                    if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
                 }
@@ -780,6 +800,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
                     }
                 }
+                setUpPassageBtn();
             }
         }
         );
@@ -812,7 +833,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         endTurnBtn.setDisable(true);
         //rolls the dice
         diceRoller.getRollButton().fire();
-
         //use current agent to make sure thread doesn't try to move the next player 
         Player currentAgent = board.getCurrentPlayer();
         //Starts the thread
@@ -881,17 +901,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * Assigns the existing token on board on some player
-     *
-     * @param player
-     * @param token
-     *
-     * public void assignTokenToPlayer(Player player, Token token) { try {
-     * player.setToken(token); } catch (Exception e) {
-     * System.out.println("Cannot take this Character"); } }
-     *
-     */
-    /**
      * resets the dice and counter
      */
     private void resetDice() {
@@ -907,6 +916,36 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
         }
         alertTxt.setText(board.getAlertMsg());
+        if(board.getRoomOfPlayer(board.getCurrentPlayer()) == null){
+            passageBtn.setVisible(false);
+        }
+    }
+    
+    private void setUpPassageBtn(){
+        passageBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                diceRoller.getRollButton().fire();
+                for (int i = 0; i < board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().size(); i++) {
+                    board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().get(i).getText().setText("");
+                }
+                board.playerEntersRoom(board.getCurrentPlayer(), board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit());
+                board.setCounter(diceRoller.getDiceTotal());
+                updateView();
+                updateMovementAlerts();
+                alertTxt.setText(board.getCurrentPlayer().getName() + " took passage to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getRoomName());
+                passageBtn.setVisible(false);
+            }
+        });
+    }
+    
+    
+    private void enablePassageBtn(){
+        Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
+        if (currentPlayerRoom.getPassageExit() != null) {
+            passageBtn.setText("Move to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getRoomName());
+            passageBtn.setVisible(true);
+        }
     }
 
 }

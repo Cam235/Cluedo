@@ -18,6 +18,7 @@ public class Room implements RoomInterface {
     private ArrayList<Tile> roomSpace; //for inside of room
     private ArrayList<Tile> roomDoors = new ArrayList<Tile>(); // roomdoors
     private ArrayList<Weapon> roomWeapons = new ArrayList<Weapon>();
+    private Room passageExit;
 
     /**
      * Constructor for room taking roomName and roomSpace
@@ -186,4 +187,12 @@ public class Room implements RoomInterface {
         return freeSpace;
     }
 
+    public Room getPassageExit() {
+        return passageExit;
+    }
+
+    public void setPassageExit(Room passageExit) {
+        this.passageExit = passageExit;
+    }
+    
 }

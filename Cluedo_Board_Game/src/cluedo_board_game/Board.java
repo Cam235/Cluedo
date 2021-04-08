@@ -306,9 +306,9 @@ public class Board implements BoardInterface {
                 }
                 else{
                     movePlayer(currentPlayer, x, y);
-                    alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex() 
-                            + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
                     if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
+                        alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
+                                + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
                         counter++;
                     }
                     if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
@@ -400,35 +400,23 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * moves the current player to a random space in a given room
-     *
-     * @param room
-     */
-    public void currentPlayerEntersRoom(Room room) {
-        //move player to a random free tile in the room
-        int i = (int) (Math.random() * room.getFreeSpace().size());
-        int newX = room.getFreeSpace().get(i).getColIndex();
-        int newY = room.getFreeSpace().get(i).getRowIndex();
-        for (int j = 0; j < room.getRoomDoors().size(); j++) {
-            room.getRoomDoors().get(j).setText("" + (j + 1));
-        }
-        movePlayer(currentPlayer, newX, newY);
-    }
-
-    /**
-     * summons and places player token into free space in Room
+     * moves a given player to a random space in a given room
      *
      * @param player
      * @param room
      */
-    public void callPlayerToRoom(Player player, Room room) {
+    public void playerEntersRoom(Player player, Room room) {
         //move player to a random free tile in the room
         int i = (int) (Math.random() * room.getFreeSpace().size());
         int newX = room.getFreeSpace().get(i).getColIndex();
         int newY = room.getFreeSpace().get(i).getRowIndex();
         player.getToken().getTokenLocation().setOccupied(false);
+        if(player == currentPlayer){
+            for (int j = 0; j < room.getRoomDoors().size(); j++) {
+                room.getRoomDoors().get(j).setText("" + (j + 1));
+            }
+        }
         player.moveToken(getTileMap()[newX][newY]);
-        //movePlayer(player, newX, newY);
     }
 
     /**
@@ -464,15 +452,8 @@ public class Board implements BoardInterface {
                     //find the room that the door belongs to
                     for (Room room : getRooms()) {
                         if (room.getRoomDoors().contains(getTileMap()[x][y])) {
-                            //if the player is not yet in the room
-                            if (!room.getRoomSpace().contains(p.getToken().getTokenLocation())) {
-                                //allow player to enter room
-                                currentPlayerEntersRoom(room);
-                            } else {
-                                //if the player is exiting the room then allow them to move
-                                p.getToken().getTokenLocation().setOccupied(false);
-                                p.moveToken(getTileMap()[x][y]);
-                            }
+                            //allow player to enter room
+                            playerEntersRoom(currentPlayer, room);
                         }
                     }
                 } else {
@@ -481,7 +462,7 @@ public class Board implements BoardInterface {
                     p.moveToken(getTileMap()[x][y]);
                 }
             } else {
-                //if the tile to be moved is a wall don't move 
+                //if the tile to be moved is a wall or occupied don't move 
                 System.out.println("You cannot go through Wall or Occupied Tile");
                 alertMsg = "You cannot go through walls or occupied tiles!";
             }
@@ -644,8 +625,8 @@ public class Board implements BoardInterface {
                 alertMsg = "Please End Turn";
             }
         } else {
-            alertMsg = "Please Roll the Dice";
+            alertMsg = "Please Roll The Dice";
         }
     }
-
+    
 }
