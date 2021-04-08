@@ -38,6 +38,8 @@ public class Board implements BoardInterface {
     private Player currentPlayer;
     private int counter = 0;
     private String alertMsg = "";
+    //Gets Active player number
+    private int activePlayerNumber;
 
     //Sets Up the Board of Tiles
     public Board(int columns, int rows) {
@@ -55,6 +57,14 @@ public class Board implements BoardInterface {
 
         playerList = new ArrayList<>();
         idGenerator = new Random();
+    }
+
+    /**
+     *
+     * @return cardDistributor
+     */
+    public CardDistributor getCardDistributor() {
+        return cardDistributor;
     }
 
     /**
@@ -301,10 +311,9 @@ public class Board implements BoardInterface {
         Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
         if (diceRolled) {
             if ((counter < diceTotal)) {
-                if(getRoomOfPlayer(currentPlayer) != null && !currentPlayer.isAgent()){
+                if (getRoomOfPlayer(currentPlayer) != null && !currentPlayer.isAgent()) {
                     alertMsg = "Choose door number to exit";
-                }
-                else{
+                } else {
                     movePlayer(currentPlayer, x, y);
                     if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
                         alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
@@ -411,7 +420,7 @@ public class Board implements BoardInterface {
         int newX = room.getFreeSpace().get(i).getColIndex();
         int newY = room.getFreeSpace().get(i).getRowIndex();
         player.getToken().getTokenLocation().setOccupied(false);
-        if(player == currentPlayer){
+        if (player == currentPlayer) {
             for (int j = 0; j < room.getRoomDoors().size(); j++) {
                 room.getRoomDoors().get(j).setText("" + (j + 1));
             }
@@ -591,11 +600,11 @@ public class Board implements BoardInterface {
         if (diceRolled) {
             if ((counter < diceTotal)) {
                 Room r = getRoomOfPlayer(currentPlayer);
-                if(r != null){
-                    if(i <= r.getRoomDoors().size()){
+                if (r != null) {
+                    if (i <= r.getRoomDoors().size()) {
                         int x = getDoorExit(r.getRoomDoors().get(i - 1)).getColIndex();
                         int y = getDoorExit(r.getRoomDoors().get(i - 1)).getRowIndex();
-                        if(!tileMap[x][y].IsOccupied()){
+                        if (!tileMap[x][y].IsOccupied()) {
                             movePlayer(currentPlayer, x, y);
                             alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
                                     + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
@@ -609,16 +618,13 @@ public class Board implements BoardInterface {
                                 alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
                                 counter = diceTotal;
                             }
-                        }
-                        else {
+                        } else {
                             alertMsg = "Door is blocked!";
                         }
-                    }
-                    else {
+                    } else {
                         alertMsg = "Operation not currently valid";
                     }
-                }
-                else {
+                } else {
                     alertMsg = "Operation not currently valid";
                 }
             } else {
@@ -628,5 +634,7 @@ public class Board implements BoardInterface {
             alertMsg = "Please Roll The Dice";
         }
     }
-    
+
+
+
 }

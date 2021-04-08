@@ -25,7 +25,8 @@ import javafx.stage.Stage;
  *
  * @author Anilz
  */
-public class AccusationPanel extends Application {
+public class AccusationPanel  {
+    String accusingPlayersName;
 
     private String accusedSuspect;
     private String accusedRoom;
@@ -36,6 +37,8 @@ public class AccusationPanel extends Application {
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
 
     Button submitButton; // The submit button of th game
+    Button restartByWinButton;
+    Button spectateButton;
 
     public Parent createAccusationContent() {
         Label playerAccusationText = new Label("Player is making accusation!");
@@ -70,7 +73,27 @@ public class AccusationPanel extends Application {
 
         return accusationContent;
     }
-
+    
+    public Parent createCorrectAccusationContent(){
+        VBox correctAccusationContent = new VBox();
+        Label label = new Label("Player accused correct cards!!!");
+        Text text = new Text("Player has won the game!!!");
+        restartByWinButton = new Button("Restart Game");
+        correctAccusationContent.getChildren().addAll(label,text,restartByWinButton);
+        return correctAccusationContent;
+    }
+    
+    public Parent createFalseAccusationContent(){
+        VBox falseAccusationContent = new VBox();
+        Label label = new Label("Player did not accused correct cards!!!");
+        Text text = new Text("Player has lost the game!!!");
+        spectateButton = new Button("Spectate");
+        falseAccusationContent.getChildren().addAll(label,text,spectateButton);
+        return falseAccusationContent;
+    }
+    
+    
+/*
     @Override
     public void start(Stage primaryStage) {
 
@@ -82,12 +105,18 @@ public class AccusationPanel extends Application {
         primaryStage.show();
         submitButton.setOnAction(e -> System.out.println(accusedSuspect+" commited murder in "+accusedRoom+ " using "+ accusedWeapon));
     }
+    */
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
+    public String getAccusedSuspect() {
+        return accusedSuspect;
+    }
+
+    public String getAccusedRoom() {
+        return accusedRoom;
+    }
+
+    public String getAccusedWeapon() {
+        return accusedWeapon;
     }
 
 }

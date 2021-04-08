@@ -103,7 +103,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //Boolean to declare wheter game started or not
     //Button to Start Game
     private Button startButton;
-    private Button passageBtn; 
+    private Button passageBtn;
 
     //Suggest button 
     private Button suggestionBtn;
@@ -112,8 +112,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //the suggestion Panel and stage
     SuggestionPanel suggestionPanel;
     Stage suggestionStage;
-    
+
     //for acqusationPanel and Stage
+    AccusationPanel accusationPanel;
+    Stage accusationStage;
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -310,7 +312,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Tile officeDoor = board.getTileMap()[6][4];
         officeDoors.add(officeDoor);
         Room office = board.initialiseRoom("Office", officeSpace, officeDoors);
-        
+
         office.setPassageExit(bathroom);
         bathroom.setPassageExit(office);
         kitchen.setPassageExit(conservatory);
@@ -485,7 +487,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, endTurnBtn, passageBtn);
+        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
@@ -494,9 +496,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * private method to actions after suggestion is done
-     * Shows card automatically if responding player is agent, else opens a post suggestion window for responding human player to  
-     * choose which card to show
+     * private method to actions after suggestion is done Shows card
+     * automatically if responding player is agent, else opens a post suggestion
+     * window for responding human player to choose which card to show
      */
     private void suggestionHelper() {
         //On click of submit button,suggestion takes place
@@ -741,13 +743,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     r.getRoomDoors().get(i).getText().setText("");
                                 }
                             }
-                            
+
                             Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
-                            if(currentPlayerRoom != null){
+                            if (currentPlayerRoom != null) {
                                 for (int i = 0; i < currentPlayerRoom.getRoomDoors().size(); i++) {
                                     currentPlayerRoom.getRoomDoors().get(i).getText().setText("" + (i + 1));
                                 }
-                                if(!board.getCurrentPlayer().isAgent()){
+                                if (!board.getCurrentPlayer().isAgent()) {
                                     if (p.isAgent()) {
                                         Runnable enablePassageRunnable = () -> enablePassageBtn();
                                         Platform.runLater(enablePassageRunnable);
@@ -756,7 +758,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     }
                                 }
                             }
-                            
+
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();
@@ -773,8 +775,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            //Allows suggestion if player is in room
-                            if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
+                            //Allows suggestion if player is in room, and human
+                            if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
                                 //Create new Stage for popup
                                 suggestionStage = new Stage();
                                 suggestionStage.initModality(Modality.APPLICATION_MODAL);
@@ -794,7 +796,80 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         }
                     }
                     );
-                    if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
+                    accusationBtn.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            CardDistributor cardDistributor = board.getCardDistributor();
+                            if (!board.getCurrentPlayer().isAgent()) {
+                                //Printing names for testing
+                                System.out.println(cardDistributor.getMurderRoom().getName());
+                                System.out.println(cardDistributor.getMurderWeapon().getName());
+                                System.out.println(cardDistributor.getMurderer().getName());
+                                //setting up accusation stage
+                                accusationStage = new Stage();
+                                accusationStage.initModality(Modality.APPLICATION_MODAL);
+                                //Create new AcqusationPanel
+                                accusationPanel = new AccusationPanel();
+                                Scene accusationScene = new Scene(accusationPanel.createAccusationContent());
+                                accusationStage.setScene(accusationScene);
+                                accusationStage.show();
+                                //Set on Actions
+                                accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        alertTxt.setText(board.getCurrentPlayer().getName() + " accuses " + accusationPanel.getAccusedSuspect() + " for committing murder in " + accusationPanel.getAccusedRoom() + " using " + accusationPanel.getAccusedWeapon());
+
+                                        if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoom())
+                                                && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeapon())
+                                                && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspect())) {
+                                            Scene correctAccusationScene = new Scene(accusationPanel.createCorrectAccusationContent());
+                                            accusationStage.setScene(correctAccusationScene);
+                                            accusationStage.show();
+                                            counterTxt.setText("Accusation is correct, player wins the game");
+                                        } else {
+                                            Scene falseAccusationScene = new Scene(accusationPanel.createFalseAccusationContent());
+                                            accusationStage.setScene(falseAccusationScene);
+                                            accusationStage.show();
+                                            counterTxt.setText("Accusation is false");
+                                            accusationPanel.spectateButton.setOnAction(new EventHandler<ActionEvent>() {
+                                                @Override
+                                                public void handle(ActionEvent event) {
+                                                    accusationStage.hide();
+                                                    int activePlayerNumber = 0;
+                                                    for (Player p : board.getPlayerList()) {
+                                                        if (p.isPlaying) {
+                                                            activePlayerNumber++;
+                                                        }
+                                                    }
+                                                    //If players exists after 
+                                                    if (activePlayerNumber > 1) {
+                                                        Player playerToBeDisabled = board.getCurrentPlayer();
+                                                        endTurnBtn.fire();
+                                                        playerToBeDisabled.setIsPlaying(false);
+                                                        counterTxt.setText("Player lost the game!!!!");
+                                                        activePlayerNumber--;
+                                                        if (activePlayerNumber == 1) {
+                                                            counterTxt.setText("Since player is only player,cannot lose");
+                                                            endTurnBtn.setDisable(true);
+                                                        }
+                                                    } else {
+                                                        counterTxt.setText("Since player is only player,cannot lose");
+                                                        endTurnBtn.setDisable(true);
+                                                    }
+                                                }
+
+                                            });
+                                        }
+
+                                    }
+                                }
+                                );
+                            }
+                        }
+
+                    });
+                    if (board.getCurrentPlayer()
+                            .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
                 }
@@ -920,12 +995,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
         }
         alertTxt.setText(board.getAlertMsg());
-        if(board.getRoomOfPlayer(board.getCurrentPlayer()) == null){
+        if (board.getRoomOfPlayer(board.getCurrentPlayer()) == null) {
             passageBtn.setVisible(false);
         }
     }
-    
-    private void setUpPassageBtn(){
+
+    private void setUpPassageBtn() {
         passageBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -942,9 +1017,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
     }
-    
-    
-    private void enablePassageBtn(){
+
+    private void enablePassageBtn() {
         Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
         if (currentPlayerRoom.getPassageExit() != null) {
             passageBtn.setText("Move to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getRoomName());
