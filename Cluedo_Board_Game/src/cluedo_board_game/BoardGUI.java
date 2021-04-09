@@ -317,7 +317,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         bathroom.setPassageExit(office);
         kitchen.setPassageExit(conservatory);
         conservatory.setPassageExit(kitchen);
-        
+
         //creates staircase
         ArrayList<Tile> staircaseSpace = new ArrayList<>();
         for (int i = 11; i < 16; i++) {
@@ -369,9 +369,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Collections.shuffle(board.getWeapons());
         Collections.shuffle(board.getRooms());
         for (int i = 0; i < board.getWeapons().size(); i++) {
-            // Puts the weapon into room
-            board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
-            //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
+            if (!board.getRooms().get(i).getRoomName().equals("Staircase")) {
+                // Puts the weapon into room
+                board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
+                //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
+            }
         }
 
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
