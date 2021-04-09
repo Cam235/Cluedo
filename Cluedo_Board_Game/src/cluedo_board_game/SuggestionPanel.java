@@ -5,6 +5,7 @@
  */
 package cluedo_board_game;
 
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -36,11 +37,13 @@ public class SuggestionPanel {
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     //String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library"};
 
-    Button submitButton; // The submit button of th game
+    Button submitButton; //The submit button of th game
+    Button postSuggestionButton; //Respondent player showing card
+    ComboBox<String> postSuggestionCombobox; //holds respondent players possible cards to suggest
 
     public VBox createSuggestionContent(String roomName) {
         Label playerSuggestext = new Label("Player is making suggestion!");
-        
+
         //For Room--Static , will display the name room entered
         suggestedRoom = roomName;
         Label roomLabel = new Label("Room :   ");
@@ -48,8 +51,7 @@ public class SuggestionPanel {
         Text roomText = new Text(suggestedRoom);
         HBox roomSelection = new HBox(roomLabel, roomText);
         roomSelection.setSpacing(50);
-        
-        
+
         //For Suspect
         Label suspectLabel = new Label("Suspect :");
         ComboBox<String> suspectBox = new ComboBox<>(FXCollections.observableArrayList(suspects));
@@ -74,15 +76,24 @@ public class SuggestionPanel {
         return suggestionContent;
     }
 
+    public Parent createPostSuggestionContent(String responderName, ArrayList<String>suggestedCardPossessions ) {
+        //Post suggestion panel is created after suggestion panel is submitted properly
+        HBox postSuggestionContent = new HBox();
+        Label postSuggestionLabel = new Label(responderName + " shows you :");
+        postSuggestionCombobox = new ComboBox<>(FXCollections.observableArrayList(suggestedCardPossessions));
+        postSuggestionButton = new Button("Show Card");
+        postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
+        postSuggestionContent.setSpacing(20);
+        return postSuggestionContent;
+    }
+
     public String getSuggestedSuspect() {
         return suggestedSuspect;
     }
 
-    
     public String getSuggestedRoom() {
         return suggestedRoom;
     }
-    
 
     public String getSuggestedWeapon() {
         return suggestedWeapon;

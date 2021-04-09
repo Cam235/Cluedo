@@ -583,21 +583,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + suggestedCardPossessions.get(0) + " card");
                                     //If player is human,post suggestion panel appears,where combobox value represents the card to be shown
                                 } else {
-                                    //Post suggestion panel is created after suggestion panel is submitted properly
-                                    HBox postSuggestionContent = new HBox();
-                                    Label postSuggestionLabel = new Label(board.getPlayerList().get(j).getName() + " shows you :");
-                                    ComboBox<String> postSuggestionCombobox = new ComboBox<>(FXCollections.observableArrayList(suggestedCardPossessions));
-                                    Button postSuggestionButton = new Button("Show Card");
-                                    postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
-                                    postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {
+                                    Scene postSuggestionScene = new Scene(suggestionPanel.createPostSuggestionContent(board.getPlayerList().get(j).getName(), suggestedCardPossessions));
+                                    suggestionPanel.postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {
                                         @Override
                                         public void handle(ActionEvent event) {
-                                            counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + postSuggestionCombobox.getValue() + " card");
+                                            counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + suggestionPanel.postSuggestionCombobox.getValue() + " card");
                                             suggestionStage.close();
                                         }
                                     });
-                                    postSuggestionContent.setSpacing(20);
-                                    Scene postSuggestionScene = new Scene(postSuggestionContent);
                                     suggestionStage.setScene(postSuggestionScene);
                                     suggestionStage.setTitle("Please show a card!");
                                     suggestionStage.show();
