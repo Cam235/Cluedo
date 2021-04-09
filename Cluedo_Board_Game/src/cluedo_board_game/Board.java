@@ -489,19 +489,7 @@ public class Board implements BoardInterface {
      * @return null or player p's room
      */
     public Room getRoomOfPlayer(Player p) {
-        Room room = null;
-        boolean roomFound = false; //whether a room that contains the player is found
-        int i = 0;
-        while (!roomFound && i < getRooms().size()) {
-            room = getRooms().get(i);
-            if (room.checkTileInRoom(currentPlayer.getToken().getTokenLocation())) {
-                roomFound = true;
-            } else {
-                room = null;
-            }
-            i++;
-        }
-        return room;
+        return getRoomOfTile(p.getToken().getTokenLocation());
     }
 
     /**
@@ -581,6 +569,13 @@ public class Board implements BoardInterface {
         }
     }
 
+    /**
+     * returns the current room of tile t if it is in a room, null
+     * otherwise
+     * 
+     * @param t
+     * @return null or room t's room
+     */
     private Room getRoomOfTile(Tile t) {
         boolean found = false;
         int i = 0;
