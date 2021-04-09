@@ -196,8 +196,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     private void setUpRooms() {
         //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
-        ArrayList<Tile> bathroomSpace = new ArrayList<Tile>();
-        ArrayList<Tile> bathroomDoors = new ArrayList<Tile>();
+        ArrayList<Tile> bathroomSpace = new ArrayList<>();
+        ArrayList<Tile> bathroomDoors = new ArrayList<>();
         for (int i = 22; i < 27; i++) {
             for (int j = 22; j < 27; j++) {
                 bathroomSpace.add(board.getTileMap()[i][j]);
@@ -207,8 +207,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         bathroomDoors.add(bathroomDoor);
         Room bathroom = board.initialiseRoom("Bathroom", bathroomSpace, bathroomDoors);
 
-        ArrayList<Tile> diningroomSpace = new ArrayList<Tile>();
-        ArrayList<Tile> diningroomDoors = new ArrayList<Tile>();
+        ArrayList<Tile> diningroomSpace = new ArrayList<>();
+        ArrayList<Tile> diningroomDoors = new ArrayList<>();
         for (int i = 20; i < 27; i++) {
             for (int j = 12; j < 18; j++) {
                 diningroomSpace.add(board.getTileMap()[i][j]);
@@ -220,8 +220,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diningroomDoors.add(diningroomDoor2);
         Room diningroom = board.initialiseRoom("Diningroom", diningroomSpace, diningroomDoors);
 
-        ArrayList<Tile> kitchenSpace = new ArrayList<Tile>();
-        ArrayList<Tile> kitchenDoors = new ArrayList<Tile>();
+        ArrayList<Tile> kitchenSpace = new ArrayList<>();
+        ArrayList<Tile> kitchenDoors = new ArrayList<>();
         for (int i = 21; i < 27; i++) {
             for (int j = 1; j < 7; j++) {
                 kitchenSpace.add(board.getTileMap()[i][j]);
@@ -231,8 +231,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         kitchenDoors.add(kitchenDoor);
         Room kitchen = board.initialiseRoom("Kitchen", kitchenSpace, kitchenDoors);
 
-        ArrayList<Tile> ballroomSpace = new ArrayList<Tile>();
-        ArrayList<Tile> ballroomDoors = new ArrayList<Tile>();
+        ArrayList<Tile> ballroomSpace = new ArrayList<>();
+        ArrayList<Tile> ballroomDoors = new ArrayList<>();
         for (int i = 10; i < 18; i++) {
             for (int j = 22; j < 27; j++) {
                 ballroomSpace.add(board.getTileMap()[i][j]);
@@ -248,8 +248,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         ballroomDoors.add(ballroomDoor4);
         Room ballroom = board.initialiseRoom("Ballroom", ballroomSpace, ballroomDoors);
 
-        ArrayList<Tile> conservatorySpace = new ArrayList<Tile>();
-        ArrayList<Tile> conservatoryDoors = new ArrayList<Tile>();
+        ArrayList<Tile> conservatorySpace = new ArrayList<>();
+        ArrayList<Tile> conservatoryDoors = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             for (int j = 23; j < 27; j++) {
                 conservatorySpace.add(board.getTileMap()[i][j]);
@@ -259,8 +259,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         conservatoryDoors.add(conservatoryDoor);
         Room conservatory = board.initialiseRoom("Conservatory", conservatorySpace, conservatoryDoors);
 
-        ArrayList<Tile> gamesroomSpace = new ArrayList<Tile>();
-        ArrayList<Tile> gamesroomDoors = new ArrayList<Tile>();
+        ArrayList<Tile> gamesroomSpace = new ArrayList<>();
+        ArrayList<Tile> gamesroomDoors = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             for (int j = 15; j < 19; j++) {
                 gamesroomSpace.add(board.getTileMap()[i][j]);
@@ -272,8 +272,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gamesroomDoors.add(gamesroomDoor2);
         Room gamesroom = board.initialiseRoom("Gamesroom", gamesroomSpace, gamesroomDoors);
 
-        ArrayList<Tile> librarySpace = new ArrayList<Tile>();
-        ArrayList<Tile> libraryDoors = new ArrayList<Tile>();
+        ArrayList<Tile> librarySpace = new ArrayList<>();
+        ArrayList<Tile> libraryDoors = new ArrayList<>();
         for (int i = 1; i < 7; i++) {
             for (int j = 8; j < 12; j++) {
                 librarySpace.add(board.getTileMap()[i][j]);
@@ -286,8 +286,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         Room library = board.initialiseRoom("Library", librarySpace, libraryDoors);
 
         // HALLWAY STUFF
-        ArrayList<Tile> hallwaySpace = new ArrayList<Tile>();
-        ArrayList<Tile> hallwayDoors = new ArrayList<Tile>();
+        ArrayList<Tile> hallwaySpace = new ArrayList<>();
+        ArrayList<Tile> hallwayDoors = new ArrayList<>();
         for (int i = 11; i < 17; i++) {
             for (int j = 1; j < 7; j++) {
                 hallwaySpace.add(board.getTileMap()[i][j]);
@@ -302,8 +302,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         board.initialiseRoom("Hallway", hallwaySpace, hallwayDoors);
 
         //OFFICE
-        ArrayList<Tile> officeSpace = new ArrayList<Tile>();
-        ArrayList<Tile> officeDoors = new ArrayList<Tile>();
+        ArrayList<Tile> officeSpace = new ArrayList<>();
+        ArrayList<Tile> officeDoors = new ArrayList<>();
         for (int i = 1; i < 7; i++) {
             for (int j = 1; j < 4; j++) {
                 officeSpace.add(board.getTileMap()[i][j]);
@@ -317,6 +317,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         bathroom.setPassageExit(office);
         kitchen.setPassageExit(conservatory);
         conservatory.setPassageExit(kitchen);
+        
+        //creates staircase
+        ArrayList<Tile> staircaseSpace = new ArrayList<>();
+        for (int i = 11; i < 16; i++) {
+            for (int j = 11; j < 18; j++) {
+                staircaseSpace.add(board.getTileMap()[i][j]);
+            }
+        }
+        ArrayList<Tile> staircaseDoors = new ArrayList<>();
+        board.initialiseRoom("Staircase", staircaseSpace, staircaseDoors);
     }
 
     /**
@@ -554,7 +564,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             Collections.shuffle(board.getPlayerList().get(j).getHand());
                             //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
                             //the card found is shown to player through counterTxt
-                            ArrayList<String> suggestedCardPossessions = new ArrayList<String>();
+                            ArrayList<String> suggestedCardPossessions = new ArrayList<>();
                             for (Card card : board.getPlayerList().get(j).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
@@ -574,7 +584,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     //Post suggestion panel is created after suggestion panel is submitted properly
                                     HBox postSuggestionContent = new HBox();
                                     Label postSuggestionLabel = new Label(board.getPlayerList().get(j).getName() + " shows you :");
-                                    ComboBox postSuggestionCombobox = new ComboBox(FXCollections.observableArrayList(suggestedCardPossessions));
+                                    ComboBox<String> postSuggestionCombobox = new ComboBox<>(FXCollections.observableArrayList(suggestedCardPossessions));
                                     Button postSuggestionButton = new Button("Show Card");
                                     postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
                                     postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {

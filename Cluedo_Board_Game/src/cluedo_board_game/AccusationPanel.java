@@ -45,21 +45,21 @@ public class AccusationPanel  {
 
         //For Room--Static , will display the name room entered        
         Label roomLabel = new Label("Room :   ");
-        ComboBox roomBox = new ComboBox(FXCollections.observableArrayList(rooms));
+        ComboBox<String> roomBox = new ComboBox<>(FXCollections.observableArrayList(rooms));
         HBox roomSelection = new HBox(roomLabel, roomBox);
         roomSelection.setSpacing(50);
         roomBox.setOnAction(e -> accusedRoom = (String) roomBox.getValue());
 
         //For Suspect
         Label suspectLabel = new Label("Suspect :");
-        ComboBox suspectBox = new ComboBox(FXCollections.observableArrayList(suspects));
+        ComboBox<String> suspectBox = new ComboBox<>(FXCollections.observableArrayList(suspects));
         HBox suspectSelection = new HBox(suspectLabel, suspectBox);
         suspectSelection.setSpacing(50);
         suspectBox.setOnAction(e -> accusedSuspect = (String) suspectBox.getValue());
 
         //For Weapon
         Label weaponLabel = new Label("Weapon :");
-        ComboBox weaponBox = new ComboBox(FXCollections.observableArrayList(weapons));
+        ComboBox<String> weaponBox = new ComboBox<>(FXCollections.observableArrayList(weapons));
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
         weaponBox.setOnAction(e -> accusedWeapon = (String) weaponBox.getValue());

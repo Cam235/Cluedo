@@ -52,14 +52,14 @@ public class SuggestionPanel {
         
         //For Suspect
         Label suspectLabel = new Label("Suspect :");
-        ComboBox suspectBox = new ComboBox(FXCollections.observableArrayList(suspects));
+        ComboBox<String> suspectBox = new ComboBox<>(FXCollections.observableArrayList(suspects));
         HBox suspectSelection = new HBox(suspectLabel, suspectBox);
         suspectSelection.setSpacing(50);
         suspectBox.setOnAction(e -> suggestedSuspect = (String) suspectBox.getValue());
 
         //For Weapon
         Label weaponLabel = new Label("Weapon :");
-        ComboBox weaponBox = new ComboBox(FXCollections.observableArrayList(weapons));
+        ComboBox<String> weaponBox = new ComboBox<>(FXCollections.observableArrayList(weapons));
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
         weaponBox.setOnAction(e -> suggestedWeapon = (String) weaponBox.getValue());
