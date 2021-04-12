@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 
 /**
  * Represents board of the game
@@ -38,8 +39,6 @@ public class Board implements BoardInterface {
     private Player currentPlayer;
     private int counter = 0;
     private String alertMsg = "";
-    //Gets Active player number
-    private int activePlayerNumber;
 
     //Sets Up the Board of Tiles
     public Board(int columns, int rows) {
@@ -630,6 +629,35 @@ public class Board implements BoardInterface {
         }
     }
 
+    /**
+     * initialises the player detective cards for all playing players,
+     * using a predefined list of characters, weapons and rooms,
+     * initialises all the check list values as false and case notes values
+     * as empty
+     */
+    public void initialisePlayerDetectiveCards(){
+        String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
+        String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
+        String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
+        for(Player p: playerList){
+            if(p.getIsPlaying()){
+                HashMap<String, Pair<Boolean, String>> currDetectCard = new HashMap<>();
+                for (String c : characterNames) {
+                    Pair<Boolean, String> currPair = new Pair<>(false, "");
+                    currDetectCard.put(c, currPair);
+                }
+                for (String w : weaponNames) {
+                    Pair<Boolean, String> currPair = new Pair<>(false, "");
+                    currDetectCard.put(w, currPair);
+                }
+                for (String r : roomNames) {
+                    Pair<Boolean, String> currPair = new Pair<>(false, "");
+                    currDetectCard.put(r, currPair);
+                }
+                p.setDetectiveCard(currDetectCard);
+            }
+        }
+    }
 
 
 }

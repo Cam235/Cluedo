@@ -4,6 +4,8 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import javafx.util.Pair;
 
 /**
  * Represents the Players of the board game
@@ -15,9 +17,10 @@ public class Player implements PlayerInterface {
     protected int playerId; //uniquely identifies a player
     protected String name; //display name for player, doesn't have to be unique
     protected ArrayList<Card> hand; //the players hand of cards
-    protected Token token;
+    protected Token token; //represents the players token
     protected Boolean isPlaying; //represents whether the player is currently playing
     protected Boolean isTurn; //represents whether it is currently the players turn
+    protected HashMap<String, Pair<Boolean, String>> detectiveCard; //represents the detective card of the player
     
     /**
      * Constructor for objects of class Player
@@ -89,6 +92,23 @@ public class Player implements PlayerInterface {
     public Integer[] getMove(int x, int y){
         return null;
     }
+
+    /**
+     * update the players detective card with a given string key k and pair value
+     * v
+     * @param k
+     * @param v 
+     */
+    public void updateDetectiveCard(String k, Pair<Boolean, String> v){
+        detectiveCard.put(k, v);
+    }
     
-      
+    public HashMap<String, Pair<Boolean, String>> getDetectiveCard() {
+        return detectiveCard;
+    }
+
+    public void setDetectiveCard(HashMap<String, Pair<Boolean, String>> detectiveCard) {
+        this.detectiveCard = detectiveCard;
+    }
+    
 }

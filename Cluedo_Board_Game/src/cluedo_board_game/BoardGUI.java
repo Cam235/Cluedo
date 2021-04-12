@@ -508,6 +508,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         }
+        board.initialisePlayerDetectiveCards();
+        
         //Combines Gui elements
         controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
@@ -637,7 +639,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case S:// go down
+                    case S://go down
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() + 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
@@ -647,28 +649,28 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case D:// go right
+                    case D://go right
                         board.moveCurrentPlayer((board.getCurrentPlayer().getToken().getTokenLocation().getColIndex() + 1),
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case DIGIT1:
+                    case DIGIT1://exit door 1
                         board.currentPlayerExitsRoom(1, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case DIGIT2:
+                    case DIGIT2://exit door 2
                         board.currentPlayerExitsRoom(2, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case DIGIT3:
+                    case DIGIT3://exit door 3
                         board.currentPlayerExitsRoom(3, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    case DIGIT4:
+                    case DIGIT4://exit door 4
                         board.currentPlayerExitsRoom(4, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    default://Non valid Ket
+                    default://non valid Ket
                         alertTxt.setText("Not Valid Key");
                         System.out.println("Not Valid Key");
                         break;
