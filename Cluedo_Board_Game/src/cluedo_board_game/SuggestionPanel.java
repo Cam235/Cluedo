@@ -6,22 +6,21 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  *
@@ -76,15 +75,24 @@ public class SuggestionPanel {
         return suggestionContent;
     }
 
-    public Parent createPostSuggestionContent(String responderName, ArrayList<String>suggestedCardPossessions ) {
-        //Post suggestion panel is created after suggestion panel is submitted properly
-        HBox postSuggestionContent = new HBox();
-        Label postSuggestionLabel = new Label(responderName + " shows you :");
-        postSuggestionCombobox = new ComboBox<>(FXCollections.observableArrayList(suggestedCardPossessions));
-        postSuggestionButton = new Button("Show Card");
-        postSuggestionContent.getChildren().addAll(postSuggestionLabel, postSuggestionCombobox, postSuggestionButton);
-        postSuggestionContent.setSpacing(20);
+    public ChoiceDialog createSuggestionResponderContent(String responderName, ArrayList<String> suggestedCardPossessions) {
+        // create a choice dialog
+        ChoiceDialog postSuggestionContent = new ChoiceDialog("",suggestedCardPossessions);       
+        postSuggestionContent.setTitle("Player "+responderName+" has a card to show!");        
+        postSuggestionContent.setHeaderText("Please choose a card to show!");
+        //Removes Cancel button
+        postSuggestionContent.getDialogPane().getButtonTypes().remove(1);
+        postSuggestionContent.setContentText(responderName + " shows you");
+        
         return postSuggestionContent;
+    }
+    
+    public Alert createPostSuggestionAlert(String responderPlayer, String responseCard){
+        Alert correctAccusationAlert = new Alert(Alert.AlertType.INFORMATION);
+        correctAccusationAlert.setTitle("Card is Shown!");
+        correctAccusationAlert.setHeaderText("Player "+responderPlayer +" shows you a "+responseCard+" card!!!");
+        correctAccusationAlert.setContentText("Please make accusation or end your turn!");
+        return correctAccusationAlert;
     }
 
     public String getSuggestedSuspect() {
