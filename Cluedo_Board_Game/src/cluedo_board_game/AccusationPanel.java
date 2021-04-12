@@ -12,8 +12,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -25,7 +29,8 @@ import javafx.stage.Stage;
  *
  * @author Anilz
  */
-public class AccusationPanel  {
+public class AccusationPanel {
+
     String accusingPlayersName;
 
     private String accusedSuspect;
@@ -33,15 +38,15 @@ public class AccusationPanel  {
     private String accusedWeapon;
 
     String[] suspects = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library"};
+    String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Hallway","Office", "Ballroom", "Conservatory", "Gamesroom", "Library"};
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
 
     Button submitButton; // The submit button of th game
     Button restartByWinButton;
     Button spectateButton;
 
-    public Parent createAccusationContent() {
-        Label playerAccusationText = new Label("Player is making accusation!");
+    public Parent createAccusationContent(String accusingPlayerName) {
+        Label playerAccusationText = new Label("Player "+ accusingPlayerName+" is making accusation!");
 
         //For Room--Static , will display the name room entered        
         Label roomLabel = new Label("Room :   ");
@@ -67,55 +72,37 @@ public class AccusationPanel  {
         submitButton = new Button("Submit");
 
         VBox accusationContent = new VBox();
-        accusationContent.getChildren().addAll(playerAccusationText,  suspectSelection, roomSelection, weaponSelection, submitButton);
+        accusationContent.getChildren().addAll(playerAccusationText, suspectSelection, roomSelection, weaponSelection, submitButton);
         accusationContent.setAlignment(Pos.CENTER);
         accusationContent.setSpacing(25);
-
         return accusationContent;
     }
-    
-    public Parent createCorrectAccusationContent(){
-        VBox correctAccusationContent = new VBox();
-        Label label = new Label("Player accused correct cards!!!");
-        Text text = new Text("Player has won the game!!!");
-        restartByWinButton = new Button("Restart Game");
-        correctAccusationContent.getChildren().addAll(label,text,restartByWinButton);
-        return correctAccusationContent;
-    }
-    
-    public Parent createFalseAccusationContent(){
-        VBox falseAccusationContent = new VBox();
-        Label label = new Label("Player did not accused correct cards!!!");
-        Text text = new Text("Player has lost the game!!!");
-        spectateButton = new Button("Spectate");
-        falseAccusationContent.getChildren().addAll(label,text,spectateButton);
-        return falseAccusationContent;
-    }
-    
-    
-/*
-    @Override
-    public void start(Stage primaryStage) {
 
-        StackPane root = new StackPane();
-        root.getChildren().add(createAccusationContent());
-        Scene scene = new Scene(root, 300, 250);
-        primaryStage.setTitle("Accusation Panel");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        submitButton.setOnAction(e -> System.out.println(accusedSuspect+" commited murder in "+accusedRoom+ " using "+ accusedWeapon));
+    public Alert createCorrectAccusationContent(String wonPlayerName,String succeededEnvelopeCheck) {
+        Alert correctAccusationAlert = new Alert(Alert.AlertType.INFORMATION);
+        correctAccusationAlert.setTitle("Player "+wonPlayerName+" wins!!!");
+        correctAccusationAlert.setHeaderText("Accusation Confirmed!!!");
+        correctAccusationAlert.setContentText(succeededEnvelopeCheck);
+        return correctAccusationAlert;
     }
-    */
 
-    public String getAccusedSuspect() {
+    public Alert createFalseAccusationContent(String lostPlayerName, String failedEnvelopeCheck) {
+        Alert falseAccusationAlert = new Alert(Alert.AlertType.ERROR);
+        falseAccusationAlert.setTitle("Player " + lostPlayerName + " loses!!!");
+        falseAccusationAlert.setHeaderText("Accusation Fails!!!");
+        falseAccusationAlert.setContentText(failedEnvelopeCheck);
+        return falseAccusationAlert;
+    }
+
+    public String getAccusedSuspectName() {
         return accusedSuspect;
     }
 
-    public String getAccusedRoom() {
+    public String getAccusedRoomName() {
         return accusedRoom;
     }
 
-    public String getAccusedWeapon() {
+    public String getAccusedWeaponName() {
         return accusedWeapon;
     }
 

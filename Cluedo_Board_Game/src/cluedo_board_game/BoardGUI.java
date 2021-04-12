@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import static javafx.application.Application.STYLESHEET_MODENA;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -21,8 +22,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -618,7 +621,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         }
         );
-
     }
 
     /**
@@ -811,6 +813,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     accusationBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+                            //SET ALERT AND COUNTER texts TO EMPTY TEXTS
+                            alertTxt.setText("");
+                            counterTxt.setText("");
+                            //Get card distributor
                             CardDistributor cardDistributor = board.getCardDistributor();
                             if (!board.getCurrentPlayer().isAgent()) {
                                 //Printing names for testing
@@ -822,62 +828,71 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 accusationStage.initModality(Modality.APPLICATION_MODAL);
                                 //Create new AcqusationPanel
                                 accusationPanel = new AccusationPanel();
-                                Scene accusationScene = new Scene(accusationPanel.createAccusationContent());
+                                Scene accusationScene = new Scene(accusationPanel.createAccusationContent(board.getCurrentPlayer().getName()));
                                 accusationStage.setScene(accusationScene);
                                 accusationStage.show();
                                 //Set on Actions
                                 accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        if ((accusationPanel.getAccusedSuspect() != null) && (accusationPanel.getAccusedRoom() != null) && (accusationPanel.getAccusedWeapon() != null)) {
-                                            alertTxt.setText(board.getCurrentPlayer().getName() + " accuses " + accusationPanel.getAccusedSuspect() + " for committing murder in " + accusationPanel.getAccusedRoom() + " using " + accusationPanel.getAccusedWeapon());
-                                            String envelopeCardsRevealed = "Envelope cards are " + cardDistributor.getMurderRoom().getName() + ", " + cardDistributor.getMurderWeapon().getName() + ", " + cardDistributor.getMurderer().getName();
-                                            if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoom())
-                                                    && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeapon())
-                                                    && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspect())) {
-                                                Scene correctAccusationScene = new Scene(accusationPanel.createCorrectAccusationContent());
-                                                accusationStage.setScene(correctAccusationScene);
-                                                accusationStage.show();
 
-                                                counterTxt.setText(envelopeCardsRevealed + "\n" + "Accusation is correct, " + board.getCurrentPlayer().getName() + " wins the game!");
+                                        if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
+                                            //Put envelope card names to strng to display and compare with accusation cards
+                                            String envelopeCardCompare = "Murder cards are:\n"
+                                                    + cardDistributor.getMurderer().getName() + ","
+                                                    + cardDistributor.getMurderRoom().getName() + ","
+                                                    + cardDistributor.getMurderWeapon().getName() + "\n"
+                                                    + "Player's accusation was:\n"
+                                                    + accusationPanel.getAccusedSuspectName() + ","
+                                                    + accusationPanel.getAccusedRoomName() + ","
+                                                    + accusationPanel.getAccusedWeaponName();
+
+                                            if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoomName())
+                                                    && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
+                                                    && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
+                                                accusationStage.close();
+                                                String correctAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " solved the case and won the game!!!";
+                                                Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(board.getCurrentPlayer().getName(), correctAccusationInfo);
+                                                correctAccusationAlert.showAndWait();
+                                                //Should restart the game on command 
                                             } else {
-                                                Scene falseAccusationScene = new Scene(accusationPanel.createFalseAccusationContent());
-                                                accusationStage.setScene(falseAccusationScene);
-                                                accusationStage.show();
-                                                counterTxt.setText(envelopeCardsRevealed + "\n" + "Accusation is false, " + board.getCurrentPlayer().getName() + " loses the game!");
-                                                accusationPanel.spectateButton.setOnAction(new EventHandler<ActionEvent>() {
-                                                    @Override
-                                                    public void handle(ActionEvent event) {
-                                                        accusationStage.hide();
-                                                        int activePlayerNumber = 0;
-                                                        for (Player p : board.getPlayerList()) {
-                                                            if (p.isPlaying) {
-                                                                activePlayerNumber++;
-                                                            }
-                                                        }
-                                                        //If players exists after 
-                                                        if (activePlayerNumber > 1) {
-                                                            Player playerToBeDisabled = board.getCurrentPlayer();
-                                                            endTurnBtn.fire();
-                                                            playerToBeDisabled.setIsPlaying(false);
-                                                            counterTxt.setText("Player lost the game!!!!");
-                                                            activePlayerNumber--;
-                                                            if (activePlayerNumber == 1) {
-                                                                counterTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
-                                                                endTurnBtn.setDisable(true);
-                                                            }
-                                                        } else {
-                                                            counterTxt.setText("Since player is only player,cannot lose");
+                                                accusationStage.close();
+                                                //Gets the number of active players
+                                                int activePlayerNumber = 0;
+                                                for (Player p : board.getPlayerList()) {
+                                                    if (p.isPlaying) {
+                                                        activePlayerNumber++;
+                                                    }
+                                                }
+                                                //Gives text a value depends on whether the player whow failed was last active player
+                                                String failedAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!!!";
+                                                String failedAccusationInfoWithOnlyPlayer = envelopeCardCompare + "\n\n" + "No player wins the game!!!";
+                                                String choosenFailedAccusationText = null;
+                                                choosenFailedAccusationText = (activePlayerNumber > 1) ? failedAccusationInfo : failedAccusationInfoWithOnlyPlayer;
+                                                //Puts the player name and the chosen text into acqusationPanel
+                                                Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(board.getCurrentPlayer().getName(), choosenFailedAccusationText);
+                                                falseAccusationAlert.showAndWait();
+                                                if (!falseAccusationAlert.isShowing()) {
+                                                    //If active player number is greater than 1,disables the player, else ends the game(not yet)
+                                                    if (activePlayerNumber > 1) {
+                                                        //Disables the player who made false acqusation
+                                                        Player playerToBeDisabled = board.getCurrentPlayer();
+                                                        endTurnBtn.fire();
+                                                        playerToBeDisabled.setIsPlaying(false);
+                                                        activePlayerNumber--;
+                                                        if (activePlayerNumber == 1) {
+                                                            alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
                                                             endTurnBtn.setDisable(true);
                                                         }
+                                                    } else {
+                                                        //For now , disables the endturn button , but it has to end the game
+                                                        endTurnBtn.setDisable(true);
                                                     }
-
-                                                });
+                                                }
                                             }
                                         } else {
                                             alertTxt.setText("Please fill all boxes to make accusation !");
                                         }
-
                                     }
                                 }
                                 );
@@ -898,7 +913,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                 }
                 setUpPassageBtn();
-             */   
+                 */
             }
         }
         );
