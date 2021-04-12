@@ -402,6 +402,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 boardView.add(board.getTileMap()[_c][_r], _c, _r);
             }
         }
+        //add door text objects to board
+        for (Room r : board.getRooms()) {
+            for (Tile t : r.getRoomDoors()) {
+                boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
+            }
+        }
+        setUpPassageBtn();
 
         //Initialise PlayerName List
         List<String> playerNamesList = new ArrayList<>();
@@ -822,7 +829,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        if ((accusationPanel.getAccusedSuspect() !=null) && (accusationPanel.getAccusedRoom() !=null) && (accusationPanel.getAccusedWeapon() !=null)) {
+                                        if ((accusationPanel.getAccusedSuspect() != null) && (accusationPanel.getAccusedRoom() != null) && (accusationPanel.getAccusedWeapon() != null)) {
                                             alertTxt.setText(board.getCurrentPlayer().getName() + " accuses " + accusationPanel.getAccusedSuspect() + " for committing murder in " + accusationPanel.getAccusedRoom() + " using " + accusationPanel.getAccusedWeapon());
                                             String envelopeCardsRevealed = "Envelope cards are " + cardDistributor.getMurderRoom().getName() + ", " + cardDistributor.getMurderWeapon().getName() + ", " + cardDistributor.getMurderer().getName();
                                             if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoom())
@@ -883,6 +890,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         handleAgentTurn();
                     }
                 }
+                /*
                 //add door text objects to board
                 for (Room r : board.getRooms()) {
                     for (Tile t : r.getRoomDoors()) {
@@ -890,6 +898,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                 }
                 setUpPassageBtn();
+             */   
             }
         }
         );
