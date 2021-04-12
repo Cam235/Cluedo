@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,6 +25,8 @@ import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -577,6 +580,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
                             //the card found is shown to player through counterTxt
                             ArrayList<String> suggestedCardPossessions = new ArrayList<>();
+                            //Let its first value be emtpty
+
                             for (Card card : board.getPlayerList().get(j).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
@@ -588,22 +593,26 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //If suggested card/s appear in players hand,break the loop
                             if (!suggestedCardPossessions.isEmpty()) {
                                 suggestedCardsFound = true;
+                                Alert postSuggestionAlert;
                                 //If responding player is agent,automatically shows first value of arrayList
                                 if (board.getPlayerList().get(j).isAgent()) {
-                                    counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + suggestedCardPossessions.get(0) + " card");
-                                    //If player is human,post suggestion panel appears,where combobox value represents the card to be shown
+                                    postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), suggestedCardPossessions.get(0));
+                                    postSuggestionAlert.showAndWait();
                                 } else {
-                                    Scene postSuggestionScene = new Scene(suggestionPanel.createPostSuggestionContent(board.getPlayerList().get(j).getName(), suggestedCardPossessions));
-                                    suggestionPanel.postSuggestionButton.setOnAction(new EventHandler<ActionEvent>() {
-                                        @Override
-                                        public void handle(ActionEvent event) {
-                                            counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + suggestionPanel.postSuggestionCombobox.getValue() + " card");
-                                            suggestionStage.close();
+                                    suggestionStage.close();
+                                    ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), suggestedCardPossessions);
+                                    //responderChoiceBox.showAndWait();
+                                    boolean validItemChosen = false;
+                                    while (!validItemChosen) {
+                                        responderChoiceBox.showAndWait();
+                                        if (!responderChoiceBox.getSelectedItem().equals("")) {
+                                            validItemChosen = true;
+                                            System.out.println("Selected Item: " + responderChoiceBox.getSelectedItem());
+                                            //counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + responderChoiceBox.getSelectedItem() + " card");
+                                            postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
+                                            postSuggestionAlert.showAndWait();
                                         }
-                                    });
-                                    suggestionStage.setScene(postSuggestionScene);
-                                    suggestionStage.setTitle("Please show a card!");
-                                    suggestionStage.show();
+                                    }
                                 }
                                 break;
                             } else {

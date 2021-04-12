@@ -48,7 +48,7 @@ public class AccusationPanel {
     public Parent createAccusationContent(String accusingPlayerName) {
         Label playerAccusationText = new Label("Player "+ accusingPlayerName+" is making accusation!");
 
-        //For Room--Static , will display the name room entered        
+        //For Room       
         Label roomLabel = new Label("Room :   ");
         ComboBox<String> roomBox = new ComboBox<>(FXCollections.observableArrayList(rooms));
         HBox roomSelection = new HBox(roomLabel, roomBox);
