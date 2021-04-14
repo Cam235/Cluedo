@@ -6,6 +6,7 @@
 package cluedo_board_game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,10 +15,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 /**
  *
@@ -29,7 +32,11 @@ public class DetectiveChecklistPanel extends Application {
     String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
     //Collection of HBoxes including itemLabels and corresponding ChoiceBoxes
-    ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();
+    
+    HashMap<String,Boolean> detectiveCard = new HashMap<String,Boolean>();
+    
+    ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();    
+    TextField caseNotes;
 
     /**
      *
@@ -46,10 +53,11 @@ public class DetectiveChecklistPanel extends Application {
         for (String suspectName : suspectNames) {
             //Create label and checkbox,then put them into HBox
             Label suspectText = new Label(suspectName);
-            CheckBox checkBox = new CheckBox();
-            HBox suspectCheckListLine = new HBox(checkBox, suspectText);
+            CheckBox suspectCheckBox = new CheckBox();
+            HBox suspectCheckListLine = new HBox(suspectCheckBox, suspectText);
             //Add the HBox to defined arrayList
             boxesAndLabels.add(suspectCheckListLine);
+            detectiveCard.put(suspectName, suspectCheckBox.isSelected());
             //Set Spacings between label and checkbox 
             suspectCheckListLine.setSpacing(10);
             //Finally add HBox into VBox
@@ -70,6 +78,7 @@ public class DetectiveChecklistPanel extends Application {
             HBox roomCheckListLine = new HBox(roomCheckBox, roomLabel);
             //Add the HBox to defined arrayList
             boxesAndLabels.add(roomCheckListLine);
+            detectiveCard.put(roomName, roomCheckBox.isSelected());
             //Set Spacings between label and checkbox 
             roomCheckListLine.setSpacing(10);
             //Finally add HBox into VBox
@@ -83,13 +92,14 @@ public class DetectiveChecklistPanel extends Application {
         roomList.getChildren().add(weapons);
         weapons.setScaleX(1);
         //Loop through weapon names and for each room name;
-        for (String weapon : weaponNames) {
+        for (String weaponName : weaponNames) {
             //Create label and checkbox,then put them into HBox
-            Label roomLabel = new Label(weapon);
+            Label weaponLabel = new Label(weaponName);
             CheckBox weaponCheckBox = new CheckBox();
-            HBox weaponCheckListLine = new HBox(weaponCheckBox, roomLabel);
+            HBox weaponCheckListLine = new HBox(weaponCheckBox, weaponLabel);
             //Add the HBox to defined arrayList
             boxesAndLabels.add(weaponCheckListLine);
+            detectiveCard.put(weaponName, weaponCheckBox.isSelected());
             //Set Spacings between label and checkbox 
             weaponCheckListLine.setSpacing(10);
             //Finally add HBox into VBox
@@ -108,10 +118,14 @@ public class DetectiveChecklistPanel extends Application {
         HBox detectiveCheckList = new HBox(completeCheckList, detectiveNotesPane);
         return detectiveCheckList;
     }
+    public boolean toggleSelect(String itemName){
+       return detectiveCard.replace(itemName, !detectiveCard.get(itemName));   
+    }
 
     @Override
     public void start(Stage primaryStage) {
         Scene scene = new Scene(createContent());
+        System.out.println(detectiveCard);
         //Algorithm to match corresponding labels and boxes        
         for (HBox boxAndName : boxesAndLabels) {
             // child 0 is selection box and child 1 is label
@@ -122,8 +136,8 @@ public class DetectiveChecklistPanel extends Application {
                 @Override
                 public void handle(ActionEvent event) {
                     //if selected print selected , else print not selected
-                    String response = selectionBox.isSelected() ? selectionLabel.getText() + " is Selected!!!" : selectionLabel.getText() + " is Not selected";
-                    System.out.println(response);
+                    toggleSelect(selectionLabel.getText());
+                    System.out.println(detectiveCard);
                 }
             });
         }
