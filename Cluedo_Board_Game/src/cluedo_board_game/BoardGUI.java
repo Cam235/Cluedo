@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -100,25 +101,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Text counterTxt;
     // text for pregame guidence
     private Text preGameText;
-
     //NO of player SelectionBoxes
     private int playerSelectionBoxesNumber = 2;
     ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    //Boolean to declare wheter game started or not
-    //Button to Start Game
+    //Buttons
     private Button startButton;
     private Button passageBtn;
-
-    //Suggest button 
     private Button suggestionBtn;
-    //Accuse button
     private Button accusationBtn;
+    private Button detectiveCardButton;
+
     //the suggestion Panel and stage
     SuggestionPanel suggestionPanel;
     Stage suggestionStage;
-
     //for acqusationPanel and Stage
     AccusationPanel accusationPanel;
     Stage accusationStage;
@@ -348,6 +345,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to switch between Player and AI
+        detectiveCardButton = new Button("Check detective!");
         suggestionBtn = new Button("Make Suggestion");
         accusationBtn = new Button("Make Accusation");
         showHandBtn = new Button("Show Hand");
@@ -511,10 +509,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         }
-        board.initialisePlayerDetectiveCards();
         
+        //Initialize detective cards for each player
+        board.initialisePlayerDetectiveCards();
+        //To test if they received detective cards
+        for(Player p: board.getPlayerList()){
+            System.out.println(p.getDetectiveCard());
+        }
+
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
+        controlsHbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         alertsVbx.getChildren().addAll(alertTxt, counterTxt);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
@@ -797,6 +801,15 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             displayCardList(primaryStage);
                         }
                     });
+                    //Shows DetectiveCards
+                    detectiveCardButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            Stage detectiveCardStage = new Stage();
+                            detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
+                            displayDetectiveCard(detectiveCardStage);
+                        }
+                    });
                     suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
@@ -1022,6 +1035,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             System.out.println("Agent Player Turn");
             alertTxt.setText("Agent Player Turn");
         }
+    }
+
+    public void displayDetectiveCard(Stage stage) {
+        DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
+        detectiveCardPanel.getUpdates();
+        Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
+        stage.setScene(detectiveCardScene);
+        stage.setResizable(false);
+        stage.show();
+        stage.setTitle("Detective CheckList");
+        detectiveCardPanel.getUpdates();
+        //Updates detectiveCards when checkBox is selected
+        
     }
 
     /**

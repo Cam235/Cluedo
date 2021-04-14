@@ -20,8 +20,9 @@ public class Player implements PlayerInterface {
     protected Token token; //represents the players token
     protected Boolean isPlaying; //represents whether the player is currently playing
     protected Boolean isTurn; //represents whether it is currently the players turn
-    protected HashMap<String, Pair<Boolean, String>> detectiveCard; //represents the detective card of the player
     
+    protected HashMap<String, Boolean> detectiveCard; //represents the detective card of the player
+    protected String detectiveNotes; // represents detective Notes of player
     /**
      * Constructor for objects of class Player
      * 
@@ -98,17 +99,27 @@ public class Player implements PlayerInterface {
      * v
      * @param k
      * @param v 
-     */
-    public void updateDetectiveCard(String k, Pair<Boolean, String> v){
+     
+    public void updateDetectiveCard(String k, Boolean v){
         detectiveCard.put(k, v);
-    }
+    }*/
     
-    public HashMap<String, Pair<Boolean, String>> getDetectiveCard() {
+    public HashMap<String, Boolean> getDetectiveCard() {
         return detectiveCard;
     }
 
-    public void setDetectiveCard(HashMap<String, Pair<Boolean, String>> detectiveCard) {
+    public void setDetectiveCard(HashMap<String, Boolean> detectiveCard) {
         this.detectiveCard = detectiveCard;
     }
+
+    public String getDetectiveNotes() {
+        return detectiveNotes;
+    }
+
+    public void setDetectiveNotes(String detectiveNotes) {
+        this.detectiveNotes = detectiveNotes;
+    }
+    
+    
     
 }

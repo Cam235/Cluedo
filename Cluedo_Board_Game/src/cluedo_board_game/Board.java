@@ -641,20 +641,20 @@ public class Board implements BoardInterface {
         String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
         for(Player p: playerList){
             if(p.getIsPlaying()){
-                HashMap<String, Pair<Boolean, String>> currDetectCard = new HashMap<>();
+                HashMap<String, Boolean> currDetectCard = new HashMap<>();
+                String currString = "Player can take notes here!";
+                
                 for (String c : characterNames) {
-                    Pair<Boolean, String> currPair = new Pair<>(false, "");
-                    currDetectCard.put(c, currPair);
+                    currDetectCard.put(c, Boolean.FALSE);
                 }
                 for (String w : weaponNames) {
-                    Pair<Boolean, String> currPair = new Pair<>(false, "");
-                    currDetectCard.put(w, currPair);
+                    currDetectCard.put(w, Boolean.FALSE);
                 }
                 for (String r : roomNames) {
-                    Pair<Boolean, String> currPair = new Pair<>(false, "");
-                    currDetectCard.put(r, currPair);
+                    currDetectCard.put(r, Boolean.FALSE);
                 }
                 p.setDetectiveCard(currDetectCard);
+                p.setDetectiveNotes(currString);
             }
         }
     }

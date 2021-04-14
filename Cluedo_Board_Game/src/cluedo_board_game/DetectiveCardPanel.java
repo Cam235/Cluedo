@@ -26,16 +26,16 @@ import javafx.util.Pair;
  *
  * @author Anilz
  */
-public class DetectiveChecklistPanel extends Application {
+public class DetectiveCardPanel  {
 
     String[] suspectNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
     String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
     //Collection of HBoxes including itemLabels and corresponding ChoiceBoxes
-    
-    HashMap<String,Boolean> detectiveCard = new HashMap<String,Boolean>();
-    
-    ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();    
+
+    HashMap<String, Boolean> detectiveCard = new HashMap<String, Boolean>();
+
+    ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();
     TextField caseNotes;
 
     /**
@@ -118,15 +118,20 @@ public class DetectiveChecklistPanel extends Application {
         HBox detectiveCheckList = new HBox(completeCheckList, detectiveNotesPane);
         return detectiveCheckList;
     }
-    public boolean toggleSelect(String itemName){
-       return detectiveCard.replace(itemName, !detectiveCard.get(itemName));   
+
+    /**
+     * selects / unselects the label
+     * @param itemName
+     */
+    private void toggleSelect(String itemName) {
+        detectiveCard.replace(itemName, !detectiveCard.get(itemName));
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        Scene scene = new Scene(createContent());
-        System.out.println(detectiveCard);
-        //Algorithm to match corresponding labels and boxes        
+    /**
+     * Returns updated detective card when a checkbox is selected
+     * @return detectiveCard
+     */
+    public HashMap getUpdates() {
         for (HBox boxAndName : boxesAndLabels) {
             // child 0 is selection box and child 1 is label
             CheckBox selectionBox = (CheckBox) boxAndName.getChildren().get(0);
@@ -140,20 +145,28 @@ public class DetectiveChecklistPanel extends Application {
                     System.out.println(detectiveCard);
                 }
             });
-        }
+        }        
+        return detectiveCard;
+    }
+/*
+    @Override
+    public void start(Stage primaryStage) {
+        Scene scene = new Scene(createContent());
         //Some stage related stuff
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
         primaryStage.setTitle("Detective CheckList");
+        //Updates detectiveCards when checkBox is selected
+        getUpdates();
 
     }
 
     /**
      * @param args the command line arguments
-     */
+     
     public static void main(String[] args) {
         launch(args);
-    }
+    }*/
 
 }
