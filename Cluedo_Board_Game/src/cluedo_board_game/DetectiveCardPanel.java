@@ -29,18 +29,18 @@ import javafx.util.Pair;
  */
 public class DetectiveCardPanel {
 
-    String[] suspectNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
-    String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
-    String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
+    private String[] suspectNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
+    private String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
+    private String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
     //Collection of HBoxes including itemLabels and corresponding ChoiceBoxes
-    ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();
+    private ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();
 
     //Hashmap and notes store
-    HashMap<String, Boolean> detectiveCard = new HashMap<String, Boolean>();
-    String detectiveNotes;
+    private HashMap<String, Boolean> detectiveCard = new HashMap<String, Boolean>();
+    private String detectiveNotes;
 
-    TextArea detectiveNotesTextArea;
-    Button saveButton;
+    private TextArea detectiveNotesTextArea;
+    private Button saveButton;
 
     /**
      *
@@ -117,6 +117,7 @@ public class DetectiveCardPanel {
 
         //A text area is created for a player to take notes
         detectiveNotesTextArea = new TextArea(detectiveNotes);
+        detectiveNotesTextArea.setPromptText("Case Notes...");
         detectiveNotesTextArea.setWrapText(true);
         detectiveNotesTextArea.setPrefSize(200, 500);
         Pane detectiveNotesPane = new Pane(detectiveNotesTextArea);
@@ -186,4 +187,14 @@ public class DetectiveCardPanel {
         this.detectiveNotes = detectiveNotes;
     }
 
+    public TextArea getDetectiveNotesTextArea() {
+        return detectiveNotesTextArea;
+    }
+
+    public Button getSaveButton() {
+        return saveButton;
+    }
+
+    
+    
 }

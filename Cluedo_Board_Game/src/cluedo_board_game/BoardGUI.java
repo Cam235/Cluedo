@@ -899,7 +899,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         public void handle(ActionEvent event) {
                             Stage detectiveCardStage = new Stage();
                             detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
-                            detectiveCardStage.setOnCloseRequest(e -> e.consume());
                             displayDetectiveCard(detectiveCardStage);
                         }
                     });
@@ -1064,10 +1063,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         detectiveCardPanel.setDetectiveCard(board.getCurrentPlayer().getDetectiveCard());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Prints the data of players first
-        System.out.println("Players checkList is: " + detectiveCardPanel.detectiveCard);
-        System.out.println("Players current notes are : " + detectiveCardPanel.detectiveNotes);
+        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveCard());
+        System.out.println("Players current notes are : " + detectiveCardPanel.getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
+        
+        stage.setOnCloseRequest(e -> {
+            //sets text areas value into detectiveNotes of detectiveCardsPanel
+            detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
+            //Assigns detective Card and Notes values as players detective Card and notes
+            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+            board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
+        });
 
         detectiveCardPanel.getCardUpdates();
         stage.setScene(detectiveCardScene);
@@ -1075,14 +1082,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         stage.show();
         stage.setTitle(board.getCurrentPlayer().getName() + "'s Detective Card");
         //Saves the detective updates to data to open once again in the same player
-        detectiveCardPanel.saveButton.setOnAction(new EventHandler<ActionEvent>() {
+        detectiveCardPanel.getSaveButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
-                detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.detectiveNotesTextArea.getText());
+                detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.detectiveCard);
-                board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.detectiveNotes);
+                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+                board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Prints for cvalidation
                 System.out.println(board.getCurrentPlayer().getDetectiveCard());
                 System.out.println(board.getCurrentPlayer().getDetectiveNotes());

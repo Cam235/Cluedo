@@ -642,7 +642,7 @@ public class Board implements BoardInterface {
         for(Player p: playerList){
             if(p.getIsPlaying()){
                 HashMap<String, Boolean> currDetectCard = new HashMap<>();
-                String currString = "Player can take notes here!";
+                String currString = "";
                 
                 for (String c : characterNames) {
                     currDetectCard.put(c, Boolean.FALSE);
