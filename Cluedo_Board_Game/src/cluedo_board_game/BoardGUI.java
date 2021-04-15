@@ -509,11 +509,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         }
-        
-        //Initialize detective cards for each player
+
+        //Give players required stuff
         board.initialisePlayerDetectiveCards();
         //To test if they received detective cards
-        for(Player p: board.getPlayerList()){
+        for (Player p : board.getPlayerList()) {
             System.out.println(p.getDetectiveCard());
         }
 
@@ -1039,13 +1039,36 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     public void displayDetectiveCard(Stage stage) {
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
-        detectiveCardPanel.getUpdates();
+        //Give values of Players data to detectiveCardPanel
+        detectiveCardPanel.setDetectiveCard(board.getCurrentPlayer().getDetectiveCard());
+        detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
+        //Prints the data of players first
+        System.out.println("Players checkList is: " + detectiveCardPanel.detectiveCard);
+        System.out.println("Players current notes are : "+detectiveCardPanel.detectiveNotes);
+        //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
+        
+        detectiveCardPanel.getCardUpdates();
         stage.setScene(detectiveCardScene);
         stage.setResizable(false);
         stage.show();
-        stage.setTitle("Detective CheckList");
-        detectiveCardPanel.getUpdates();
+        stage.setTitle(board.getCurrentPlayer().getName() + "'s Detective Card");
+        //Saves the detective updates to data to open once again in the same player
+        detectiveCardPanel.saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //sets text areas value into detectiveNotes of detectiveCardsPanel
+                detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.detectiveNotesTextArea.getText());
+                //Assigns detective Card and Notes values as players detective Card and notes
+                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.detectiveCard);
+                board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.detectiveNotes);
+                //Prints for cvalidation
+                System.out.println(board.getCurrentPlayer().getDetectiveCard());
+                System.out.println(board.getCurrentPlayer().getDetectiveNotes());
+                //Close string
+                stage.hide();
+            }
+        });
         //Updates detectiveCards when checkBox is selected
         
     }
