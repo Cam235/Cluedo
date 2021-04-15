@@ -19,6 +19,7 @@ import static javafx.application.Application.STYLESHEET_MODENA;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
@@ -52,6 +53,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
@@ -638,6 +640,74 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         );
     }
 
+    private void accusationHelper(CardDistributor cardDistributor) {
+        //Set on Actions
+        accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
+                    //Put envelope card names to strng to display and compare with accusation cards
+                    String envelopeCardCompare = "Murder cards are:\n"
+                            + cardDistributor.getMurderer().getName() + ","
+                            + cardDistributor.getMurderRoom().getName() + ","
+                            + cardDistributor.getMurderWeapon().getName() + "\n"
+                            + "Player's accusation was:\n"
+                            + accusationPanel.getAccusedSuspectName() + ","
+                            + accusationPanel.getAccusedRoomName() + ","
+                            + accusationPanel.getAccusedWeaponName();
+
+                    if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoomName())
+                            && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
+                            && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
+                        accusationStage.close();
+                        String correctAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " solved the case and won the game!!!";
+                        Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(board.getCurrentPlayer().getName(), correctAccusationInfo);
+                        correctAccusationAlert.showAndWait();
+                        //Should restart the game on command 
+                    } else {
+                        accusationStage.close();
+                        //Gets the number of active players
+                        int activePlayerNumber = 0;
+                        for (Player p : board.getPlayerList()) {
+                            if (p.isPlaying) {
+                                activePlayerNumber++;
+                            }
+                        }
+                        //Gives text a value depends on whether the player whow failed was last active player
+                        String failedAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!!!";
+                        String failedAccusationInfoWithOnlyPlayer = envelopeCardCompare + "\n\n" + "No player wins the game!!!";
+                        String choosenFailedAccusationText = null;
+                        choosenFailedAccusationText = (activePlayerNumber > 1) ? failedAccusationInfo : failedAccusationInfoWithOnlyPlayer;
+                        //Puts the player name and the chosen text into acqusationPanel
+                        Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(board.getCurrentPlayer().getName(), choosenFailedAccusationText);
+                        falseAccusationAlert.showAndWait();
+                        if (!falseAccusationAlert.isShowing()) {
+                            //If active player number is greater than 1,disables the player, else ends the game(not yet)
+                            if (activePlayerNumber > 1) {
+                                //Disables the player who made false acqusation
+                                Player playerToBeDisabled = board.getCurrentPlayer();
+                                endTurnBtn.fire();
+                                playerToBeDisabled.setIsPlaying(false);
+                                activePlayerNumber--;
+                                if (activePlayerNumber == 1) {
+                                    alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
+                                    endTurnBtn.setDisable(true);
+                                }
+                            } else {
+                                //For now , disables the endturn button , but it has to end the game
+                                endTurnBtn.setDisable(true);
+                            }
+                        }
+                    }
+                } else {
+                    alertTxt.setText("Please fill all boxes to make accusation !");
+                }
+            }
+        }
+        );
+    }
+
     /**
      * sets up handlers for key presses during game play, including human player
      * movement controls
@@ -714,6 +784,49 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
+     * Returns true when game starting criterias are obtained
+     *
+     * @param e
+     * @return
+     */
+    private boolean IsGameStarting(ActionEvent e) {
+        boolean gameStarting = true;
+        //List To check if characters are choosen twice or more
+        ArrayList<String> characterRepetitionChecklist = new ArrayList<String>();
+        //List to checks if player namefield contains same values
+        ArrayList<String> playerNameRepetitionChecklist = new ArrayList<String>();
+        //Checks if any variable is missing
+        for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
+            // Gets value of textField
+            playerselectionbox.playerTextField.fireEvent(e);
+            // Check for name replications
+            if (!playerNameRepetitionChecklist.contains(playerselectionbox.playerTextField.getText())) {
+                playerNameRepetitionChecklist.add(playerselectionbox.playerTextField.getText());
+            } else {
+                preGameText.setText("Name of players cannot be same !!!");
+                gameStarting = false;
+                break;
+            }
+            //Checks for unfilled variables 
+            if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
+                //In any errors, prevents initialisation of the game
+                preGameText.setText("Please fill player details completely !!!");
+                gameStarting = false;
+                break;
+            }
+            //Checks for repetition of characters
+            if (!characterRepetitionChecklist.contains(playerselectionbox.getPlayerCharacter())) {
+                characterRepetitionChecklist.add(playerselectionbox.getPlayerCharacter());
+            } else {
+                preGameText.setText("A character cannot be chosen more than once !!!");
+                gameStarting = false;
+                break;
+            }
+        }
+        return gameStarting;
+    }
+
+    /**
      * Starts the prototype GUI
      *
      * @param primaryStage
@@ -728,28 +841,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                boolean gameStarting = true;
-                ArrayList<String> characterRepetitionchecklist = new ArrayList<String>();
-                //Checks if any variable is missing
-                for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
-                    playerselectionbox.playerTextField.fireEvent(e); // Gets value of textField
-                    //Checks unfilled variables 
-                    if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
-                        //In any errors, prevents initialisation of the game
-                        preGameText.setText("Please fill player details completely !!!");
-                        gameStarting = false;
-                        break;
-                    }
-                    //Checks for repetition
-                    if (!characterRepetitionchecklist.contains(playerselectionbox.getPlayerCharacter())) {
-                        characterRepetitionchecklist.add(playerselectionbox.getPlayerCharacter());
-                    } else {
-                        preGameText.setText("A character cannot be chosen more than once !!!");
-                        gameStarting = false;
-                    }
-                }
-                //when setup fullfils all requirements, game can be started
-                if (gameStarting) { //Starts the game
+                //when setup fullfils all requirements,then START GAME!!!
+                if (IsGameStarting(e)) { 
                     startButton.setDisable(true);
                     //For setting gameScene and showing labels
                     setUpBoard();
@@ -787,7 +880,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     }
                                 }
                             }
-
                             //if current player is now ai handle their turn
                             if (board.getCurrentPlayer().isAgent()) {
                                 handleAgentTurn();
@@ -807,6 +899,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         public void handle(ActionEvent event) {
                             Stage detectiveCardStage = new Stage();
                             detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
+                            detectiveCardStage.setOnCloseRequest(e -> e.consume());
                             displayDetectiveCard(detectiveCardStage);
                         }
                     });
@@ -856,88 +949,15 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 accusationStage.setScene(accusationScene);
                                 accusationStage.show();
                                 //Set on Actions
-                                accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
-                                    @Override
-                                    public void handle(ActionEvent event) {
-
-                                        if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
-                                            //Put envelope card names to strng to display and compare with accusation cards
-                                            String envelopeCardCompare = "Murder cards are:\n"
-                                                    + cardDistributor.getMurderer().getName() + ","
-                                                    + cardDistributor.getMurderRoom().getName() + ","
-                                                    + cardDistributor.getMurderWeapon().getName() + "\n"
-                                                    + "Player's accusation was:\n"
-                                                    + accusationPanel.getAccusedSuspectName() + ","
-                                                    + accusationPanel.getAccusedRoomName() + ","
-                                                    + accusationPanel.getAccusedWeaponName();
-
-                                            if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoomName())
-                                                    && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
-                                                    && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
-                                                accusationStage.close();
-                                                String correctAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " solved the case and won the game!!!";
-                                                Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(board.getCurrentPlayer().getName(), correctAccusationInfo);
-                                                correctAccusationAlert.showAndWait();
-                                                //Should restart the game on command 
-                                            } else {
-                                                accusationStage.close();
-                                                //Gets the number of active players
-                                                int activePlayerNumber = 0;
-                                                for (Player p : board.getPlayerList()) {
-                                                    if (p.isPlaying) {
-                                                        activePlayerNumber++;
-                                                    }
-                                                }
-                                                //Gives text a value depends on whether the player whow failed was last active player
-                                                String failedAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!!!";
-                                                String failedAccusationInfoWithOnlyPlayer = envelopeCardCompare + "\n\n" + "No player wins the game!!!";
-                                                String choosenFailedAccusationText = null;
-                                                choosenFailedAccusationText = (activePlayerNumber > 1) ? failedAccusationInfo : failedAccusationInfoWithOnlyPlayer;
-                                                //Puts the player name and the chosen text into acqusationPanel
-                                                Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(board.getCurrentPlayer().getName(), choosenFailedAccusationText);
-                                                falseAccusationAlert.showAndWait();
-                                                if (!falseAccusationAlert.isShowing()) {
-                                                    //If active player number is greater than 1,disables the player, else ends the game(not yet)
-                                                    if (activePlayerNumber > 1) {
-                                                        //Disables the player who made false acqusation
-                                                        Player playerToBeDisabled = board.getCurrentPlayer();
-                                                        endTurnBtn.fire();
-                                                        playerToBeDisabled.setIsPlaying(false);
-                                                        activePlayerNumber--;
-                                                        if (activePlayerNumber == 1) {
-                                                            alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
-                                                            endTurnBtn.setDisable(true);
-                                                        }
-                                                    } else {
-                                                        //For now , disables the endturn button , but it has to end the game
-                                                        endTurnBtn.setDisable(true);
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            alertTxt.setText("Please fill all boxes to make accusation !");
-                                        }
-                                    }
-                                }
-                                );
+                                accusationHelper(cardDistributor);
                             }
                         }
-
                     });
                     if (board.getCurrentPlayer()
                             .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
                         handleAgentTurn();
                     }
                 }
-                /*
-                //add door text objects to board
-                for (Room r : board.getRooms()) {
-                    for (Tile t : r.getRoomDoors()) {
-                        boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
-                    }
-                }
-                setUpPassageBtn();
-                 */
             }
         }
         );
@@ -1038,16 +1058,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     public void displayDetectiveCard(Stage stage) {
+
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
         detectiveCardPanel.setDetectiveCard(board.getCurrentPlayer().getDetectiveCard());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Prints the data of players first
         System.out.println("Players checkList is: " + detectiveCardPanel.detectiveCard);
-        System.out.println("Players current notes are : "+detectiveCardPanel.detectiveNotes);
+        System.out.println("Players current notes are : " + detectiveCardPanel.detectiveNotes);
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
-        
+
         detectiveCardPanel.getCardUpdates();
         stage.setScene(detectiveCardScene);
         stage.setResizable(false);
@@ -1070,7 +1091,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
         //Updates detectiveCards when checkBox is selected
-        
+
     }
 
     /**

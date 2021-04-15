@@ -138,14 +138,13 @@ public class DetectiveCardPanel {
         return !detectiveCard.get(itemName);
     }
 
-
     /**
      * Returns updated detective card when a checkbox is selected
      *
      * @return detectiveCard
      */
     public HashMap getCardUpdates() {
-        
+
         for (HBox boxAndName : boxesAndLabels) {
             // child 0 is selection box and child 1 is label
             CheckBox selectionBox = (CheckBox) boxAndName.getChildren().get(0);
@@ -163,13 +162,11 @@ public class DetectiveCardPanel {
                 public void handle(ActionEvent event) {
                     //if selected print selected , else print not selected
                     toggleSelect(selectionLabel.getText());
-                    
-                    
                 }
             });
 
         }
-        detectiveNotes = detectiveNotesTextArea.getText();
+        //detectiveNotes = detectiveNotesTextArea.getText();
         return detectiveCard;
     }
 
@@ -188,7 +185,5 @@ public class DetectiveCardPanel {
     public void setDetectiveNotes(String detectiveNotes) {
         this.detectiveNotes = detectiveNotes;
     }
-    
-    
 
 }
