@@ -35,6 +35,7 @@ public class Tile extends Rectangle implements TileInterface{
         this.colIndex = colIndex;
         this.rowIndex = rowIndex;
         text = new Text("");
+        text.setStyle("-fx-font-weight: bold");
     }
 
     /**

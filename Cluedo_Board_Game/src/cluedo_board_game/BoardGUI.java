@@ -21,6 +21,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Parent;
@@ -65,9 +66,8 @@ import javafx.stage.WindowEvent;
 public class BoardGUI extends Application implements BoardGUIInterface {
 
     //Scene for preGame player selection, and game gameScene
-    Scene preGameScene;
-    Scene gameScene;
-    //Made Scene Global,for methods access
+    private Scene preGameScene;
+    private Scene gameScene;
 
     //Used to Combine Board movements with Dice Image
     private VBox gameBox;
@@ -91,7 +91,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //To measure steps not surpassing value of dice
 
     //ImageView of Weapon
-    ArrayList<ImageView> weaponImageViews = new ArrayList<>();
+    private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
 
     private Button showHandBtn;
     private Button endTurnBtn;
@@ -105,7 +105,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Text preGameText;
     //NO of player SelectionBoxes
     private int playerSelectionBoxesNumber = 2;
-    ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
+    private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     //Combobox Values
     private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     //Buttons
@@ -116,11 +116,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Button detectiveCardButton;
 
     //the suggestion Panel and stage
-    SuggestionPanel suggestionPanel;
-    Stage suggestionStage;
+    private SuggestionPanel suggestionPanel;
+    private Stage suggestionStage;
     //for acqusationPanel and Stage
-    AccusationPanel accusationPanel;
-    Stage accusationStage;
+    private AccusationPanel accusationPanel;
+    private Stage accusationStage;
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -412,6 +412,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (Room r : board.getRooms()) {
             for (Tile t : r.getRoomDoors()) {
                 boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
+                boardView.setHalignment(t.getText(), HPos.CENTER);
             }
         }
         setUpPassageBtn();
