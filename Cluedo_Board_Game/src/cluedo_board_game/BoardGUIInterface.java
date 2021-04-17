@@ -1,5 +1,6 @@
 package cluedo_board_game;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -8,7 +9,7 @@ import javafx.stage.Stage;
  * @author Mazon
  */
 public interface BoardGUIInterface {
-    public VBox setUpBoard();
+    public HBox setUpBoard();
     
     
     // Move these to Board class

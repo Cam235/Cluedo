@@ -50,6 +50,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
@@ -70,7 +73,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Scene gameScene;
 
     //Used to Combine Board movements with Dice Image
-    private VBox gameBox;
+    private HBox gameBox;
     //Pane will be used for Board
     private GridPane boardView;
     //Board and repsenetation of Board with Rectangles
@@ -95,7 +98,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     private Button showHandBtn;
     private Button endTurnBtn;
-    private HBox controlsHbx;
+    private VBox controlsVbx;
 
     private HBox gameViewHbx;
     private VBox alertsVbx;
@@ -121,6 +124,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     //for acqusationPanel and Stage
     private AccusationPanel accusationPanel;
     private Stage accusationStage;
+
+    //Fields to get current player image 
+    Image currentPlayerImage;
+    ImageView currentPlayerImageView;
+    Text currentPlayerText;
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
@@ -169,7 +177,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             System.out.println(newSelectionBox.getSelectedCharacter());
                             newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 80, 200, false, false));
                             newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
-                            
+
                             Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
                             VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
                             characterSelectionViews.getChildren().remove(nodeIndex);
@@ -378,29 +386,56 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * @return
      */
     @Override
-    public VBox setUpBoard() {
-        gameBox = new VBox();
+    public HBox setUpBoard() {
+        gameBox = new HBox();
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
         //Button to switch between Player and AI
-        detectiveCardButton = new Button("Check detective!");
+        detectiveCardButton = new Button("Check Detective Card");
+        detectiveCardButton.setTextAlignment(TextAlignment.CENTER);
+        detectiveCardButton.setWrapText(true);
+        detectiveCardButton.setPrefSize(100, 100);
+        //Suggestion Button
         suggestionBtn = new Button("Make Suggestion");
+        suggestionBtn.setTextAlignment(TextAlignment.CENTER);
+        suggestionBtn.setWrapText(true);
+        suggestionBtn.setPrefSize(100, 100);
+        //Accusation Button
         accusationBtn = new Button("Make Accusation");
-        showHandBtn = new Button("Show Hand");
+        accusationBtn.setTextAlignment(TextAlignment.CENTER);
+        accusationBtn.setWrapText(true);
+        accusationBtn.setPrefSize(100, 100);
+        //Show Cards Button
+        showHandBtn = new Button("Check Hand");
+        showHandBtn.setTextAlignment(TextAlignment.CENTER);
+        showHandBtn.setWrapText(true);
+        showHandBtn.setPrefSize(100, 100);
+        //End Turn Button
         endTurnBtn = new Button("End Turn");
+        endTurnBtn.setTextAlignment(TextAlignment.CENTER);
+        endTurnBtn.setWrapText(true);
+        endTurnBtn.setPrefSize(100, 100);
+
         passageBtn = new Button("Take passage");
+        passageBtn.setTextAlignment(TextAlignment.CENTER);
+        passageBtn.setWrapText(true);
+        passageBtn.setPrefSize(100, 100);
         passageBtn.setVisible(false);
-        controlsHbx = new HBox();
-        controlsHbx.setAlignment(Pos.CENTER);
+        
+        
+        controlsVbx = new VBox();
+        controlsVbx.setAlignment(Pos.CENTER);
 
         gameViewHbx = new HBox();
         alertsVbx = new VBox();
         alertsVbx.setPrefSize(350, 300);
         alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         alertsVbx.setAlignment(Pos.CENTER);
+        //Some Stuff
         alertTxt = new Text();
         counterTxt = new Text();
+
         //Establish Board
         board = new Board(columns, rows);
         //Create Weapons on board
@@ -556,12 +591,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (Player p : board.getPlayerList()) {
             System.out.println(p.getDetectiveCard());
         }
-
+        //Displays current players Image
+        currentPlayerText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
+        currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
+        currentPlayerImageView = new ImageView(currentPlayerImage);
         //Combines Gui elements
-        controlsHbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        alertsVbx.getChildren().addAll(alertTxt, counterTxt);
+        controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
+        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, counterTxt, diceRollerView);
+        alertsVbx.setAlignment(Pos.TOP_CENTER);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
-        gameBox.getChildren().addAll(diceRollerView, gameViewHbx, controlsHbx);
+        gameBox.getChildren().addAll(controlsVbx, gameViewHbx);
         gameBox.setAlignment(Pos.CENTER);
         return gameBox;
     }
@@ -897,6 +937,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             resetDice();
                             alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                             counterTxt.setText("Please Roll The Dice");
+                            //Displays current players Image
+                            currentPlayerText.setText(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
+                            currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
+                            currentPlayerImageView.setImage(currentPlayerImage);
 
                             for (Room r : board.getRooms()) {
                                 for (int i = 0; i < r.getRoomDoors().size(); i++) {

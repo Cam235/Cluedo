@@ -21,6 +21,7 @@ public class Player implements PlayerInterface {
     protected Boolean isPlaying; //represents whether the player is currently playing
     protected Boolean isTurn; //represents whether it is currently the players turn
     
+    
     protected HashMap<String, Boolean> detectiveCard; //represents the detective card of the player
     protected String detectiveNotes; // represents detective Notes of player
     /**
