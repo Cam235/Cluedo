@@ -16,6 +16,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -25,23 +27,29 @@ import javafx.stage.Stage;
  * @author Anilz
  */
 public class PlayerSelectionBox {
-
+    //To write players Names
     TextField playerTextField;
-    ComboBox<String> combobox;
+    //select character via combobox, show character display 
+    ComboBox<String> characterSelectionCombobox;
+    Image selectedCharacterImage;
+    ImageView selectedCharacterView;
+    
     RadioButton agentButton;
     RadioButton humanButton;
 
     //Fields of Selection
-    private String playerName;
+    String playerName;
     private char selectedPlayerType;
-    private String selectedCharacter;
+    String selectedCharacter;
 
     public String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    //  private Button printSelectionsButton;
 
     public Parent selectionContent() {
         HBox characterSelectBox = new HBox();
         characterSelectBox.setSpacing(10);
+        
+        selectedCharacterImage = new Image("/CharacterCards/unknownCard.png",80,200,false,false);
+        selectedCharacterView = new ImageView(selectedCharacterImage);
         //Textfield Value
         playerTextField = new TextField();
         playerTextField.setPromptText("Player Name...");
@@ -52,14 +60,16 @@ public class PlayerSelectionBox {
                 System.out.println(playerName);
             }
         });
-
-        combobox = new ComboBox<>(FXCollections.observableArrayList(characters));
-        combobox.setPromptText("Choose Character...");
-        combobox.setOnAction(new EventHandler<ActionEvent>() {
+        characterSelectionCombobox = new ComboBox<>(FXCollections.observableArrayList(characters));
+        characterSelectionCombobox.setPromptText("Choose Character...");
+        characterSelectionCombobox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                selectedCharacter = (String) combobox.getValue();
+                selectedCharacter = (String) characterSelectionCombobox.getValue();
                 System.out.println(selectedCharacter);
+                selectedCharacterImage = new Image("/CharacterCards/"+selectedCharacter+".jpg");
+                selectedCharacterView = new ImageView(selectedCharacterImage);
+                
             }
         });
 
@@ -95,7 +105,7 @@ public class PlayerSelectionBox {
             ) {
                 playerName = playerTextField.getText();
                 selectedPlayerType = agentButton.isSelected() ? 'a' : 'h';
-                selectedCharacter = (String) combobox.getValue();
+                selectedCharacter = (String) characterSelectionCombobox.getValue();
                 System.out.println(playerName + "is an " + selectedPlayerType + " and plays with " + selectedCharacter);
 
             }
@@ -103,7 +113,7 @@ public class PlayerSelectionBox {
         );
          */
         characterSelectBox.getChildren()
-                .addAll(playerTextField, combobox, agentButton, humanButton);
+                .addAll(playerTextField, characterSelectionCombobox, agentButton, humanButton);
 
         return characterSelectBox;
     }

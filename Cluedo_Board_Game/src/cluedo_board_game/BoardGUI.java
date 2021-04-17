@@ -124,12 +124,30 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     public VBox CreatePreGameContent() {
         VBox actualPreGame = new VBox();
-        actualPreGame.setPrefSize(600, 279);
+        actualPreGame.setPrefSize(600, 280);
         VBox selectionBoxesView = new VBox();
+        HBox characterSelectionViews = new HBox();
         for (int i = 0; i < playerSelectionBoxesNumber; i++) {
+            final int nodeIndex = i;
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
             selectionBoxesList.add(newSelectionBox);
             selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
+            characterSelectionViews.getChildren().add(selectionBoxesList.get(i).selectedCharacterView);
+            newSelectionBox.characterSelectionCombobox.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    newSelectionBox.playerTextField.getText();
+                    newSelectionBox.selectedCharacter = (String) newSelectionBox.characterSelectionCombobox.getValue();
+                    System.out.println(newSelectionBox.selectedCharacter);
+                    newSelectionBox.selectedCharacterImage = new Image("/CharacterCards/" + newSelectionBox.selectedCharacter + ".jpg", 80, 200, false, false);
+                    newSelectionBox.selectedCharacterView = new ImageView(newSelectionBox.selectedCharacterImage);
+
+                    Text playerNameDisplay = new Text(newSelectionBox.playerTextField.getText());
+                    VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.selectedCharacterView);
+                    characterSelectionViews.getChildren().remove(nodeIndex);
+                    characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
+                }
+            });
         }
 
         //Adds player buttons
@@ -138,11 +156,27 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             @Override
             public void handle(ActionEvent event) {
                 if (playerSelectionBoxesNumber < 6) {
+                    final int nodeIndex = playerSelectionBoxesNumber;
                     PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
-
                     selectionBoxesList.add(newSelectionBox);
                     selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
                     playerSelectionBoxesNumber++;
+                    characterSelectionViews.getChildren().add(selectionBoxesList.get(selectionBoxesList.size() - 1).selectedCharacterView);
+                    newSelectionBox.characterSelectionCombobox.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            newSelectionBox.selectedCharacter = (String) newSelectionBox.characterSelectionCombobox.getValue();
+                            System.out.println(newSelectionBox.selectedCharacter);
+                            newSelectionBox.selectedCharacterImage = new Image("/CharacterCards/" + newSelectionBox.selectedCharacter + ".jpg", 80, 200, false, false);
+                            newSelectionBox.selectedCharacterView = new ImageView(newSelectionBox.selectedCharacterImage);
+                            
+                            Text playerNameDisplay = new Text(newSelectionBox.playerTextField.getText());
+                            VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.selectedCharacterView);
+                            characterSelectionViews.getChildren().remove(nodeIndex);
+                            characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
+                        }
+
+                    });
                     System.out.println(playerSelectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List number:" + selectionBoxesView.getChildren().size());
@@ -159,6 +193,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 if (playerSelectionBoxesNumber > 2) {
                     selectionBoxesList.remove(selectionBoxesList.size() - 1);
                     selectionBoxesView.getChildren().remove(selectionBoxesView.getChildren().size() - 1);
+                    characterSelectionViews.getChildren().remove(characterSelectionViews.getChildren().size() - 1);
                     playerSelectionBoxesNumber--;
                     System.out.println(playerSelectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
@@ -168,6 +203,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         });
+
         startButton = new Button("Start Game");
         //Put player buttons into one
         HBox preSetupButtons = new HBox();
@@ -175,8 +211,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Display a text for guidance 
         preGameText = new Text("Please fill player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
-        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons, preGameTextPane);
+        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons, characterSelectionViews, preGameTextPane);
         //Set up position of nodes 
+        characterSelectionViews.setAlignment(Pos.CENTER);
         selectionBoxesView.setAlignment(Pos.CENTER);
         preSetupButtons.setAlignment(Pos.CENTER);
         preGameTextPane.setAlignment(Pos.CENTER);
@@ -539,7 +576,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //if combobox values are not empty start iterating
+                //if characterSelectionCombobox values are not empty start iterating
                 if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
                     //Set suggestion alertText as 
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
@@ -834,7 +871,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(CreatePreGameContent(), 600, 300);
+        preGameScene = new Scene(CreatePreGameContent(), 600, 500);
         primaryStage.setTitle("Please Choose Characters!");
         primaryStage.setScene(preGameScene);
         primaryStage.show();
@@ -843,7 +880,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             @Override
             public void handle(ActionEvent e) {
                 //when setup fullfils all requirements,then START GAME!!!
-                if (IsGameStarting(e)) { 
+                if (IsGameStarting(e)) {
                     startButton.setDisable(true);
                     //For setting gameScene and showing labels
                     setUpBoard();
@@ -1068,7 +1105,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         System.out.println("Players current notes are : " + detectiveCardPanel.getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
-        
+
         stage.setOnCloseRequest(e -> {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
