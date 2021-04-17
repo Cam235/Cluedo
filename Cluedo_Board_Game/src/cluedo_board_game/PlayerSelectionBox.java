@@ -28,19 +28,19 @@ import javafx.stage.Stage;
  */
 public class PlayerSelectionBox {
     //To write players Names
-    TextField playerTextField;
+    private TextField playerTextField;
     //select character via combobox, show character display 
-    ComboBox<String> characterSelectionCombobox;
-    Image selectedCharacterImage;
-    ImageView selectedCharacterView;
+    private ComboBox<String> characterSelectionCombobox;
+    private Image selectedCharacterImage;
+    private ImageView selectedCharacterView;
     
-    RadioButton agentButton;
-    RadioButton humanButton;
+    private RadioButton agentButton;
+    private RadioButton humanButton;
 
     //Fields of Selection
-    String playerName;
+    private String playerName;
     private char selectedPlayerType;
-    String selectedCharacter;
+    private String selectedCharacter;
 
     public String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
 
@@ -144,10 +144,45 @@ public class PlayerSelectionBox {
         return characters;
     }
 
-    /**
-     * @param args the command line arguments
-     *
-     * public static void main(String[] args) { launch(args); }
-     *
-     */
+    public TextField getPlayerTextField() {
+        return playerTextField;
+    }
+
+    public ComboBox<String> getCharacterSelectionCombobox() {
+        return characterSelectionCombobox;
+    }
+
+    public ImageView getSelectedCharacterView() {
+        return selectedCharacterView;
+    }
+
+    public String getSelectedCharacter() {
+        return selectedCharacter;
+    }
+
+    public void setSelectedCharacter(String selectedCharacter) {
+        this.selectedCharacter = selectedCharacter;
+    }
+
+    public Image getSelectedCharacterImage() {
+        return selectedCharacterImage;
+    }
+
+    public void setSelectedCharacterImage(Image selectedCharacterImage) {
+        this.selectedCharacterImage = selectedCharacterImage;
+    }
+
+    public void setSelectedCharacterView(ImageView selectedCharacterView) {
+        this.selectedCharacterView = selectedCharacterView;
+    }
+
+    public RadioButton getAgentButton() {
+        return agentButton;
+    }
+
+    public RadioButton getHumanButton() {
+        return humanButton;
+    }
+
+    
 }

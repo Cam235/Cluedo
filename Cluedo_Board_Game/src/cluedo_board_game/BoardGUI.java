@@ -132,18 +132,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
             selectionBoxesList.add(newSelectionBox);
             selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
-            characterSelectionViews.getChildren().add(selectionBoxesList.get(i).selectedCharacterView);
-            newSelectionBox.characterSelectionCombobox.setOnAction(new EventHandler<ActionEvent>() {
+            characterSelectionViews.getChildren().add(selectionBoxesList.get(i).getSelectedCharacterView());
+            newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    newSelectionBox.playerTextField.getText();
-                    newSelectionBox.selectedCharacter = (String) newSelectionBox.characterSelectionCombobox.getValue();
-                    System.out.println(newSelectionBox.selectedCharacter);
-                    newSelectionBox.selectedCharacterImage = new Image("/CharacterCards/" + newSelectionBox.selectedCharacter + ".jpg", 80, 200, false, false);
-                    newSelectionBox.selectedCharacterView = new ImageView(newSelectionBox.selectedCharacterImage);
+                    newSelectionBox.getPlayerTextField().getText();
+                    newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
+                    System.out.println(newSelectionBox.getSelectedCharacter());
+                    newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 80, 200, false, false));
+                    newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
 
-                    Text playerNameDisplay = new Text(newSelectionBox.playerTextField.getText());
-                    VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.selectedCharacterView);
+                    Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
+                    VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
                     characterSelectionViews.getChildren().remove(nodeIndex);
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                 }
@@ -161,17 +161,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     selectionBoxesList.add(newSelectionBox);
                     selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
                     playerSelectionBoxesNumber++;
-                    characterSelectionViews.getChildren().add(selectionBoxesList.get(selectionBoxesList.size() - 1).selectedCharacterView);
-                    newSelectionBox.characterSelectionCombobox.setOnAction(new EventHandler<ActionEvent>() {
+                    characterSelectionViews.getChildren().add(selectionBoxesList.get(selectionBoxesList.size() - 1).getSelectedCharacterView());
+                    newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            newSelectionBox.selectedCharacter = (String) newSelectionBox.characterSelectionCombobox.getValue();
-                            System.out.println(newSelectionBox.selectedCharacter);
-                            newSelectionBox.selectedCharacterImage = new Image("/CharacterCards/" + newSelectionBox.selectedCharacter + ".jpg", 80, 200, false, false);
-                            newSelectionBox.selectedCharacterView = new ImageView(newSelectionBox.selectedCharacterImage);
+                            newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
+                            System.out.println(newSelectionBox.getSelectedCharacter());
+                            newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 80, 200, false, false));
+                            newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
                             
-                            Text playerNameDisplay = new Text(newSelectionBox.playerTextField.getText());
-                            VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.selectedCharacterView);
+                            Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
+                            VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
                             characterSelectionViews.getChildren().remove(nodeIndex);
                             characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                         }
@@ -836,17 +836,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Checks if any variable is missing
         for (PlayerSelectionBox playerselectionbox : selectionBoxesList) {
             // Gets value of textField
-            playerselectionbox.playerTextField.fireEvent(e);
+            playerselectionbox.getPlayerTextField().fireEvent(e);
             // Check for name replications
-            if (!playerNameRepetitionChecklist.contains(playerselectionbox.playerTextField.getText())) {
-                playerNameRepetitionChecklist.add(playerselectionbox.playerTextField.getText());
+            if (!playerNameRepetitionChecklist.contains(playerselectionbox.getPlayerTextField().getText())) {
+                playerNameRepetitionChecklist.add(playerselectionbox.getPlayerTextField().getText());
             } else {
                 preGameText.setText("Name of players cannot be same !!!");
                 gameStarting = false;
                 break;
             }
             //Checks for unfilled variables 
-            if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.agentButton.isSelected() && !playerselectionbox.humanButton.isSelected())) {
+            if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.getAgentButton().isSelected() && !playerselectionbox.getHumanButton().isSelected())) {
                 //In any errors, prevents initialisation of the game
                 preGameText.setText("Please fill player details completely !!!");
                 gameStarting = false;
