@@ -200,17 +200,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     private void setUpRooms() {
-        //////////////////CREATES 9 ROOMS - BATHROOM, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, GAMESROOM, LIBRARY, OFFICE, HALLWAY////////////////////// 
-        ArrayList<Tile> bathroomSpace = new ArrayList<>();
-        ArrayList<Tile> bathroomDoors = new ArrayList<>();
+        //////////////////CREATES 9 ROOMS - LOUNGE, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, BILLIARDROOM, LIBRARY, STUDY, HALL////////////////////// 
+        ArrayList<Tile> kitchenSpace = new ArrayList<>();
+        ArrayList<Tile> kitchenDoors = new ArrayList<>();
         for (int i = 22; i < 27; i++) {
             for (int j = 22; j < 27; j++) {
-                bathroomSpace.add(board.getTileMap()[i][j]);
+                kitchenSpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile bathroomDoor = board.getTileMap()[22][21];
-        bathroomDoors.add(bathroomDoor);
-        Room bathroom = board.initialiseRoom("Bathroom", bathroomSpace, bathroomDoors);
+        Tile kitchenDoor = board.getTileMap()[22][21];
+        kitchenDoors.add(kitchenDoor);
+        Room kitchen = board.initialiseRoom("Kitchen", kitchenSpace, kitchenDoors);
 
         ArrayList<Tile> diningroomSpace = new ArrayList<>();
         ArrayList<Tile> diningroomDoors = new ArrayList<>();
@@ -225,16 +225,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         diningroomDoors.add(diningroomDoor2);
         Room diningroom = board.initialiseRoom("Diningroom", diningroomSpace, diningroomDoors);
 
-        ArrayList<Tile> kitchenSpace = new ArrayList<>();
-        ArrayList<Tile> kitchenDoors = new ArrayList<>();
+        ArrayList<Tile> loungeSpace = new ArrayList<>();
+        ArrayList<Tile> loungeDoors = new ArrayList<>();
         for (int i = 21; i < 27; i++) {
             for (int j = 1; j < 7; j++) {
-                kitchenSpace.add(board.getTileMap()[i][j]);
+                loungeSpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile kitchenDoor = board.getTileMap()[21][7];
-        kitchenDoors.add(kitchenDoor);
-        Room kitchen = board.initialiseRoom("Kitchen", kitchenSpace, kitchenDoors);
+        Tile loungeDoor = board.getTileMap()[21][7];
+        loungeDoors.add(loungeDoor);
+        Room lounge = board.initialiseRoom("Lounge", loungeSpace, loungeDoors);
 
         ArrayList<Tile> ballroomSpace = new ArrayList<>();
         ArrayList<Tile> ballroomDoors = new ArrayList<>();
@@ -264,18 +264,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         conservatoryDoors.add(conservatoryDoor);
         Room conservatory = board.initialiseRoom("Conservatory", conservatorySpace, conservatoryDoors);
 
-        ArrayList<Tile> gamesroomSpace = new ArrayList<>();
-        ArrayList<Tile> gamesroomDoors = new ArrayList<>();
+        ArrayList<Tile> billiardroomSpace = new ArrayList<>();
+        ArrayList<Tile> billiardroomDoors = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
             for (int j = 15; j < 19; j++) {
-                gamesroomSpace.add(board.getTileMap()[i][j]);
+                billiardroomSpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile gamesroomDoor = board.getTileMap()[1][14];
-        Tile gamesroomDoor2 = board.getTileMap()[6][18];
-        gamesroomDoors.add(gamesroomDoor);
-        gamesroomDoors.add(gamesroomDoor2);
-        Room gamesroom = board.initialiseRoom("Gamesroom", gamesroomSpace, gamesroomDoors);
+        Tile billiardroomDoor = board.getTileMap()[1][14];
+        Tile billiardroomDoor2 = board.getTileMap()[6][18];
+        billiardroomDoors.add(billiardroomDoor);
+        billiardroomDoors.add(billiardroomDoor2);
+        Room billiardroom = board.initialiseRoom("Billiardroom", billiardroomSpace, billiardroomDoors);
 
         ArrayList<Tile> librarySpace = new ArrayList<>();
         ArrayList<Tile> libraryDoors = new ArrayList<>();
@@ -290,38 +290,38 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         libraryDoors.add(libraryDoor2);
         Room library = board.initialiseRoom("Library", librarySpace, libraryDoors);
 
-        // HALLWAY STUFF
-        ArrayList<Tile> hallwaySpace = new ArrayList<>();
-        ArrayList<Tile> hallwayDoors = new ArrayList<>();
+        // HALL STUFF
+        ArrayList<Tile> hallSpace = new ArrayList<>();
+        ArrayList<Tile> hallDoors = new ArrayList<>();
         for (int i = 11; i < 17; i++) {
             for (int j = 1; j < 7; j++) {
-                hallwaySpace.add(board.getTileMap()[i][j]);
+                hallSpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile hallwayDoor1 = board.getTileMap()[13][7];
-        Tile hallwayDoor2 = board.getTileMap()[14][7];
-        Tile hallwayDoor3 = board.getTileMap()[8][4];
-        hallwayDoors.add(hallwayDoor1);
-        hallwayDoors.add(hallwayDoor2);
-        hallwayDoors.add(hallwayDoor3);
-        board.initialiseRoom("Hallway", hallwaySpace, hallwayDoors);
+        Tile hallDoor1 = board.getTileMap()[13][7];
+        Tile hallDoor2 = board.getTileMap()[14][7];
+        Tile hallDoor3 = board.getTileMap()[8][4];
+        hallDoors.add(hallDoor1);
+        hallDoors.add(hallDoor2);
+        hallDoors.add(hallDoor3);
+        board.initialiseRoom("Hall", hallSpace, hallDoors);
 
-        //OFFICE
-        ArrayList<Tile> officeSpace = new ArrayList<>();
-        ArrayList<Tile> officeDoors = new ArrayList<>();
+        //STUDY
+        ArrayList<Tile> studySpace = new ArrayList<>();
+        ArrayList<Tile> studyDoors = new ArrayList<>();
         for (int i = 1; i < 7; i++) {
             for (int j = 1; j < 4; j++) {
-                officeSpace.add(board.getTileMap()[i][j]);
+                studySpace.add(board.getTileMap()[i][j]);
             }
         }
-        Tile officeDoor = board.getTileMap()[6][4];
-        officeDoors.add(officeDoor);
-        Room office = board.initialiseRoom("Office", officeSpace, officeDoors);
+        Tile studyDoor = board.getTileMap()[6][4];
+        studyDoors.add(studyDoor);
+        Room study = board.initialiseRoom("Study", studySpace, studyDoors);
 
-        office.setPassageExit(bathroom);
-        bathroom.setPassageExit(office);
-        kitchen.setPassageExit(conservatory);
-        conservatory.setPassageExit(kitchen);
+        study.setPassageExit(kitchen);
+        kitchen.setPassageExit(study);
+        lounge.setPassageExit(conservatory);
+        conservatory.setPassageExit(lounge);
 
         //creates staircase
         ArrayList<Tile> staircaseSpace = new ArrayList<>();

@@ -522,9 +522,9 @@ public class Board implements BoardInterface {
             new Card(CardType.Person, "Mr.Green"), new Card(CardType.Person, "Mrs.Peacock"), new Card(CardType.Person, "Professor Plum")};
         Card[] wCards = {new Card(CardType.Weapon, "Dagger"), new Card(CardType.Weapon, "Candlestick"), new Card(CardType.Weapon, "Revolver"),
             new Card(CardType.Weapon, "Rope"), new Card(CardType.Weapon, "Leadpiping"), new Card(CardType.Weapon, "Spanner")};
-        Card[] rCards = {new Card(CardType.Room, "Bathroom"), new Card(CardType.Room, "Diningroom"), new Card(CardType.Room, "Kitchen"),
-            new Card(CardType.Room, "Ballroom"), new Card(CardType.Room, "Conservatory"), new Card(CardType.Room, "Gamesroom"),
-            new Card(CardType.Room, "Library"), new Card(CardType.Room, "Hallway"), new Card(CardType.Room, "Office")};
+        Card[] rCards = {new Card(CardType.Room, "Lounge"), new Card(CardType.Room, "Diningroom"), new Card(CardType.Room, "Kitchen"),
+            new Card(CardType.Room, "Ballroom"), new Card(CardType.Room, "Conservatory"), new Card(CardType.Room, "Billiardroom"),
+            new Card(CardType.Room, "Library"), new Card(CardType.Room, "Hall"), new Card(CardType.Room, "Study")};
         ArrayList<Card> cList = new ArrayList<>();
         cList.addAll(Arrays.asList(pCards));
         cList.addAll(Arrays.asList(wCards));
@@ -638,7 +638,7 @@ public class Board implements BoardInterface {
     public void initialisePlayerDetectiveCards(){
         String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
         String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
-        String[] roomNames = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library", "Hallway", "Office"};
+        String[] roomNames = {"Lounge", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
         for(Player p: playerList){
             if(p.getIsPlaying()){
                 HashMap<String, Boolean> currDetectCard = new HashMap<>();

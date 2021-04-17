@@ -38,7 +38,7 @@ public class AccusationPanel {
     private String accusedWeapon;
 
     String[] suspects = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Hallway","Office", "Ballroom", "Conservatory", "Gamesroom", "Library"};
+    String[] rooms = {"Lounge", "Diningroom", "Kitchen", "Hall","Study", "Ballroom", "Conservatory", "Billiardroom", "Library"};
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
 
     Button submitButton; // The submit button of th game
