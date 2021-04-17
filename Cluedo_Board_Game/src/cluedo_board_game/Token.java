@@ -7,6 +7,7 @@ package cluedo_board_game;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 
 /**
  * Represents token which is used to make movements on board
@@ -30,7 +31,11 @@ public class Token extends Circle implements TokenInterface{
         //Initialise Token, with circle properties
         this.name = name;
         setFill(Color.RED);
-        setRadius(5);
+        setRadius(7.5);
+        setStrokeWidth(1.5);
+        setStrokeMiterLimit(10);
+        setStrokeType(StrokeType.CENTERED);
+        setStroke(Color.BLACK);
         setTranslateX(+2);
         //this.tokenLocation = tokenLocation;
     }
