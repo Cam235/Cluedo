@@ -29,10 +29,10 @@ public class DiceRoller implements DiceRollerInterface{
     //Button to throw dice
     Button rollButton;
     //Initial 1st Dice View
-    Image diceImage = new Image("/Die/Dice" + diceNumber + ".png", 60, 60, false, false);
+    Image diceImage = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
     ImageView diceImageView = new ImageView(diceImage);
     //Initial 2nd Dice View
-    Image diceImage2 = new Image("/Die/Dice" + diceNumber + ".png", 60, 60, false, false);
+    Image diceImage2 = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
     ImageView diceImageView2 = new ImageView(diceImage2);
 
     /**
@@ -45,7 +45,7 @@ public class DiceRoller implements DiceRollerInterface{
     public VBox createContent() {
         rollButton = new Button();
         rollButton.setText("Roll the Dice");
-        rollButton.setPrefWidth(120);
+        rollButton.setPrefSize(200,80);
         rollButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -56,10 +56,10 @@ public class DiceRoller implements DiceRollerInterface{
                 diceNumber = randomDice.nextInt(6) + 1;
                 diceNumber2 = randomDice.nextInt(6) + 1;
                 //Sets Image For First Dice
-                diceImage = new Image("/Die/Dice" + diceNumber + ".png", 60, 60, false, false);
+                diceImage = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
                 diceImageView.setImage(diceImage);
                 //Sets Second Dice
-                diceImage2 = new Image("/Die/Dice" + diceNumber2 + ".png", 60, 60, false, false);
+                diceImage2 = new Image("/Die/Dice" + diceNumber2 + ".png", 100, 100, false, false);
                 diceImageView2.setImage(diceImage2);
                 //Disables button after pressed
                 rollButton.setDisable(true);

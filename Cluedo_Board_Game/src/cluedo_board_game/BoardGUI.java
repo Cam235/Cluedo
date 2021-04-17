@@ -55,6 +55,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -429,12 +430,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         gameViewHbx = new HBox();
         alertsVbx = new VBox();
-        alertsVbx.setPrefSize(350, 300);
+        alertsVbx.setMaxWidth(300);
         alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         alertsVbx.setAlignment(Pos.CENTER);
+        
         //Some Stuff
         alertTxt = new Text();
         counterTxt = new Text();
+        
 
         //Establish Board
         board = new Board(columns, rows);
@@ -593,13 +596,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         //Displays current players Image
         currentPlayerText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
-        currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20));
+        currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        currentPlayerText.setWrappingWidth(170);
         currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
         currentPlayerImageView = new ImageView(currentPlayerImage);
-        //Combines Gui elements
+        
+        alertTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
+        alertTxt.setWrappingWidth(170);
+        counterTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
+        
+        
+        counterTxt.setWrappingWidth(100);
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, counterTxt, diceRollerView);
+        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView,counterTxt);
         alertsVbx.setAlignment(Pos.TOP_CENTER);
+        alertsVbx.setSpacing(10);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(controlsVbx, gameViewHbx);
         gameBox.setAlignment(Pos.CENTER);

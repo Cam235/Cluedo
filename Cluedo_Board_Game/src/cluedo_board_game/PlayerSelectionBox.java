@@ -95,39 +95,14 @@ public class PlayerSelectionBox {
         ToggleGroup radioGroup = new ToggleGroup();
         agentButton.setToggleGroup(radioGroup);
         humanButton.setToggleGroup(radioGroup);
-        /*
-        printSelectionsButton = new Button("ApproveSelections");
 
-        printSelectionsButton.setOnAction(
-                new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event
-            ) {
-                playerName = playerTextField.getText();
-                selectedPlayerType = agentButton.isSelected() ? 'a' : 'h';
-                selectedCharacter = (String) characterSelectionCombobox.getValue();
-                System.out.println(playerName + "is an " + selectedPlayerType + " and plays with " + selectedCharacter);
-
-            }
-        }
-        );
-         */
         characterSelectBox.getChildren()
                 .addAll(playerTextField, characterSelectionCombobox, agentButton, humanButton);
 
         return characterSelectBox;
     }
 
-    /*
-    @Override
-    public void start(Stage primaryStage) {
 
-        Scene scene = new Scene(selectionContent());
-        primaryStage.setTitle("Hello World!");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-     */
     public String getPlayerName() {
         return playerName;
     }
