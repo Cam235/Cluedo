@@ -478,6 +478,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     boardView.add(tileView, _c, _r);
 
                 } catch (Exception e) {
+                    //Adds roads
+                    /*
                     if (board.getTileMap()[_c][_r].getIsWall()) {
                         board.getTileMap()[_c][_r].setFill(Color.BLUE);
                         board.getTileMap()[_c][_r].setStroke(Color.BLUE);
@@ -493,12 +495,26 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             board.getTileMap()[_c][_r].setStroke(Color.GRAY);
                         }
                     }
+                     */
+                    board.getTileMap()[_c][_r].setFill(Color.GOLD);
+                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
                     boardView.add(board.getTileMap()[_c][_r], _c, _r);
                 }
 
             }
-
         }
+        //To place staircase
+        for (int _r = 10; _r < 19; _r++) {
+            for (int _c = 10; _c < 17; _c++) {
+                int currentTextureRow= _r-9;
+                int currentTextureCol = _c-9;
+                Image stairCaseTileImage = new Image("/Staircase_textures/image_"+ currentTextureRow+"_"+ currentTextureCol + ".png", 21, 21, false, false);
+                board.getTileMap()[_c][_r].setImage(stairCaseTileImage);
+                ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
+                boardView.add(tileView, _c, _r);
+            }
+        }
+
         //add door text objects to board
         for (Room r : board.getRooms()) {
             for (Tile t : r.getRoomDoors()) {
@@ -1183,7 +1199,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             Scene dialogScene = new Scene(dialogVbox);
             dialog.setScene(dialogScene);
             dialog.setResizable(false);
-            dialog.setTitle("---"+board.getCurrentPlayer().getName()+"'s Cards---");
+            dialog.setTitle("---" + board.getCurrentPlayer().getName() + "'s Cards---");
             dialog.show();
         } else {
             System.out.println("Agent Player Turn");
