@@ -6,6 +6,7 @@
  */
 package cluedo_board_game;
 
+import java.awt.Paint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Parent;
@@ -39,6 +41,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -456,6 +460,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
 
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
+        // create a background fill        
         //Establish array of rectangles
         boardView = new GridPane();
         //Set up the Image of Board
@@ -465,10 +470,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
                 board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
                 try {
-                    Image i = new Image("/tile_textures/" + _r + "/" + _c + ".png", 20, 20, false, false);
+                    Image i = new Image("/tile_textures/" + _r + "/" + _c + ".png", 21, 21, false, false);
                     board.getTileMap()[_c][_r].setImage(i);
                     ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
+                    tileView.setSmooth(true);
                     boardView.add(tileView, _c, _r);
+
                 } catch (Exception e) {
                     if (board.getTileMap()[_c][_r].getIsWall()) {
                         board.getTileMap()[_c][_r].setFill(Color.BLUE);
@@ -476,7 +483,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     } else if (board.getTileMap()[_c][_r].getIsDoor()) {
                         board.getTileMap()[_c][_r].setFill(Color.WHITE);
                     } else {
-                        board.getTileMap()[_c][_r].setFill(Color.YELLOW);
+                        board.getTileMap()[_c][_r].setFill(Color.GOLD);
                         board.getTileMap()[_c][_r].setStroke(Color.BLACK);
                     }
                     for (Room room : board.getRooms()) {
@@ -487,6 +494,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                     boardView.add(board.getTileMap()[_c][_r], _c, _r);
                 }
+                 
             }
 
         }
@@ -1147,11 +1155,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             for (Card c : board.getCurrentPlayer().getHand()) {
                 ImageView cardImageView;
                 try {
-                    if(c.getType()==CardType.Person){
+                    if (c.getType() == CardType.Person) {
                         c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 100, 120, false, false));
-                    }else if(c.getType()==CardType.Weapon){
-                         c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 100, 120, false, false));
-                    }else{
+                    } else if (c.getType() == CardType.Weapon) {
+                        c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                    } else {
                         c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 100, 120, false, false));
                     }
                     System.out.println(c.getType() + ":" + c.getName());
@@ -1161,7 +1169,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     c.setCardImage(new Image("/CharacterCards/unknownCard.png", 100, 120, false, false));
                     cardImageView = new ImageView(c.getCardImage());
                     cardsDisplay.getChildren().add(cardImageView);
-                    System.out.println(c.getType()+ ":" + c.getName());
+                    System.out.println(c.getType() + ":" + c.getName());
                 }
             }
             dialogVbox.getChildren().add(cardsDisplay);
