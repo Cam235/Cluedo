@@ -37,6 +37,115 @@ public class TileTest {
     @After
     public void tearDown() {
     }
+
+    /**
+     * Test of getColIndex method, of class Tile.
+     */
+    @Test
+    public void testGetColIndex() {
+        System.out.println("getColIndex");
+        Tile instance = null;
+        int expResult = 0;
+        int result = instance.getColIndex();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getRowIndex method, of class Tile.
+     */
+    @Test
+    public void testGetRowIndex() {
+        System.out.println("getRowIndex");
+        Tile instance = null;
+        int expResult = 0;
+        int result = instance.getRowIndex();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of IsOccupied method, of class Tile.
+     */
+    @Test
+    public void testIsOccupied() {
+        System.out.println("IsOccupied");
+        Tile instance = null;
+        boolean expResult = false;
+        boolean result = instance.IsOccupied();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setOccupied method, of class Tile.
+     */
+    @Test
+    public void testSetOccupied() {
+        System.out.println("setOccupied");
+        boolean isOccupied = false;
+        Tile instance = null;
+        instance.setOccupied(isOccupied);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getIsWall method, of class Tile.
+     */
+    @Test
+    public void testGetIsWall() {
+        System.out.println("getIsWall");
+        Tile instance = null;
+        boolean expResult = false;
+        boolean result = instance.getIsWall();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setWall method, of class Tile.
+     */
+    @Test
+    public void testSetWall() {
+        System.out.println("setWall");
+        boolean isWall = false;
+        Tile instance = null;
+        instance.setWall(isWall);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getIsDoor method, of class Tile.
+     */
+    @Test
+    public void testGetIsDoor() {
+        System.out.println("getIsDoor");
+        Tile instance = null;
+        boolean expResult = false;
+        boolean result = instance.getIsDoor();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setDoor method, of class Tile.
+     */
+    @Test
+    public void testSetDoor() {
+        System.out.println("setDoor");
+        boolean isDoor = false;
+        Tile instance = null;
+        instance.setDoor(isDoor);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }
     
     /**
