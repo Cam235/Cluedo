@@ -470,28 +470,23 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
                     boardView.add(tileView, _c, _r);
                 } catch (Exception e) {
-                    board.getTileMap()[_c][_r].setFill(Color.YELLOW);
-                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
+                    if (board.getTileMap()[_c][_r].getIsWall()) {
+                        board.getTileMap()[_c][_r].setFill(Color.BLUE);
+                        board.getTileMap()[_c][_r].setStroke(Color.BLUE);
+                    } else if (board.getTileMap()[_c][_r].getIsDoor()) {
+                        board.getTileMap()[_c][_r].setFill(Color.WHITE);
+                    } else {
+                        board.getTileMap()[_c][_r].setFill(Color.YELLOW);
+                        board.getTileMap()[_c][_r].setStroke(Color.BLACK);
+                    }
+                    for (Room room : board.getRooms()) {
+                        if (room.checkTileInRoom(board.getTileMap()[_c][_r])) {
+                            board.getTileMap()[_c][_r].setFill(Color.GRAY);
+                            board.getTileMap()[_c][_r].setStroke(Color.GRAY);
+                        }
+                    }
                     boardView.add(board.getTileMap()[_c][_r], _c, _r);
                 }
-                /*
-                if (board.getTileMap()[_c][_r].getIsWall()) {
-                    board.getTileMap()[_c][_r].setFill(Color.BLUE);
-                    board.getTileMap()[_c][_r].setStroke(Color.BLUE);
-                } else if (board.getTileMap()[_c][_r].getIsDoor()) {
-                    board.getTileMap()[_c][_r].setFill(Color.WHITE);
-                } else {
-                    board.getTileMap()[_c][_r].setFill(Color.YELLOW);
-                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
-                }
-                for (Room room : board.getRooms()) {
-                    if (room.checkTileInRoom(board.getTileMap()[_c][_r])) {
-                        board.getTileMap()[_c][_r].setFill(Color.GRAY);
-                        board.getTileMap()[_c][_r].setStroke(Color.GRAY);
-                    }
-                }
-                boardView.add(board.getTileMap()[_c][_r], _c, _r);
-                 */
             }
 
         }
@@ -1147,10 +1142,29 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             VBox dialogVbox = new VBox(20);
             String showHandtxt = new String();
             showHandtxt += "---Cards---\n";
-            for (Card c : board.getCurrentPlayer().getHand()) {
-                showHandtxt += c.getType().toString() + ": " + c.getName() + "\n";
-            }
             dialogVbox.getChildren().add(new Text(showHandtxt));
+            HBox cardsDisplay = new HBox();
+            for (Card c : board.getCurrentPlayer().getHand()) {
+                ImageView cardImageView;
+                try {
+                    if(c.getType()==CardType.Person){
+                        c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                    }else if(c.getType()==CardType.Weapon){
+                         c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                    }else{
+                        c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                    }
+                    System.out.println(c.getType() + ":" + c.getName());
+                    cardImageView = new ImageView(c.getCardImage());
+                    cardsDisplay.getChildren().add(cardImageView);
+                } catch (Exception e) {
+                    c.setCardImage(new Image("/CharacterCards/unknownCard.png", 100, 120, false, false));
+                    cardImageView = new ImageView(c.getCardImage());
+                    cardsDisplay.getChildren().add(cardImageView);
+                    System.out.println(c.getType()+ ":" + c.getName());
+                }
+            }
+            dialogVbox.getChildren().add(cardsDisplay);
             Scene dialogScene = new Scene(dialogVbox, 300, 200);
             dialog.setScene(dialogScene);
             dialog.show();
