@@ -5,6 +5,7 @@
  */
 package cluedo_board_game;
 
+import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -22,8 +23,9 @@ public class Tile extends Rectangle implements TileInterface{
     //Applied when room is established
     private boolean wall;     // see if the tile is wall
     private boolean door;     // if the tile is doorway of the room 
+    
     private Text text;
-
+    private Image image;
     /**
      * Constructor of tile object Takes row and column index parameters to
      * identify tile from other tiles
@@ -104,6 +106,16 @@ public class Tile extends Rectangle implements TileInterface{
     public Text getText() {
         return text;
     }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+    
+    
     
     
 }
