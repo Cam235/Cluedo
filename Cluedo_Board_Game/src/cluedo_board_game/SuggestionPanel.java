@@ -17,6 +17,8 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -50,48 +52,81 @@ public class SuggestionPanel {
         Text roomText = new Text(suggestedRoom);
         HBox roomSelection = new HBox(roomLabel, roomText);
         roomSelection.setSpacing(50);
+        //Suggested room card image
+        Image roomImage = new Image("/RoomCards/" + roomName + ".jpg", 140, 150, false, false);
+        ImageView roomCardView = new ImageView(roomImage);
 
         //For Suspect
         Label suspectLabel = new Label("Suspect :");
         ComboBox<String> suspectBox = new ComboBox<>(FXCollections.observableArrayList(suspects));
         HBox suspectSelection = new HBox(suspectLabel, suspectBox);
         suspectSelection.setSpacing(50);
-        suspectBox.setOnAction(e -> suggestedSuspect = (String) suspectBox.getValue());
+
+        Image suspectImage = new Image("/CharacterCards/unknownCard.png", 140, 150, false, false);
+        ImageView suspectCardView = new ImageView(suspectImage);
+
+        suspectBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                suggestedSuspect = (String) suspectBox.getValue();
+                suspectCardView.setImage(new Image("/CharacterCards/" + suggestedSuspect + ".jpg", 140, 150, false, false));
+            }
+        });
 
         //For Weapon
         Label weaponLabel = new Label("Weapon :");
         ComboBox<String> weaponBox = new ComboBox<>(FXCollections.observableArrayList(weapons));
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
-        weaponBox.setOnAction(e -> suggestedWeapon = (String) weaponBox.getValue());
+
+        Image weaponImage = new Image("/weaponCards/unknownCard.png", 140, 150, false, false);
+        ImageView weaponCardView = new ImageView(weaponImage);
+
+        weaponBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                suggestedWeapon = (String) weaponBox.getValue();
+                weaponCardView.setImage(new Image("/weaponCards/" + suggestedWeapon + ".jpg", 140, 150, false, false));
+            }
+        });
+
         // A submit button
         submitButton = new Button("Submit");
-
+        HBox cardDisplays = new HBox(roomCardView, suspectCardView, weaponCardView);
         VBox suggestionContent = new VBox();
-        suggestionContent.getChildren().addAll(playerSuggestext, roomSelection, suspectSelection, weaponSelection, submitButton);
+        suggestionContent.getChildren().addAll(playerSuggestext, roomSelection, suspectSelection, weaponSelection, submitButton, cardDisplays);
         suggestionContent.setAlignment(Pos.CENTER);
-        suggestionContent.setSpacing(25);
+        suggestionContent.setSpacing(10);
 
         return suggestionContent;
     }
 
     public ChoiceDialog createSuggestionResponderContent(String responderName, ArrayList<String> suggestedCardPossessions) {
         // create a choice dialog
-        ChoiceDialog postSuggestionContent = new ChoiceDialog("",suggestedCardPossessions);       
-        postSuggestionContent.setTitle("Player "+responderName+" has a card to show!");        
+        ChoiceDialog postSuggestionContent = new ChoiceDialog("", suggestedCardPossessions);
+        postSuggestionContent.setTitle("Player " + responderName + " has a card to show!");
         postSuggestionContent.setHeaderText("Please choose a card to show!");
         //Removes Cancel button
         postSuggestionContent.getDialogPane().getButtonTypes().remove(1);
         postSuggestionContent.setContentText(responderName + " shows you");
-        
+
         return postSuggestionContent;
     }
-    
-    public Alert createPostSuggestionAlert(String responderPlayer, String responseCard){
+
+    public Alert createPostSuggestionAlert(String responderPlayer, String responseCardName) {
         Alert correctAccusationAlert = new Alert(Alert.AlertType.INFORMATION);
         correctAccusationAlert.setTitle("Card is Shown!");
-        correctAccusationAlert.setHeaderText("Player "+responderPlayer +" shows you a "+responseCard+" card!!!");
+        correctAccusationAlert.setHeaderText("Player " + responderPlayer + " shows you a " + responseCardName + " card!!!");
         correctAccusationAlert.setContentText("Please make accusation or end your turn!");
+        try {
+            ImageView ShownCardIsWeapon = new ImageView(new Image("/weaponCards/" + responseCardName + ".jpg", 140, 150, false, false));
+            correctAccusationAlert.setGraphic(ShownCardIsWeapon);
+        }catch(IllegalArgumentException e){
+            ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 140, 150, false, false));
+            correctAccusationAlert.setGraphic(ShownCardIsSuspect);
+        }catch(Exception e){
+            System.out.println("not working");
+        }
         return correctAccusationAlert;
     }
 

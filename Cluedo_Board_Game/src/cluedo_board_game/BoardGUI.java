@@ -51,6 +51,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -494,7 +495,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                     boardView.add(board.getTileMap()[_c][_r], _c, _r);
                 }
-                 
+
             }
 
         }
@@ -1148,33 +1149,41 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(pStage);
             VBox dialogVbox = new VBox(20);
-            String showHandtxt = new String();
-            showHandtxt += "---Cards---\n";
-            dialogVbox.getChildren().add(new Text(showHandtxt));
-            HBox cardsDisplay = new HBox();
+            Text showHandtxt = new Text("--------Cards--------");
+            showHandtxt.setFont(Font.font("Verdana", FontWeight.BLACK, FontPosture.REGULAR, 15));
+            dialogVbox.getChildren().add(showHandtxt);
+            TilePane displayedCards = new TilePane();
             for (Card c : board.getCurrentPlayer().getHand()) {
                 ImageView cardImageView;
                 try {
                     if (c.getType() == CardType.Person) {
-                        c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                        c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 140, 150, false, false));
                     } else if (c.getType() == CardType.Weapon) {
-                        c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                        c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 140, 150, false, false));
                     } else {
-                        c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 100, 120, false, false));
+                        c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 140, 150, false, false));
                     }
                     System.out.println(c.getType() + ":" + c.getName());
                     cardImageView = new ImageView(c.getCardImage());
-                    cardsDisplay.getChildren().add(cardImageView);
+                    displayedCards.getChildren().add(cardImageView);
                 } catch (Exception e) {
-                    c.setCardImage(new Image("/CharacterCards/unknownCard.png", 100, 120, false, false));
+                    c.setCardImage(new Image("/CharacterCards/unknownCard.png", 140, 150, false, false));
                     cardImageView = new ImageView(c.getCardImage());
-                    cardsDisplay.getChildren().add(cardImageView);
+                    displayedCards.getChildren().add(cardImageView);
                     System.out.println(c.getType() + ":" + c.getName());
                 }
             }
-            dialogVbox.getChildren().add(cardsDisplay);
-            Scene dialogScene = new Scene(dialogVbox, 300, 200);
+            //Sets card distances
+            displayedCards.setPrefRows(2);
+            displayedCards.setHgap(10);
+            displayedCards.setVgap(10);
+            /////////////////////////////////
+            dialogVbox.getChildren().add(displayedCards);
+            dialogVbox.setAlignment(Pos.TOP_CENTER);
+            Scene dialogScene = new Scene(dialogVbox);
             dialog.setScene(dialogScene);
+            dialog.setResizable(false);
+            dialog.setTitle("---"+board.getCurrentPlayer().getName()+"'s Cards---");
             dialog.show();
         } else {
             System.out.println("Agent Player Turn");
