@@ -3,6 +3,8 @@
  */
 package cluedo_board_game;
 
+import javafx.scene.image.Image;
+
 /**
  * Represents cards in the board game which are handed to players and put in
  * the envelope
@@ -14,7 +16,7 @@ public class Card implements CardInterface{
     
     private CardType type; //determines card type
     private String name;   //display name of card
-    
+    private Image cardImage; // for the image of the card
     /**
      * Constructor for objects of class Card
      * 
@@ -52,5 +54,15 @@ public class Card implements CardInterface{
     public void setType(CardType newType){
         type = newType;
     }
+
+    public Image getCardImage() {
+        return cardImage;
+    }
+
+    public void setCardImage(Image cardImage) {
+        this.cardImage = cardImage;
+    }
+    
+    
 
 }
