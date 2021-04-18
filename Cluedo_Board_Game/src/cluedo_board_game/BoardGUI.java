@@ -423,8 +423,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         passageBtn.setWrapText(true);
         passageBtn.setPrefSize(100, 100);
         passageBtn.setVisible(false);
-        
-        
+
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
 
@@ -433,11 +432,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         alertsVbx.setMaxWidth(300);
         alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         alertsVbx.setAlignment(Pos.CENTER);
-        
+
         //Some Stuff
         alertTxt = new Text();
         counterTxt = new Text();
-        
 
         //Establish Board
         board = new Board(columns, rows);
@@ -463,8 +461,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Set up the Image of Board
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
+                //Temporarily,not fit yet
                 board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
                 board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
+                try {
+                    Image i = new Image("/tile_textures/" + _r + "/" + _c + ".png", 20, 20, false, false);
+                    board.getTileMap()[_c][_r].setImage(i);
+                    ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
+                    boardView.add(tileView, _c, _r);
+                } catch (Exception e) {
+                    board.getTileMap()[_c][_r].setFill(Color.YELLOW);
+                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
+                    boardView.add(board.getTileMap()[_c][_r], _c, _r);
+                }
+                /*
                 if (board.getTileMap()[_c][_r].getIsWall()) {
                     board.getTileMap()[_c][_r].setFill(Color.BLUE);
                     board.getTileMap()[_c][_r].setStroke(Color.BLUE);
@@ -481,7 +491,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     }
                 }
                 boardView.add(board.getTileMap()[_c][_r], _c, _r);
+                 */
             }
+
         }
         //add door text objects to board
         for (Room r : board.getRooms()) {
@@ -600,15 +612,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         currentPlayerText.setWrappingWidth(170);
         currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
         currentPlayerImageView = new ImageView(currentPlayerImage);
-        
+
         alertTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
         alertTxt.setWrappingWidth(170);
         counterTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
-        
-        
+
         counterTxt.setWrappingWidth(100);
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView,counterTxt);
+        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView, counterTxt);
         alertsVbx.setAlignment(Pos.TOP_CENTER);
         alertsVbx.setSpacing(10);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
