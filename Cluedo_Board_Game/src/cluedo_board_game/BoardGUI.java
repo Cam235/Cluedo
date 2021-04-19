@@ -784,11 +784,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         accusationStage.close();
 
                         Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
-                                board.getCurrentPlayer().getName(), cardDistributor.getMurderer().getName(),
+                                board.getCurrentPlayer().getName(), 
+                                cardDistributor.getMurderer().getName(),
                                 cardDistributor.getMurderRoom().getName(),
                                 cardDistributor.getMurderWeapon().getName()
                         );
-
+                        correctAccusationAlert.initStyle(StageStyle.UTILITY);
                         correctAccusationAlert.showAndWait();
                         //Should restart the game on command 
                     } else {
@@ -800,29 +801,36 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 activePlayerNumber++;
                             }
                         }
-                        //Gives text a value depends on whether the player whow failed was last active player
-                        String failedAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!!!";
-                        String failedAccusationInfoWithOnlyPlayer = envelopeCardCompare + "\n\n" + "No player wins the game!!!";
-                        String choosenFailedAccusationText = null;
-                        choosenFailedAccusationText = (activePlayerNumber > 1) ? failedAccusationInfo : failedAccusationInfoWithOnlyPlayer;
-                        //Puts the player name and the chosen text into acqusationPanel
+                        
+                        //Creates Alert when accusation is not correct,player name and murder cards as parameters
                         Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(
                                 board.getCurrentPlayer().getName(),
                                 cardDistributor.getMurderer().getName(),
                                 cardDistributor.getMurderRoom().getName(),
                                 cardDistributor.getMurderWeapon().getName()
                         );
-                        falseAccusationAlert.initStyle(StageStyle.UNDECORATED);
+                        falseAccusationAlert.initStyle(StageStyle.UTILITY);
+                        //False accusation alerts have different messages depending on current active players in game
+                        String compareAccusationAndMurderCards = accusationPanel.getEnvelopeSuspect() + ","
+                                + accusationPanel.getEnvelopeRoom() + ","
+                                + accusationPanel.getEnvelopeWeapon()
+                                + " are the murder cards!" + "\n"
+                                + "and player's accusation was " + accusationPanel.getAccusedSuspectName() + ","
+                                + accusationPanel.getAccusedRoomName() + ","
+                                + accusationPanel.getAccusedWeaponName() + "\n\n";
+                        // Gives different strings
                         if (activePlayerNumber > 1) {
-                            falseAccusationAlert.setContentText(accusationPanel.getEnvelopeSuspect() + "," + accusationPanel.getEnvelopeRoom() + "," + accusationPanel.getEnvelopeWeapon() + " are the murder cards!" + "\n"
-                                    + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!");
+                            String noMoreTurns = "*** Player " + board.getCurrentPlayer().getName() + " will not have any more turns! ***";
+                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noMoreTurns);
                         } else {
-                            falseAccusationAlert.setContentText(accusationPanel.getEnvelopeSuspect() + "," + accusationPanel.getEnvelopeRoom() + "," + accusationPanel.getEnvelopeWeapon() + " are the murder cards!" + "\n"
-                                    + "No Player wins the game!");
+                            String noPlayerWins = "*** No player wins the game! Please click OK to restart game! ***";
+                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noPlayerWins);
                         }
+
+                        //When false accusation alert is shown,onclick algorihtm below starts
                         falseAccusationAlert.showAndWait();
                         if (!falseAccusationAlert.isShowing()) {
-                            //If active player number is greater than 1,disables the player, else ends the game(not yet)
+                            //If more than 1 player is active in game ,disables player
                             if (activePlayerNumber > 1) {
                                 //Disables the player who made false acqusation
                                 Player playerToBeDisabled = board.getCurrentPlayer();
@@ -833,10 +841,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
                                     endTurnBtn.setDisable(true);
                                 }
+                            //If the only active player makes the wrong accusation ,ends the game
                             } else {
                                 falseAccusationAlert.setContentText("Restarting the game");
                                 //For now , disables the endturn button , but it has to end the game
-                                endTurnBtn.setDisable(true);                                
+                                endTurnBtn.setDisable(true);
                             }
                         }
                     }

@@ -60,7 +60,6 @@ public class AccusationPanel {
             public void handle(ActionEvent event) {
                 accusedRoom = (String) roomBox.getValue();
                 roomCardView.setImage(new Image("/RoomCards/" + accusedRoom + ".jpg", 140, 150, false, false));
-
             }
         });
         //For Suspect
@@ -112,7 +111,10 @@ public class AccusationPanel {
         correctAccusationAlert.setTitle("Player " + wonPlayerName + " wins!!!");
         correctAccusationAlert.setHeaderText("Accusation Confirmed!!!");
         correctAccusationAlert.setGraphic(cardDisplays);
-        correctAccusationAlert.setContentText(envelopeSuspect + "," + envelopeRoom + "," + envelopeWeapon + "are the murder cards!");
+        correctAccusationAlert.setContentText(envelopeSuspect + "," 
+                + envelopeRoom + "," 
+                + envelopeWeapon + " are the murder cards!\n\n"
+        +"*** "+ wonPlayerName +" finds murder cards and wins the game!!! ***\nPlease click OK to restart game!");
         return correctAccusationAlert;
     }
 
