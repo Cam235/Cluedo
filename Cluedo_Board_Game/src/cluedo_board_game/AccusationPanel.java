@@ -31,6 +31,10 @@ public class AccusationPanel {
     private String accusedRoom;
     private String accusedWeapon;
 
+    private String envelopeSuspect;
+    private String envelopeRoom;
+    private String envelopeWeapon;
+
     String[] suspects = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     String[] rooms = {"Lounge", "Diningroom", "Kitchen", "Hall", "Study", "Ballroom", "Conservatory", "Billiardroom", "Library"};
     String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
@@ -38,6 +42,8 @@ public class AccusationPanel {
     Button submitButton; // The submit button of th game
     Button restartByWinButton;
     Button spectateButton;
+
+    HBox cardDisplays;
 
     public Parent createAccusationContent(String accusingPlayerName) {
         Label playerAccusationText = new Label("Player " + accusingPlayerName + " is making accusation!");
@@ -78,9 +84,9 @@ public class AccusationPanel {
         ComboBox<String> weaponBox = new ComboBox<>(FXCollections.observableArrayList(weapons));
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
-        
+
         ImageView weaponCardView = new ImageView(new Image("/weaponCards/unknownCard.png", 140, 150, false, false));
-        
+
         weaponBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -90,7 +96,7 @@ public class AccusationPanel {
         });
         // A submit button
         submitButton = new Button("Submit");
-        HBox cardDisplays = new HBox(suspectCardView,roomCardView,weaponCardView);
+        cardDisplays = new HBox(suspectCardView, roomCardView, weaponCardView);
         VBox accusationContent = new VBox();
         accusationContent.getChildren().addAll(playerAccusationText, suspectSelection, roomSelection, weaponSelection, submitButton, cardDisplays);
         accusationContent.setAlignment(Pos.CENTER);
@@ -98,19 +104,33 @@ public class AccusationPanel {
         return accusationContent;
     }
 
-    public Alert createCorrectAccusationContent(String wonPlayerName, String succeededEnvelopeCheck) {
+    public Alert createCorrectAccusationContent(String wonPlayerName, String envelopeSuspect, String envelopeRoom, String envelopeWeapon) {
+        this.envelopeSuspect = envelopeSuspect;
+        this.envelopeRoom = envelopeRoom;
+        this.envelopeWeapon = envelopeWeapon;
         Alert correctAccusationAlert = new Alert(Alert.AlertType.INFORMATION);
         correctAccusationAlert.setTitle("Player " + wonPlayerName + " wins!!!");
         correctAccusationAlert.setHeaderText("Accusation Confirmed!!!");
-        correctAccusationAlert.setContentText(succeededEnvelopeCheck);
+        correctAccusationAlert.setGraphic(cardDisplays);
+        correctAccusationAlert.setContentText(envelopeSuspect + "," + envelopeRoom + "," + envelopeWeapon + "are the murder cards!");
         return correctAccusationAlert;
     }
 
-    public Alert createFalseAccusationContent(String lostPlayerName, String failedEnvelopeCheck) {
+    public Alert createFalseAccusationContent(String lostPlayerName, String envelopeSuspect, String envelopeRoom, String envelopeWeapon) {
+        this.envelopeSuspect = envelopeSuspect;
+        this.envelopeRoom = envelopeRoom;
+        this.envelopeWeapon = envelopeWeapon;
+
         Alert falseAccusationAlert = new Alert(Alert.AlertType.ERROR);
         falseAccusationAlert.setTitle("Player " + lostPlayerName + " loses!!!");
         falseAccusationAlert.setHeaderText("Accusation Fails!!!");
-        falseAccusationAlert.setContentText(failedEnvelopeCheck);
+        ImageView murderer = new ImageView(new Image("/CharacterCards/" + envelopeSuspect + ".jpg", 140, 150, false, false));
+        ImageView murderRoom = new ImageView(new Image("/RoomCards/" + envelopeRoom + ".jpg", 140, 150, false, false));
+        ImageView murderWeapon = new ImageView(new Image("/weaponCards/" + envelopeWeapon + ".jpg", 140, 150, false, false));
+        HBox murderCardsDisplay = new HBox(murderer, murderRoom, murderWeapon);
+        falseAccusationAlert.setGraphic(murderCardsDisplay);
+        falseAccusationAlert.setContentText(envelopeSuspect + "," + envelopeRoom + "," + envelopeWeapon + " are the murder cards!" + "\n"
+                + "Player " + lostPlayerName + " will not have any more turns!");
         return falseAccusationAlert;
     }
 
@@ -124,6 +144,30 @@ public class AccusationPanel {
 
     public String getAccusedWeaponName() {
         return accusedWeapon;
+    }
+
+    public String getEnvelopeSuspect() {
+        return envelopeSuspect;
+    }
+
+    public void setEnvelopeSuspect(String envelopeSuspect) {
+        this.envelopeSuspect = envelopeSuspect;
+    }
+
+    public String getEnvelopeRoom() {
+        return envelopeRoom;
+    }
+
+    public void setEnvelopeRoom(String envelopeRoom) {
+        this.envelopeRoom = envelopeRoom;
+    }
+
+    public String getEnvelopeWeapon() {
+        return envelopeWeapon;
+    }
+
+    public void setEnvelopeWeapon(String envelopeWeapon) {
+        this.envelopeWeapon = envelopeWeapon;
     }
 
 }

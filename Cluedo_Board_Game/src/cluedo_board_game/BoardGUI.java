@@ -7,6 +7,7 @@
 package cluedo_board_game;
 
 import java.awt.Paint;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -506,9 +507,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //To place staircase
         for (int _r = 10; _r < 19; _r++) {
             for (int _c = 10; _c < 17; _c++) {
-                int currentTextureRow= _r-9;
-                int currentTextureCol = _c-9;
-                Image stairCaseTileImage = new Image("/Staircase_textures/image_"+ currentTextureRow+"_"+ currentTextureCol + ".png", 21, 21, false, false);
+                int currentTextureRow = _r - 9;
+                int currentTextureCol = _c - 9;
+                Image stairCaseTileImage = new Image("/Staircase_textures/image_" + currentTextureRow + "_" + currentTextureCol + ".png", 21, 21, false, false);
                 board.getTileMap()[_c][_r].setImage(stairCaseTileImage);
                 ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
                 boardView.add(tileView, _c, _r);
@@ -781,8 +782,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
                             && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
                         accusationStage.close();
-                        String correctAccusationInfo = envelopeCardCompare + "\n\n" + "Player " + board.getCurrentPlayer().getName() + " solved the case and won the game!!!";
-                        Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(board.getCurrentPlayer().getName(), correctAccusationInfo);
+
+                        Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
+                                board.getCurrentPlayer().getName(), cardDistributor.getMurderer().getName(),
+                                cardDistributor.getMurderRoom().getName(),
+                                cardDistributor.getMurderWeapon().getName()
+                        );
+
                         correctAccusationAlert.showAndWait();
                         //Should restart the game on command 
                     } else {
@@ -800,7 +806,20 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         String choosenFailedAccusationText = null;
                         choosenFailedAccusationText = (activePlayerNumber > 1) ? failedAccusationInfo : failedAccusationInfoWithOnlyPlayer;
                         //Puts the player name and the chosen text into acqusationPanel
-                        Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(board.getCurrentPlayer().getName(), choosenFailedAccusationText);
+                        Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(
+                                board.getCurrentPlayer().getName(),
+                                cardDistributor.getMurderer().getName(),
+                                cardDistributor.getMurderRoom().getName(),
+                                cardDistributor.getMurderWeapon().getName()
+                        );
+                        falseAccusationAlert.initStyle(StageStyle.UNDECORATED);
+                        if (activePlayerNumber > 1) {
+                            falseAccusationAlert.setContentText(accusationPanel.getEnvelopeSuspect() + "," + accusationPanel.getEnvelopeRoom() + "," + accusationPanel.getEnvelopeWeapon() + " are the murder cards!" + "\n"
+                                    + "Player " + board.getCurrentPlayer().getName() + " will not have any more turns!");
+                        } else {
+                            falseAccusationAlert.setContentText(accusationPanel.getEnvelopeSuspect() + "," + accusationPanel.getEnvelopeRoom() + "," + accusationPanel.getEnvelopeWeapon() + " are the murder cards!" + "\n"
+                                    + "No Player wins the game!");
+                        }
                         falseAccusationAlert.showAndWait();
                         if (!falseAccusationAlert.isShowing()) {
                             //If active player number is greater than 1,disables the player, else ends the game(not yet)
@@ -815,8 +834,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     endTurnBtn.setDisable(true);
                                 }
                             } else {
+                                falseAccusationAlert.setContentText("Restarting the game");
                                 //For now , disables the endturn button , but it has to end the game
-                                endTurnBtn.setDisable(true);
+                                endTurnBtn.setDisable(true);                                
                             }
                         }
                     }
