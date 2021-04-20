@@ -108,8 +108,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Button endTurnBtn;
     private VBox controlsVbx;
 
-    
-    private VBox alertsVbx;
+    private VBox profileAndAlertVBox;
     private Text alertTxt;
     private Text counterTxt;
     // text for pregame guidence
@@ -141,10 +140,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     Text currentPlayerText;
 
     public VBox CreatePreGameContent() {
-        VBox actualPreGame = new VBox();
-        actualPreGame.setPrefSize(600, 280);
+        VBox preGameBox = new VBox();
+        preGameBox.setAlignment(Pos.TOP_CENTER);
+        preGameBox.setPrefSize(600, 280);
         VBox selectionBoxesView = new VBox();
         HBox characterSelectionViews = new HBox();
+        characterSelectionViews.setSpacing(5);
         for (int i = 0; i < playerSelectionBoxesNumber; i++) {
             final int nodeIndex = i;
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
@@ -162,6 +163,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
                     Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
                     VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
+                    nameAndDisplay.setAlignment(Pos.CENTER);
                     characterSelectionViews.getChildren().remove(nodeIndex);
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                 }
@@ -229,7 +231,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Display a text for guidance 
         preGameText = new Text("Please fill player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
-        actualPreGame.getChildren().addAll(selectionBoxesView, preSetupButtons, characterSelectionViews, preGameTextPane);
+        preGameBox.getChildren().addAll(selectionBoxesView, preSetupButtons, characterSelectionViews, preGameTextPane);
         //Set up position of nodes 
         characterSelectionViews.setAlignment(Pos.CENTER);
         selectionBoxesView.setAlignment(Pos.CENTER);
@@ -239,9 +241,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
         // set background
-        actualPreGame.setBackground(bg);
+        preGameBox.setBackground(bg);
+
         // scene setting
-        return actualPreGame;
+        return preGameBox;
     }
 
     private void setUpWeapons() {
@@ -448,10 +451,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
 
-        alertsVbx = new VBox();
-        alertsVbx.setMaxWidth(300);
-        alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        alertsVbx.setAlignment(Pos.CENTER);
+        profileAndAlertVBox = new VBox();
+        profileAndAlertVBox.setMaxWidth(300);
+        profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        profileAndAlertVBox.setAlignment(Pos.CENTER);
 
         //Some Stuff
         alertTxt = new Text();
@@ -630,7 +633,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
         currentPlayerImageView = new ImageView(currentPlayerImage);
 
-        alertTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
+        alertTxt.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 15));
         alertTxt.setWrappingWidth(170);
         counterTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
 
@@ -638,11 +641,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
         //controlsVbx.setSpacing(5);
-        alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView, counterTxt);
-        alertsVbx.setAlignment(Pos.TOP_CENTER);
-        alertsVbx.setSpacing(10);
-        
-        gameBox.getChildren().addAll(controlsVbx, boardView, alertsVbx);
+        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
+        currentPlayerText.setTextAlignment(TextAlignment.CENTER);
+        counterTxt.setTextAlignment(TextAlignment.CENTER);
+        profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
+        profileAndAlertVBox.setSpacing(10);
+
+        gameBox.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
         gameBox.setAlignment(Pos.TOP_CENTER);
         //Set Background 
         //Create background
@@ -873,6 +878,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
+                        
                         break;
                     case S://go down
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
@@ -889,21 +895,27 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
+                    /*In exiting the room , enable suggestion button,which does not work outside room.
+                     This will enforce players inside room to move outside */
                     case DIGIT1://exit door 1
                         board.currentPlayerExitsRoom(1, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
+                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT2://exit door 2
                         board.currentPlayerExitsRoom(2, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
+                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT3://exit door 3
                         board.currentPlayerExitsRoom(3, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
+                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT4://exit door 4
                         board.currentPlayerExitsRoom(4, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
+                        suggestionBtn.setDisable(false);
                         break;
                     default://non valid Ket
                         alertTxt.setText("Not Valid Key");
@@ -986,8 +998,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     @Override
     public void start(Stage primaryStage) {
         preGameScene = new Scene(CreatePreGameContent(), 600, 500);
+
         primaryStage.setTitle("Please Choose Characters!");
         primaryStage.setScene(preGameScene);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         startButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -1029,7 +1043,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 Player p = board.getCurrentPlayer();
                 board.incrementCurrentPlayer();
                 resetDice();
-                suggestionBtn.setDisable(false); // enables suggestion button
+                //If currentPlayer is not in room after end turn ,enable suggest button,if not make it disable so, 
+                //it cannot make suggestion in room it is already in
+                if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
+                    suggestionBtn.setDisable(true); // enables suggestion button
+                }else{
+                     suggestionBtn.setDisable(false);//disables suggestion Button
+                }
                 alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                 counterTxt.setText("Please Roll The Dice");
                 //Displays current players Image
@@ -1087,6 +1107,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //Create new Stage for popup
                     suggestionStage = new Stage();
                     suggestionStage.initModality(Modality.APPLICATION_MODAL);
+                    suggestionStage.setResizable(false);
                     // Create new suggestion panel 
                     suggestionPanel = new SuggestionPanel();
                     // gets name of current players room as parameter to create content of suggestionPanel
@@ -1119,6 +1140,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //setting up accusation stage
                     accusationStage = new Stage();
                     accusationStage.initModality(Modality.APPLICATION_MODAL);
+                    accusationStage.setResizable(false);
                     //Create new AcqusationPanel
                     accusationPanel = new AccusationPanel();
                     Scene accusationScene = new Scene(accusationPanel.createAccusationContent(board.getCurrentPlayer().getName()));
@@ -1316,6 +1338,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         passageBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                suggestionBtn.setDisable(false);
                 diceRoller.getRollButton().fire();
                 for (int i = 0; i < board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().size(); i++) {
                     board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().get(i).getText().setText("");
