@@ -122,7 +122,7 @@ public class AccusationPanel {
         correctAccusationAlert.setContentText(envelopeSuspect + "," 
                 + envelopeRoom + "," 
                 + envelopeWeapon + " are the murder cards!\n\n"
-        +"*** "+ wonPlayerName +" finds murder cards and wins the game!!! ***\nPlease click OK to restart game!");
+        +"*** "+ wonPlayerName +" finds murder cards and wins the game!!! ***\n");
         return correctAccusationAlert;
     }
 
