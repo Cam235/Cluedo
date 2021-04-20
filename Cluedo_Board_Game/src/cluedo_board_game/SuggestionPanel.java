@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
@@ -19,9 +20,13 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -42,8 +47,8 @@ public class SuggestionPanel {
     Button postSuggestionButton; //Respondent player showing card
     ComboBox<String> postSuggestionCombobox; //holds respondent players possible cards to suggest
 
-    public VBox createSuggestionContent(String roomName) {
-        Label playerSuggestext = new Label("Player is making suggestion!");
+    public VBox createSuggestionContent(String roomName , String suggestingPlayer) {
+        Label playerSuggestext = new Label("Player "+suggestingPlayer+" is making suggestion!");
 
         //For Room--Static , will display the name room entered
         suggestedRoom = roomName;
@@ -97,7 +102,9 @@ public class SuggestionPanel {
         suggestionContent.getChildren().addAll(playerSuggestext, roomSelection, suspectSelection, weaponSelection, submitButton, cardDisplays);
         suggestionContent.setAlignment(Pos.CENTER);
         suggestionContent.setSpacing(10);
-
+        //Sets background 
+        Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
+        suggestionContent.setBackground(bg);
         return suggestionContent;
     }
 

@@ -234,6 +234,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         selectionBoxesView.setAlignment(Pos.CENTER);
         preSetupButtons.setAlignment(Pos.CENTER);
         preGameTextPane.setAlignment(Pos.CENTER);
+
+        //Create background
+        Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
+        // set background
+        actualPreGame.setBackground(bg);
+        // scene setting
         return actualPreGame;
     }
 
@@ -470,7 +476,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Set up the Image of Board
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                //Temporarily,not fit yet
+                
                 board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
                 board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
                 try {
@@ -481,24 +487,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     boardView.add(tileView, _c, _r);
 
                 } catch (Exception e) {
-                    //Adds roads
-                    /*
-                    if (board.getTileMap()[_c][_r].getIsWall()) {
-                        board.getTileMap()[_c][_r].setFill(Color.BLUE);
-                        board.getTileMap()[_c][_r].setStroke(Color.BLUE);
-                    } else if (board.getTileMap()[_c][_r].getIsDoor()) {
-                        board.getTileMap()[_c][_r].setFill(Color.WHITE);
-                    } else {
-                        board.getTileMap()[_c][_r].setFill(Color.GOLD);
-                        board.getTileMap()[_c][_r].setStroke(Color.BLACK);
-                    }
-                    for (Room room : board.getRooms()) {
-                        if (room.checkTileInRoom(board.getTileMap()[_c][_r])) {
-                            board.getTileMap()[_c][_r].setFill(Color.GRAY);
-                            board.getTileMap()[_c][_r].setStroke(Color.GRAY);
-                        }
-                    }
-                     */
                     board.getTileMap()[_c][_r].setFill(Color.GOLD);
                     board.getTileMap()[_c][_r].setStroke(Color.BLACK);
                     boardView.add(board.getTileMap()[_c][_r], _c, _r);
@@ -591,11 +579,11 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     player.getToken().setTokenLocation(board.getTileMap()[7][27]);
                     break;
                 case "Mrs.Peacock": // Left Bottom
-                    player.getToken().setFill(Color.BLUEVIOLET);
+                    player.getToken().setFill(Color.AQUA);
                     player.getToken().setTokenLocation(board.getTileMap()[0][20]);
                     break;
                 case "Professor Plum": // Left Top
-                    player.getToken().setFill(Color.PLUM);
+                    player.getToken().setFill(Color.PURPLE);
                     player.getToken().setTokenLocation(board.getTileMap()[0][5]);
                     break;
                 default: //If error
@@ -642,12 +630,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         counterTxt.setWrappingWidth(100);
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
+        controlsVbx.setSpacing(5);
         alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView, counterTxt);
         alertsVbx.setAlignment(Pos.TOP_CENTER);
         alertsVbx.setSpacing(10);
         gameViewHbx.getChildren().addAll(boardView, alertsVbx);
         gameBox.getChildren().addAll(controlsVbx, gameViewHbx);
         gameBox.setAlignment(Pos.CENTER);
+        //Set Background 
+        //Create background
+        Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
+        // set background
+        gameBox.setBackground(bg);
         return gameBox;
     }
 
@@ -1089,7 +1083,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     // gets name of current players room as parameter to create content of suggestionPanel
                     String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
                     //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
-                    Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName));
+                    Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName,board.getCurrentPlayer().getName()));
                     suggestionStage.setScene(suggestionScene);
                     suggestionStage.show();
                     //Calls private method to start submission suggestion process 

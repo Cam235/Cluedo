@@ -8,12 +8,17 @@ package cluedo_board_game;
 import java.util.Random;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * Represents the rolling a dice via button
@@ -29,10 +34,10 @@ public class DiceRoller implements DiceRollerInterface{
     //Button to throw dice
     Button rollButton;
     //Initial 1st Dice View
-    Image diceImage = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
+    Image diceImage = new Image("/Die/Dice" + diceNumber + ".png", 75, 75, false, false);
     ImageView diceImageView = new ImageView(diceImage);
     //Initial 2nd Dice View
-    Image diceImage2 = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
+    Image diceImage2 = new Image("/Die/Dice" + diceNumber + ".png", 75, 75, false, false);
     ImageView diceImageView2 = new ImageView(diceImage2);
 
     /**
@@ -45,7 +50,7 @@ public class DiceRoller implements DiceRollerInterface{
     public VBox createContent() {
         rollButton = new Button();
         rollButton.setText("Roll the Dice");
-        rollButton.setPrefSize(200,80);
+        rollButton.setPrefSize(150,50);
         rollButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -56,25 +61,31 @@ public class DiceRoller implements DiceRollerInterface{
                 diceNumber = randomDice.nextInt(6) + 1;
                 diceNumber2 = randomDice.nextInt(6) + 1;
                 //Sets Image For First Dice
-                diceImage = new Image("/Die/Dice" + diceNumber + ".png", 100, 100, false, false);
+                diceImage = new Image("/Die/Dice" + diceNumber + ".png", 75, 75, false, false);
                 diceImageView.setImage(diceImage);
                 //Sets Second Dice
-                diceImage2 = new Image("/Die/Dice" + diceNumber2 + ".png", 100, 100, false, false);
+                diceImage2 = new Image("/Die/Dice" + diceNumber2 + ".png", 75, 75, false, false);
                 diceImageView2.setImage(diceImage2);
                 //Disables button after pressed
                 rollButton.setDisable(true);
             }
         });
+        Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
+        
         //Displays dices horizontally
         HBox dicesHbox = new HBox();
         dicesHbox.getChildren().addAll(diceImageView, diceImageView2);
+        dicesHbox.setBackground(bg);
+        
         //Displays roll button above dices
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(rollButton, dicesHbox);
+        VBox diceRollerBox = new VBox();
+        diceRollerBox.getChildren().addAll(rollButton, dicesHbox);
         //SetsAlignments
         dicesHbox.setAlignment(Pos.CENTER);
-        vbox.setAlignment(Pos.CENTER);
-        return vbox;
+        diceRollerBox.setAlignment(Pos.CENTER);
+       
+        diceRollerBox.setBackground(bg);
+        return diceRollerBox;
     }
 
     /**
