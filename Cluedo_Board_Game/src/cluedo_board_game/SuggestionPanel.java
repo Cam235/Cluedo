@@ -47,8 +47,8 @@ public class SuggestionPanel {
     Button postSuggestionButton; //Respondent player showing card
     ComboBox<String> postSuggestionCombobox; //holds respondent players possible cards to suggest
 
-    public VBox createSuggestionContent(String roomName , String suggestingPlayer) {
-        Label playerSuggestext = new Label("Player "+suggestingPlayer+" is making suggestion!");
+    public VBox createSuggestionContent(String roomName, String suggestingPlayer) {
+        Label playerSuggestext = new Label("Player " + suggestingPlayer + " is making suggestion!");
 
         //For Room--Static , will display the name room entered
         suggestedRoom = roomName;
@@ -125,16 +125,29 @@ public class SuggestionPanel {
         correctAccusationAlert.setTitle("Card is Shown!");
         correctAccusationAlert.setHeaderText("Player " + responderPlayer + " shows you a " + responseCardName + " card!!!");
         correctAccusationAlert.setContentText("Please make accusation or end your turn!");
+        //Gets the correct image view of suggested card!
         try {
             ImageView ShownCardIsWeapon = new ImageView(new Image("/weaponCards/" + responseCardName + ".jpg", 140, 150, false, false));
             correctAccusationAlert.setGraphic(ShownCardIsWeapon);
-        }catch(IllegalArgumentException e){
-            ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 140, 150, false, false));
-            correctAccusationAlert.setGraphic(ShownCardIsSuspect);
-        }catch(Exception e){
-            System.out.println("not working");
+        } catch (IllegalArgumentException e) {
+            try {
+                ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 140, 150, false, false));
+                correctAccusationAlert.setGraphic(ShownCardIsSuspect);
+            } catch (IllegalArgumentException t) {
+                ImageView ShownCardIsSuspect = new ImageView(new Image("/RoomCards/" + responseCardName + ".jpg", 140, 150, false, false));
+                correctAccusationAlert.setGraphic(ShownCardIsSuspect);
+            }
         }
         return correctAccusationAlert;
+    }
+
+    public Alert createCardNotFoundAlert() {
+        Alert NoPlayerHaveCardAlert = new Alert(Alert.AlertType.ERROR);
+        NoPlayerHaveCardAlert.setHeaderText("Other players do not have suggested cards");
+        NoPlayerHaveCardAlert.setTitle("Cards not found");
+        NoPlayerHaveCardAlert.setContentText("Please make accusation or end your turn!");
+        return NoPlayerHaveCardAlert;
+        
     }
 
     public String getSuggestedSuspect() {

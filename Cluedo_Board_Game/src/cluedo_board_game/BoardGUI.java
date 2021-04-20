@@ -30,6 +30,7 @@ import static javafx.print.PrintColor.COLOR;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
@@ -107,7 +108,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private Button endTurnBtn;
     private VBox controlsVbx;
 
-    private HBox gameViewHbx;
+    
     private VBox alertsVbx;
     private Text alertTxt;
     private Text counterTxt;
@@ -410,38 +411,43 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         detectiveCardButton = new Button("Check Detective Card");
         detectiveCardButton.setTextAlignment(TextAlignment.CENTER);
         detectiveCardButton.setWrapText(true);
-        detectiveCardButton.setPrefSize(100, 100);
+        detectiveCardButton.setPrefSize(130, 100);
+        detectiveCardButton.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
         //Suggestion Button
         suggestionBtn = new Button("Make Suggestion");
         suggestionBtn.setTextAlignment(TextAlignment.CENTER);
         suggestionBtn.setWrapText(true);
-        suggestionBtn.setPrefSize(100, 100);
+        suggestionBtn.setPrefSize(130, 100);
+        suggestionBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
         //Accusation Button
         accusationBtn = new Button("Make Accusation");
         accusationBtn.setTextAlignment(TextAlignment.CENTER);
         accusationBtn.setWrapText(true);
-        accusationBtn.setPrefSize(100, 100);
+        accusationBtn.setPrefSize(130, 100);
+        accusationBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
         //Show Cards Button
         showHandBtn = new Button("Check Hand");
         showHandBtn.setTextAlignment(TextAlignment.CENTER);
         showHandBtn.setWrapText(true);
-        showHandBtn.setPrefSize(100, 100);
+        showHandBtn.setPrefSize(130, 100);
+        showHandBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
         //End Turn Button
         endTurnBtn = new Button("End Turn");
         endTurnBtn.setTextAlignment(TextAlignment.CENTER);
         endTurnBtn.setWrapText(true);
-        endTurnBtn.setPrefSize(100, 100);
+        endTurnBtn.setPrefSize(130, 100);
+        endTurnBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
 
         passageBtn = new Button("Take passage");
         passageBtn.setTextAlignment(TextAlignment.CENTER);
         passageBtn.setWrapText(true);
-        passageBtn.setPrefSize(100, 100);
+        passageBtn.setPrefSize(130, 100);
         passageBtn.setVisible(false);
+        passageBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
 
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
 
-        gameViewHbx = new HBox();
         alertsVbx = new VBox();
         alertsVbx.setMaxWidth(300);
         alertsVbx.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -476,7 +482,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Set up the Image of Board
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
-                
+
                 board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
                 board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
                 try {
@@ -630,13 +636,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         counterTxt.setWrappingWidth(100);
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        controlsVbx.setSpacing(5);
+        controlsVbx.setAlignment(Pos.TOP_CENTER);
+        //controlsVbx.setSpacing(5);
         alertsVbx.getChildren().addAll(currentPlayerText, currentPlayerImageView, alertTxt, diceRollerView, counterTxt);
         alertsVbx.setAlignment(Pos.TOP_CENTER);
         alertsVbx.setSpacing(10);
-        gameViewHbx.getChildren().addAll(boardView, alertsVbx);
-        gameBox.getChildren().addAll(controlsVbx, gameViewHbx);
-        gameBox.setAlignment(Pos.CENTER);
+        
+        gameBox.getChildren().addAll(controlsVbx, boardView, alertsVbx);
+        gameBox.setAlignment(Pos.TOP_CENTER);
         //Set Background 
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
@@ -657,6 +664,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             public void handle(ActionEvent event) {
                 //if characterSelectionCombobox values are not empty start iterating
                 if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
+                    //Disables suggestion button once suggestion is made
+                    suggestionBtn.setDisable(true);
                     //Set suggestion alertText as 
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
@@ -732,8 +741,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                         responderChoiceBox.showAndWait();
                                         if (!responderChoiceBox.getSelectedItem().equals("")) {
                                             validItemChosen = true;
-                                            System.out.println("Selected Item: " + responderChoiceBox.getSelectedItem());
-                                            //counterTxt.setText(board.getPlayerList().get(j).getName() + " shows you " + responderChoiceBox.getSelectedItem() + " card");
                                             postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
                                             postSuggestionAlert.showAndWait();
                                         }
@@ -745,12 +752,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             }
                         }
                     }
-                    //If other players do not have the suggested cards,counterTxt gives a message
+                    //If other players do not have the suggested cards gives a message
                     if (!suggestedCardsFound) {
-                        counterTxt.setText("Other players do not have suggested cards");
+                        Alert NoCharacterHaveCardAlert = suggestionPanel.createCardNotFoundAlert();
+                        NoCharacterHaveCardAlert.showAndWait();
                     }
                 } else {
-                    System.out.println("Please fill all suggestion boxes");
+                    alertTxt.setText("Please fill all boxes to make suggestion !");
                 }
             }
         }
@@ -1021,6 +1029,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 Player p = board.getCurrentPlayer();
                 board.incrementCurrentPlayer();
                 resetDice();
+                suggestionBtn.setDisable(false); // enables suggestion button
                 alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                 counterTxt.setText("Please Roll The Dice");
                 //Displays current players Image
@@ -1083,13 +1092,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     // gets name of current players room as parameter to create content of suggestionPanel
                     String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
                     //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
-                    Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName,board.getCurrentPlayer().getName()));
+                    Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName, board.getCurrentPlayer().getName()));
                     suggestionStage.setScene(suggestionScene);
                     suggestionStage.show();
                     //Calls private method to start submission suggestion process 
                     suggestionHelper();
                 } else {
-                    alertTxt.setText("Cannot make suggestion outside of rooms");
+                    alertTxt.setText("Player cannot make suggestion outside of rooms");
                 }
             }
         }
@@ -1287,6 +1296,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private void resetDice() {
         //Sets Counter to 0
         board.setCounter(0);
+        counterTxt.setText("");
         //Set Dice Rolled to false and Enables DiceRoller
         diceRoller.setDiceRolled(false);
         diceRoller.enableDiceRollerButton();
