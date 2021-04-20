@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
@@ -778,12 +779,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
                 if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
                     //Put envelope card names to strng to display and compare with accusation cards
-
                     if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoomName())
                             && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
                             && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
+                        //Closes accusation stage
                         accusationStage.close();
-
+                        //Creates correct accusation Content
                         Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
                                 board.getCurrentPlayer().getName(),
                                 cardDistributor.getMurderer().getName(),
@@ -791,14 +792,34 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 cardDistributor.getMurderWeapon().getName()
                         );
                         correctAccusationAlert.initStyle(StageStyle.UTILITY);
-                        correctAccusationAlert.showAndWait();
-                        //when alert closed ,restarts the game
-                        if (!correctAccusationAlert.isShowing()) {
-
+                        
+                        // Removes all default buttons                           
+                        correctAccusationAlert.getButtonTypes().clear();
+                        //Starts from character selection
+                        ButtonType startNewGameBtn = new ButtonType("START NEW GAME!", ButtonData.YES);
+                        correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
+                        //Restarts the game with same characters
+                        ButtonType restartBtn = new ButtonType("RESTART!", ButtonData.YES);
+                        correctAccusationAlert.getButtonTypes().add(restartBtn);
+                        //ENDS GAME
+                        ButtonType endGameBtn = new ButtonType("END GAME", ButtonData.YES);
+                        correctAccusationAlert.getButtonTypes().add(endGameBtn);
+                        //When correct accusation alert is shown,onclick algorihtm below starts
+                        Optional<ButtonType> result = correctAccusationAlert.showAndWait();
+                        if (!result.isPresent()) {
+                            // opens new tap until something is choosen
+                            correctAccusationAlert.showAndWait();
+                        } else if (result.get() == startNewGameBtn) {
+                            //Starts new Game
+                            startNewGame();
+                        } else if (result.get() == restartBtn) {
+                            // starts with same characters
                             playGame(primaryStage);
-
+                        } else if (result.get() == endGameBtn) {
+                            //Exits the game
+                            Platform.exit();
+                            System.exit(0);
                         }
-                        //Should restart the game on command 
                     } else {
                         accusationStage.close();
                         //Gets the number of active players
@@ -829,31 +850,50 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         if (activePlayerNumber > 1) {
                             String noMoreTurns = "*** Player " + board.getCurrentPlayer().getName() + " will not have any more turns! ***";
                             falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noMoreTurns);
-                        } else {
-                            String noPlayerWins = "*** No player wins the game! Please click OK to restart game! ***";
-                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noPlayerWins);
-                        }
-
-                        //When false accusation alert is shown,onclick algorihtm below starts
-                        falseAccusationAlert.showAndWait();
-                        if (!falseAccusationAlert.isShowing()) {
-                            //If more than 1 player is active in game ,disables player
-                            if (activePlayerNumber > 1) {
-                                //Disables the player who made false acqusation
-                                Player playerToBeDisabled = board.getCurrentPlayer();
-                                endTurnBtn.fire();
-                                playerToBeDisabled.setIsPlaying(false);
-                                activePlayerNumber--;
-                                if (activePlayerNumber == 1) {
-                                    alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
-
+                            falseAccusationAlert.showAndWait();
+                            if (!falseAccusationAlert.isShowing()) {
+                                //If more than 1 player is active in game ,disables player
+                                if (activePlayerNumber > 1) {
+                                    //Disables the player who made false acqusation
+                                    Player playerToBeDisabled = board.getCurrentPlayer();
+                                    endTurnBtn.fire();
+                                    playerToBeDisabled.setIsPlaying(false);
+                                    activePlayerNumber--;
+                                    if (activePlayerNumber == 1) {
+                                        alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
+                                    }
+                                    //If the only active player makes the wrong accusation ,ends the game
                                 }
-                                //If the only active player makes the wrong accusation ,ends the game
-                            } else {
-                                //When last player makes a false accusation,and click Ok, restarts the game 
+                            }
+                        } else {
+                            String noPlayerWins = "*** No player wins the game! ***";
+                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noPlayerWins);
+                            // Removes all default buttons                           
+                            falseAccusationAlert.getButtonTypes().clear();
+                            //Starts from character selection
+                            ButtonType startNewGameBtn = new ButtonType("START NEW GAME!", ButtonData.YES);
+                            falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
+                            //Restarts the game with same characters
+                            ButtonType restartBtn = new ButtonType("RESTART!", ButtonData.YES);
+                            falseAccusationAlert.getButtonTypes().add(restartBtn);
+                            //End game 
+                            ButtonType endGameBtn = new ButtonType("END GAME", ButtonData.YES);
+                            falseAccusationAlert.getButtonTypes().add(endGameBtn);
+                            //When false accusation alert is shown,onclick algorihtm below starts
+                            Optional<ButtonType> result = falseAccusationAlert.showAndWait();
+                            if (!result.isPresent()) {
+                                // opens new tap until something is choosen
+                                falseAccusationAlert.showAndWait();
+                            } else if (result.get() == startNewGameBtn) {
+                                //Starts new Game
+                                startNewGame();
+                            } else if (result.get() == restartBtn) {
+                                // starts with same characters
                                 playGame(primaryStage);
-                                //Or resets 
-                                //start(primaryStage);
+                            } else if (result.get() == endGameBtn) {
+                                //Exits the game
+                                Platform.exit();
+                                System.exit(0);
                             }
                         }
                     }
@@ -878,7 +918,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
                                 (board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex() - 1), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
-                        
+
                         break;
                     case S://go down
                         board.moveCurrentPlayer(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(),
@@ -1047,8 +1087,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 //it cannot make suggestion in room it is already in
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
                     suggestionBtn.setDisable(true); // enables suggestion button
-                }else{
-                     suggestionBtn.setDisable(false);//disables suggestion Button
+                } else {
+                    suggestionBtn.setDisable(false);//disables suggestion Button
                 }
                 alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                 counterTxt.setText("Please Roll The Dice");
@@ -1309,6 +1349,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             }
         });
         //Updates detectiveCards when checkBox is selected
+
+    }
+
+    /**
+     * Restarts the game from characterSelection
+     */
+    private void startNewGame() {
+        // Stackoverflow says it is dirty way to do!
+        System.out.println("Restarting app!");
+        primaryStage.close();
+        primaryStage = new Stage();
+        Platform.runLater(() -> new BoardGUI().start(primaryStage));
 
     }
 
