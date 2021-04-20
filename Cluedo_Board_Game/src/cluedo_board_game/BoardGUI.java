@@ -792,7 +792,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 cardDistributor.getMurderWeapon().getName()
                         );
                         correctAccusationAlert.initStyle(StageStyle.UTILITY);
-                        
+
                         // Removes all default buttons                           
                         correctAccusationAlert.getButtonTypes().clear();
                         //Starts from character selection
@@ -1134,14 +1134,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         detectiveCardButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Stage detectiveCardStage = new Stage();
-                detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
-                displayDetectiveCard(detectiveCardStage);
+                if (!board.getCurrentPlayer().isAgent()) {
+                    Stage detectiveCardStage = new Stage();
+                    detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
+                    displayDetectiveCard(detectiveCardStage);
+                } else {
+                    alertTxt.setText("You cannot check agents detective card!");
+                }
             }
         });
         suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                
                 //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
                     //Create new Stage for popup
@@ -1302,8 +1307,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             dialog.setTitle("---" + board.getCurrentPlayer().getName() + "'s Cards---");
             dialog.show();
         } else {
-            System.out.println("Agent Player Turn");
-            alertTxt.setText("Agent Player Turn");
+            
+            alertTxt.setText("You cannot see agent player's hand !");
         }
     }
 
