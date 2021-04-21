@@ -10,7 +10,7 @@ import javafx.util.Pair;
 /**
  * Represents the Players of the board game
  * @author cwood
- * @version 1.0
+ * @version 4.0
  */
 public class Player implements PlayerInterface {
     
@@ -20,8 +20,7 @@ public class Player implements PlayerInterface {
     protected Token token; //represents the players token
     protected Boolean isPlaying; //represents whether the player is currently playing
     protected Boolean isTurn; //represents whether it is currently the players turn
-    
-    
+    protected String mostRecentlySuggestedRoom = ""; //the players last suggested room, used to disable successive suggestions
     protected HashMap<String, Boolean> detectiveCard; //represents the detective card of the player
     protected String detectiveNotes; // represents detective Notes of player
     /**
@@ -67,7 +66,7 @@ public class Player implements PlayerInterface {
 
     @Override
     public void moveToken(Tile tile) {
-        throw new UnsupportedOperationException("Unsupported Player class for move token"); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Unsupported Player class for move token");
     }
     
     @Override
@@ -100,10 +99,10 @@ public class Player implements PlayerInterface {
      * v
      * @param k
      * @param v 
-     
+     */
     public void updateDetectiveCard(String k, Boolean v){
         detectiveCard.put(k, v);
-    }*/
+    }
     
     public HashMap<String, Boolean> getDetectiveCard() {
         return detectiveCard;
@@ -120,7 +119,13 @@ public class Player implements PlayerInterface {
     public void setDetectiveNotes(String detectiveNotes) {
         this.detectiveNotes = detectiveNotes;
     }
-    
-    
+
+    public String getMostRecentlySuggestedRoom() {
+        return mostRecentlySuggestedRoom;
+    }
+
+    public void setMostRecentlySuggestedRoom(String mostRecentlySuggestedRoom) {
+        this.mostRecentlySuggestedRoom = mostRecentlySuggestedRoom;
+    }
     
 }

@@ -670,8 +670,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             public void handle(ActionEvent event) {
                 //if characterSelectionCombobox values are not empty start iterating
                 if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
-                    //Disables suggestion button once suggestion is made
-                    suggestionBtn.setDisable(true);
+                    
                     //Set suggestion alertText as 
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
@@ -940,22 +939,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     case DIGIT1://exit door 1
                         board.currentPlayerExitsRoom(1, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
-                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT2://exit door 2
                         board.currentPlayerExitsRoom(2, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
-                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT3://exit door 3
                         board.currentPlayerExitsRoom(3, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
-                        suggestionBtn.setDisable(false);
                         break;
                     case DIGIT4://exit door 4
                         board.currentPlayerExitsRoom(4, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
-                        suggestionBtn.setDisable(false);
                         break;
                     default://non valid Ket
                         alertTxt.setText("Not Valid Key");
@@ -1037,7 +1032,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(CreatePreGameContent(), 600, 500);
+        preGameScene = new Scene(CreatePreGameContent(), 800, 450);
 
         primaryStage.setTitle("Please Choose Characters!");
         primaryStage.setScene(preGameScene);
@@ -1059,8 +1054,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         primaryStage.setOnCloseRequest(
                 new EventHandler<WindowEvent>() {
             @Override
-            public void handle(WindowEvent t
-            ) {
+            public void handle(WindowEvent t) {
                 Platform.exit();
                 System.exit(0);
             }
@@ -1073,7 +1067,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //For setting gameScene and showing labels
         setUpBoard();
         gameScene = new Scene(gameBox);
-        primaryStage.setTitle("Cluedo!!!");
+        primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
         setUpControls();
         /*Increments the current player*/
@@ -1083,13 +1077,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 Player p = board.getCurrentPlayer();
                 board.incrementCurrentPlayer();
                 resetDice();
-                //If currentPlayer is not in room after end turn ,enable suggest button,if not make it disable so, 
-                //it cannot make suggestion in room it is already in
-                if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null) {
-                    suggestionBtn.setDisable(true); // enables suggestion button
-                } else {
-                    suggestionBtn.setDisable(false);//disables suggestion Button
-                }
                 alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                 counterTxt.setText("Please Roll The Dice");
                 //Displays current players Image
@@ -1149,20 +1136,25 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 
                 //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
-                    //Create new Stage for popup
-                    suggestionStage = new Stage();
-                    suggestionStage.initModality(Modality.APPLICATION_MODAL);
-                    suggestionStage.setResizable(false);
-                    // Create new suggestion panel 
-                    suggestionPanel = new SuggestionPanel();
-                    // gets name of current players room as parameter to create content of suggestionPanel
-                    String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
-                    //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
-                    Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName, board.getCurrentPlayer().getName()));
-                    suggestionStage.setScene(suggestionScene);
-                    suggestionStage.show();
-                    //Calls private method to start submission suggestion process 
-                    suggestionHelper();
+                    if(!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())){
+                        board.getCurrentPlayer().setMostRecentlySuggestedRoom(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
+                        //Create new Stage for popup
+                        suggestionStage = new Stage();
+                        suggestionStage.initModality(Modality.APPLICATION_MODAL);
+                        suggestionStage.setResizable(false);
+                        // Create new suggestion panel 
+                        suggestionPanel = new SuggestionPanel();
+                        // gets name of current players room as parameter to create content of suggestionPanel
+                        String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
+                        //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
+                        Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName, board.getCurrentPlayer().getName()));
+                        suggestionStage.setScene(suggestionScene);
+                        suggestionStage.show();
+                        //Calls private method to start submission suggestion process 
+                        suggestionHelper();
+                    } else {
+                    alertTxt.setText("Player cannot make successive suggestions in the same room");
+                    }
                 } else {
                     alertTxt.setText("Player cannot make suggestion outside of rooms");
                 }
@@ -1395,7 +1387,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         passageBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                suggestionBtn.setDisable(false);
                 diceRoller.getRollButton().fire();
                 for (int i = 0; i < board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().size(); i++) {
                     board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().get(i).getText().setText("");
