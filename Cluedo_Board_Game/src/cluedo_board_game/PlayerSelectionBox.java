@@ -48,7 +48,7 @@ public class PlayerSelectionBox {
         HBox characterSelectBox = new HBox();
         characterSelectBox.setSpacing(10);
         
-        selectedCharacterImage = new Image("/CharacterCards/unknownCard.png",80,200,false,false);
+        selectedCharacterImage = new Image("/CharacterCards/unknownCard.png",130,200,true,false);
         selectedCharacterView = new ImageView(selectedCharacterImage);
         //Textfield Value
         playerTextField = new TextField();
@@ -67,9 +67,8 @@ public class PlayerSelectionBox {
             public void handle(ActionEvent event) {
                 selectedCharacter = (String) characterSelectionCombobox.getValue();
                 System.out.println(selectedCharacter);
-                selectedCharacterImage = new Image("/CharacterCards/"+selectedCharacter+".jpg");
+                selectedCharacterImage = new Image("/CharacterCards/"+selectedCharacter+".jpg", 130, 200, false,false);
                 selectedCharacterView = new ImageView(selectedCharacterImage);
-                
             }
         });
 

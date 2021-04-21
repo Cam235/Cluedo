@@ -6,7 +6,11 @@
 package cluedo_board_game;
 
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
@@ -37,7 +41,9 @@ public class Tile extends Rectangle implements TileInterface{
         this.colIndex = colIndex;
         this.rowIndex = rowIndex;
         text = new Text("");
-        text.setStyle("-fx-font-weight: bold");
+        text.setFont(Font.font("verdana", FontWeight.EXTRA_BOLD, FontPosture.REGULAR, 17));
+        text.setFill(Color.WHITE);
+        text.setStroke(Color.BLACK);
     }
 
     /**

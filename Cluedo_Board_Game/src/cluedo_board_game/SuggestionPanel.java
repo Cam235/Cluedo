@@ -58,7 +58,7 @@ public class SuggestionPanel {
         HBox roomSelection = new HBox(roomLabel, roomText);
         roomSelection.setSpacing(50);
         //Suggested room card image
-        Image roomImage = new Image("/RoomCards/" + roomName + ".jpg", 140, 150, false, false);
+        Image roomImage = new Image("/RoomCards/" + roomName + ".jpg", 130, 200, false, false);
         ImageView roomCardView = new ImageView(roomImage);
 
         //For Suspect
@@ -67,14 +67,14 @@ public class SuggestionPanel {
         HBox suspectSelection = new HBox(suspectLabel, suspectBox);
         suspectSelection.setSpacing(50);
 
-        Image suspectImage = new Image("/CharacterCards/unknownCard.png", 140, 150, false, false);
+        Image suspectImage = new Image("/CharacterCards/unknownCard.png", 130, 200, false, false);
         ImageView suspectCardView = new ImageView(suspectImage);
 
         suspectBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 suggestedSuspect = (String) suspectBox.getValue();
-                suspectCardView.setImage(new Image("/CharacterCards/" + suggestedSuspect + ".jpg", 140, 150, false, false));
+                suspectCardView.setImage(new Image("/CharacterCards/" + suggestedSuspect + ".jpg", 130, 200, false, false));
             }
         });
 
@@ -84,14 +84,14 @@ public class SuggestionPanel {
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
 
-        Image weaponImage = new Image("/weaponCards/unknownCard.png", 140, 150, false, false);
+        Image weaponImage = new Image("/weaponCards/unknownCard.png", 130, 200, false, false);
         ImageView weaponCardView = new ImageView(weaponImage);
 
         weaponBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 suggestedWeapon = (String) weaponBox.getValue();
-                weaponCardView.setImage(new Image("/weaponCards/" + suggestedWeapon + ".jpg", 140, 150, false, false));
+                weaponCardView.setImage(new Image("/weaponCards/" + suggestedWeapon + ".jpg", 130, 200, false, false));
             }
         });
 
@@ -127,14 +127,14 @@ public class SuggestionPanel {
         correctAccusationAlert.setContentText("Please make accusation or end your turn!");
         //Gets the correct image view of suggested card!
         try {
-            ImageView ShownCardIsWeapon = new ImageView(new Image("/weaponCards/" + responseCardName + ".jpg", 140, 150, false, false));
+            ImageView ShownCardIsWeapon = new ImageView(new Image("/weaponCards/" + responseCardName + ".jpg", 130, 200, false, false));
             correctAccusationAlert.setGraphic(ShownCardIsWeapon);
         } catch (IllegalArgumentException e) {
             try {
-                ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 140, 150, false, false));
+                ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 130, 200, false, false));
                 correctAccusationAlert.setGraphic(ShownCardIsSuspect);
             } catch (IllegalArgumentException t) {
-                ImageView ShownCardIsSuspect = new ImageView(new Image("/RoomCards/" + responseCardName + ".jpg", 140, 150, false, false));
+                ImageView ShownCardIsSuspect = new ImageView(new Image("/RoomCards/" + responseCardName + ".jpg", 130, 200, false, false));
                 correctAccusationAlert.setGraphic(ShownCardIsSuspect);
             }
         }

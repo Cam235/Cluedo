@@ -59,12 +59,12 @@ public class AccusationPanel {
         HBox roomSelection = new HBox(roomLabel, roomBox);
         roomSelection.setSpacing(50);
 
-        ImageView roomCardView = new ImageView(new Image("/RoomCards/unknownCard.png", 140, 150, false, false));
+        ImageView roomCardView = new ImageView(new Image("/RoomCards/unknownCard.png", 130, 200, false, false));
         roomBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 accusedRoom = (String) roomBox.getValue();
-                roomCardView.setImage(new Image("/RoomCards/" + accusedRoom + ".jpg", 140, 150, false, false));
+                roomCardView.setImage(new Image("/RoomCards/" + accusedRoom + ".jpg", 130, 200, false, false));
             }
         });
         //For Suspect
@@ -73,13 +73,13 @@ public class AccusationPanel {
         HBox suspectSelection = new HBox(suspectLabel, suspectBox);
         suspectSelection.setSpacing(50);
 
-        ImageView suspectCardView = new ImageView(new Image("/CharacterCards/unknownCard.png", 140, 150, false, false));
+        ImageView suspectCardView = new ImageView(new Image("/CharacterCards/unknownCard.png", 130, 200, false, false));
 
         suspectBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 accusedSuspect = (String) suspectBox.getValue();
-                suspectCardView.setImage(new Image("/CharacterCards/" + accusedSuspect + ".jpg", 140, 150, false, false));
+                suspectCardView.setImage(new Image("/CharacterCards/" + accusedSuspect + ".jpg", 130, 200, false, false));
             }
         });
 
@@ -89,13 +89,13 @@ public class AccusationPanel {
         HBox weaponSelection = new HBox(weaponLabel, weaponBox);
         weaponSelection.setSpacing(45);
 
-        ImageView weaponCardView = new ImageView(new Image("/weaponCards/unknownCard.png", 140, 150, false, false));
+        ImageView weaponCardView = new ImageView(new Image("/weaponCards/unknownCard.png", 130, 200, false, false));
 
         weaponBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 accusedWeapon = (String) weaponBox.getValue();
-                weaponCardView.setImage(new Image("/weaponCards/" + accusedWeapon + ".jpg", 140, 150, false, false));
+                weaponCardView.setImage(new Image("/weaponCards/" + accusedWeapon + ".jpg", 130, 200, false, false));
             }
         });
         // A submit button
@@ -134,9 +134,9 @@ public class AccusationPanel {
         Alert falseAccusationAlert = new Alert(Alert.AlertType.ERROR);
         falseAccusationAlert.setTitle("Player " + lostPlayerName + " loses!!!");
         falseAccusationAlert.setHeaderText("Accusation Fails!!!");
-        ImageView murderer = new ImageView(new Image("/CharacterCards/" + envelopeSuspect + ".jpg", 140, 150, false, false));
-        ImageView murderRoom = new ImageView(new Image("/RoomCards/" + envelopeRoom + ".jpg", 140, 150, false, false));
-        ImageView murderWeapon = new ImageView(new Image("/weaponCards/" + envelopeWeapon + ".jpg", 140, 150, false, false));
+        ImageView murderer = new ImageView(new Image("/CharacterCards/" + envelopeSuspect + ".jpg", 130, 200, false, false));
+        ImageView murderRoom = new ImageView(new Image("/RoomCards/" + envelopeRoom + ".jpg", 130, 200, false, false));
+        ImageView murderWeapon = new ImageView(new Image("/weaponCards/" + envelopeWeapon + ".jpg", 130, 200, false, false));
         HBox murderCardsDisplay = new HBox(murderer, murderRoom, murderWeapon);
         falseAccusationAlert.setGraphic(murderCardsDisplay);
         falseAccusationAlert.setContentText(envelopeSuspect + "," + envelopeRoom + "," + envelopeWeapon + " are the murder cards!" + "\n"

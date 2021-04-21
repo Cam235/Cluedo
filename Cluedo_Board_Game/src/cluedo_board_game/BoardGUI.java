@@ -159,7 +159,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     newSelectionBox.getPlayerTextField().getText();
                     newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
                     System.out.println(newSelectionBox.getSelectedCharacter());
-                    newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 80, 200, false, false));
+                    newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
                     newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
 
                     Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
@@ -188,7 +188,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         public void handle(ActionEvent event) {
                             newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
                             System.out.println(newSelectionBox.getSelectedCharacter());
-                            newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 80, 200, false, false));
+                            newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
                             newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
 
                             Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
@@ -631,7 +631,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         currentPlayerText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
         currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
         currentPlayerText.setWrappingWidth(170);
-        currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
+        currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 160, 250, false, false);
         currentPlayerImageView = new ImageView(currentPlayerImage);
 
         alertTxt.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 15));
@@ -1278,17 +1278,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 ImageView cardImageView;
                 try {
                     if (c.getType() == CardType.Person) {
-                        c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 140, 150, false, false));
+                        c.setCardImage(new Image("/CharacterCards/" + c.getName() + ".jpg", 130, 200, false, false));
                     } else if (c.getType() == CardType.Weapon) {
-                        c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 140, 150, false, false));
+                        c.setCardImage(new Image("/weaponCards/" + c.getName() + ".jpg", 130, 200, false, false));
                     } else {
-                        c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 140, 150, false, false));
+                        c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 130, 200, false, false));
                     }
                     System.out.println(c.getType() + ":" + c.getName());
                     cardImageView = new ImageView(c.getCardImage());
                     displayedCards.getChildren().add(cardImageView);
                 } catch (Exception e) {
-                    c.setCardImage(new Image("/CharacterCards/unknownCard.png", 140, 150, false, false));
+                    c.setCardImage(new Image("/CharacterCards/unknownCard.png", 130, 200, false, false));
                     cardImageView = new ImageView(c.getCardImage());
                     displayedCards.getChildren().add(cardImageView);
                     System.out.println(c.getType() + ":" + c.getName());
