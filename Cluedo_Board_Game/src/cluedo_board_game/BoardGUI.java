@@ -684,7 +684,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     break;
                                 }
                             }
-                        }
+                        }  
                     }
                     //Call suggested weapon into room
                     for (Room room : board.getRooms()) {
@@ -1035,6 +1035,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         preGameScene = new Scene(CreatePreGameContent(), 800, 450);
 
         primaryStage.setTitle("Please Choose Characters!");
+        primaryStage.getIcons().add(new Image("stageIcon.png"));
         primaryStage.setScene(preGameScene);
         primaryStage.setResizable(false);
         primaryStage.show();
@@ -1067,6 +1068,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //For setting gameScene and showing labels
         setUpBoard();
         gameScene = new Scene(gameBox);
+        primaryStage.getIcons().add(new Image("stageIcon.png"));
         primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
         setUpControls();
@@ -1123,6 +1125,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             public void handle(ActionEvent event) {
                 if (!board.getCurrentPlayer().isAgent()) {
                     Stage detectiveCardStage = new Stage();
+                    detectiveCardStage.getIcons().add(new Image("stageIcon.png"));
                     detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
                     displayDetectiveCard(detectiveCardStage);
                 } else {
@@ -1139,6 +1142,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if(!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())){
                         //Create new Stage for popup
                         suggestionStage = new Stage();
+                        suggestionStage.getIcons().add(new Image("stageIcon.png"));
                         suggestionStage.initModality(Modality.APPLICATION_MODAL);
                         suggestionStage.setResizable(false);
                         // Create new suggestion panel 
@@ -1175,6 +1179,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     System.out.println(cardDistributor.getMurderer().getName());
                     //setting up accusation stage
                     accusationStage = new Stage();
+                    accusationStage.getIcons().add(new Image("stageIcon.png"));
                     accusationStage.initModality(Modality.APPLICATION_MODAL);
                     accusationStage.setResizable(false);
                     //Create new AcqusationPanel
@@ -1258,6 +1263,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     public void displayCardList(Stage pStage) {
         if (!board.getCurrentPlayer().isAgent()) {
             final Stage dialog = new Stage();
+            dialog.getIcons().add(new Image("stageIcon.png"));
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(pStage);
             VBox dialogVbox = new VBox(20);
@@ -1325,6 +1331,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         detectiveCardPanel.getCardUpdates();
         stage.setScene(detectiveCardScene);
+        stage.getIcons().add(new Image("stageIcon.png"));
         stage.setResizable(false);
         stage.show();
         stage.setTitle(board.getCurrentPlayer().getName() + "'s Detective Card");
