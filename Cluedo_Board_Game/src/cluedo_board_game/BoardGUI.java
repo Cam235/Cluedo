@@ -152,7 +152,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
             selectionBoxesList.add(newSelectionBox);
             selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
-            characterSelectionViews.getChildren().add(selectionBoxesList.get(i).getSelectedCharacterView());
+            VBox nameAndDisplay = new VBox(new Text(""), selectionBoxesList.get(i).getSelectedCharacterView());
+            characterSelectionViews.getChildren().add(nameAndDisplay);
             newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -169,10 +170,28 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                 }
             });
+            newSelectionBox.getPlayerTextField().setOnKeyReleased(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent key) {
+                    newSelectionBox.getPlayerTextField().getText();
+                    String selectedCharacter = (String) newSelectionBox.getCharacterSelectionCombobox().getValue();
+                    if(selectedCharacter != null){
+                        newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
+                        System.out.println(newSelectionBox.getSelectedCharacter());
+                        newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
+                        newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
+                    }
+                    Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText() + key.getCharacter());
+                    VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
+                    nameAndDisplay.setAlignment(Pos.CENTER);
+                    characterSelectionViews.getChildren().remove(nodeIndex);
+                    characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
+                }
+            });
         }
 
         //Adds player buttons
-        Button addPlayerButton = new Button("+Add Player");
+        Button addPlayerButton = new Button("+ Add Player");
         addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -182,7 +201,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     selectionBoxesList.add(newSelectionBox);
                     selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
                     playerSelectionBoxesNumber++;
-                    characterSelectionViews.getChildren().add(selectionBoxesList.get(selectionBoxesList.size() - 1).getSelectedCharacterView());
+                    VBox nameAndDisplay = new VBox(new Text(""), selectionBoxesList.get(selectionBoxesList.size() - 1).getSelectedCharacterView());
+                    characterSelectionViews.getChildren().add(nameAndDisplay);
                     newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
@@ -198,9 +218,28 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         }
 
                     });
+                    newSelectionBox.getPlayerTextField().setOnKeyReleased(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent key) {
+                            newSelectionBox.getPlayerTextField().getText();
+                            String selectedCharacter = (String) newSelectionBox.getCharacterSelectionCombobox().getValue();
+                            if (selectedCharacter != null) {
+                                newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
+                                System.out.println(newSelectionBox.getSelectedCharacter());
+                                newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
+                                newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
+                            }
+                            Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText() + key.getCharacter());
+                            VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
+                            nameAndDisplay.setAlignment(Pos.CENTER);
+                            characterSelectionViews.getChildren().remove(nodeIndex);
+                            characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
+                        }
+                    });
                     System.out.println(playerSelectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List number:" + selectionBoxesView.getChildren().size());
+                    
                 } else {
                     System.out.println("Too much mate!");
                 }
@@ -763,7 +802,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         NoCharacterHaveCardAlert.showAndWait();
                     }
                 } else {
-                    alertTxt.setText("Please fill all boxes to make suggestion !");
+                    alertTxt.setText("Please fill all boxes to make suggestion!");
                 }
             }
         }

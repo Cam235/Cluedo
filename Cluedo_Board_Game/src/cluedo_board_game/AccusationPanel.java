@@ -29,9 +29,6 @@ import javafx.scene.paint.Color;
  * @author Anilz
  */
 public class AccusationPanel {
-
-    String accusingPlayersName;
-
     private String accusedSuspect;
     private String accusedRoom;
     private String accusedWeapon;
