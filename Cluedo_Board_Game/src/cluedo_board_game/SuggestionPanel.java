@@ -39,13 +39,11 @@ public class SuggestionPanel {
     private String suggestedRoom;
     private String suggestedWeapon;
 
-    String[] suspects = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
+    private String[] suspects = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    private String[] weapons = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     //String[] rooms = {"Bathroom", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Gamesroom", "Library"};
 
-    Button submitButton; //The submit button of th game
-    Button postSuggestionButton; //Respondent player showing card
-    ComboBox<String> postSuggestionCombobox; //holds respondent players possible cards to suggest
+    private Button submitButton; //The submit button of th game
 
     public VBox createSuggestionContent(String roomName, String suggestingPlayer) {
         Label playerSuggestext = new Label("Player " + suggestingPlayer + " is making suggestion!");
@@ -162,4 +160,9 @@ public class SuggestionPanel {
         return suggestedWeapon;
     }
 
+    public Button getSubmitButton() {
+        return submitButton;
+    }
+
+    
 }

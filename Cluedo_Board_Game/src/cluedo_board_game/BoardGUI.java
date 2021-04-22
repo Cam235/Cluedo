@@ -665,12 +665,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     private void suggestionHelper() {
         //On click of submit button,suggestion takes place
-        suggestionPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+        suggestionPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //if characterSelectionCombobox values are not empty start iterating
                 if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
-                    
+                    board.getCurrentPlayer().setMostRecentlySuggestedRoom(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
                     //Set suggestion alertText as 
                     alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
@@ -1137,7 +1137,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
                     if(!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())){
-                        board.getCurrentPlayer().setMostRecentlySuggestedRoom(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
                         //Create new Stage for popup
                         suggestionStage = new Stage();
                         suggestionStage.initModality(Modality.APPLICATION_MODAL);
