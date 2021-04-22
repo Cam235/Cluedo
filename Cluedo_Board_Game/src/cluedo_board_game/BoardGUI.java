@@ -772,7 +772,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     private void accusationHelper(CardDistributor cardDistributor) {
         //Set on Actions
-        accusationPanel.submitButton.setOnAction(new EventHandler<ActionEvent>() {
+        accusationPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
@@ -792,16 +792,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         );
                         correctAccusationAlert.initStyle(StageStyle.UTILITY);
 
-                        // Removes all default buttons                           
+                        // Removes all default buttons                
                         correctAccusationAlert.getButtonTypes().clear();
                         //Starts from character selection
-                        ButtonType startNewGameBtn = new ButtonType("START NEW GAME!", ButtonData.YES);
+                        ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
                         //Restarts the game with same characters
-                        ButtonType restartBtn = new ButtonType("RESTART!", ButtonData.YES);
+                        ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(restartBtn);
                         //ENDS GAME
-                        ButtonType endGameBtn = new ButtonType("END GAME", ButtonData.YES);
+                        ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(endGameBtn);
                         //When correct accusation alert is shown,onclick algorihtm below starts
                         Optional<ButtonType> result = correctAccusationAlert.showAndWait();
@@ -838,16 +838,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         );
                         falseAccusationAlert.initStyle(StageStyle.UTILITY);
                         //False accusation alerts have different messages depending on current active players in game
-                        String compareAccusationAndMurderCards = accusationPanel.getEnvelopeSuspect() + ","
-                                + accusationPanel.getEnvelopeRoom() + ","
-                                + accusationPanel.getEnvelopeWeapon()
-                                + " are the murder cards!" + "\n"
-                                + "and player's accusation was " + accusationPanel.getAccusedSuspectName() + ","
-                                + accusationPanel.getAccusedRoomName() + ","
+                        String compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
+                                + accusationPanel.getEnvelopeRoom() + " with a "
+                                + accusationPanel.getEnvelopeWeapon() + "\n"
+                                + board.getCurrentPlayer().getName() + "'s accusation was " 
+                                + accusationPanel.getAccusedSuspectName() + " in the " + 
+                                accusationPanel.getAccusedRoomName() + " with a " 
                                 + accusationPanel.getAccusedWeaponName() + "\n\n";
                         // Gives different strings
                         if (activePlayerNumber > 1) {
-                            String noMoreTurns = "*** Player " + board.getCurrentPlayer().getName() + " will not have any more turns! ***";
+                            String noMoreTurns = "*** " + board.getCurrentPlayer().getName() + " is out of the game! ***";
                             falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noMoreTurns);
                             falseAccusationAlert.showAndWait();
                             if (!falseAccusationAlert.isShowing()) {
@@ -859,24 +859,24 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     playerToBeDisabled.setIsPlaying(false);
                                     activePlayerNumber--;
                                     if (activePlayerNumber == 1) {
-                                        alertTxt.setText(board.getCurrentPlayer().getName() + " is only player left");
+                                        alertTxt.setText(board.getCurrentPlayer().getName() + " is the only player left");
                                     }
                                     //If the only active player makes the wrong accusation ,ends the game
                                 }
                             }
                         } else {
-                            String noPlayerWins = "*** No player wins the game! ***";
+                            String noPlayerWins = "*** Nobody won the game! ***";
                             falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noPlayerWins);
                             // Removes all default buttons                           
                             falseAccusationAlert.getButtonTypes().clear();
                             //Starts from character selection
-                            ButtonType startNewGameBtn = new ButtonType("START NEW GAME!", ButtonData.YES);
+                            ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
                             //Restarts the game with same characters
-                            ButtonType restartBtn = new ButtonType("RESTART!", ButtonData.YES);
+                            ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(restartBtn);
                             //End game 
-                            ButtonType endGameBtn = new ButtonType("END GAME", ButtonData.YES);
+                            ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(endGameBtn);
                             //When false accusation alert is shown,onclick algorihtm below starts
                             Optional<ButtonType> result = falseAccusationAlert.showAndWait();
@@ -1002,14 +1002,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             if (!playerNameRepetitionChecklist.contains(playerselectionbox.getPlayerTextField().getText())) {
                 playerNameRepetitionChecklist.add(playerselectionbox.getPlayerTextField().getText());
             } else {
-                preGameText.setText("Name of players cannot be same !!!");
+                preGameText.setText("Name of players cannot be same!");
                 gameStarting = false;
                 break;
             }
             //Checks for unfilled variables 
             if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.getAgentButton().isSelected() && !playerselectionbox.getHumanButton().isSelected())) {
                 //In any errors, prevents initialisation of the game
-                preGameText.setText("Please fill player details completely !!!");
+                preGameText.setText("Please fill player details completely!");
                 gameStarting = false;
                 break;
             }
@@ -1017,7 +1017,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             if (!characterRepetitionChecklist.contains(playerselectionbox.getPlayerCharacter())) {
                 characterRepetitionChecklist.add(playerselectionbox.getPlayerCharacter());
             } else {
-                preGameText.setText("A character cannot be chosen more than once !!!");
+                preGameText.setText("A character cannot be chosen more than once!");
                 gameStarting = false;
                 break;
             }
@@ -1034,7 +1034,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     public void start(Stage primaryStage) {
         preGameScene = new Scene(CreatePreGameContent(), 800, 450);
 
-        primaryStage.setTitle("Please Choose Characters!");
+        primaryStage.setTitle("Please Choose Your Characters!");
         primaryStage.getIcons().add(new Image("stageIcon.png"));
         primaryStage.setScene(preGameScene);
         primaryStage.setResizable(false);
