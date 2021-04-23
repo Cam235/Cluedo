@@ -658,10 +658,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         //Give players required stuff
         board.initialisePlayerDetectiveCards();
-        //To test if they received detective cards
-        for (Player p : board.getPlayerList()) {
-            System.out.println(p.getDetectiveCard());
-        }
         //Displays current players Image
         currentPlayerText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
         currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));

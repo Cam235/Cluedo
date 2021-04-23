@@ -655,6 +655,11 @@ public class Board implements BoardInterface {
                 }
                 p.setDetectiveCard(currDetectCard);
                 p.setDetectiveNotes(currString);
+                
+                if(p.isAgent()){
+                    //auto update agent players detective card
+                    p.markHandAsSeenInDetectiveCard();
+                }
             }
         }
     }

@@ -61,4 +61,26 @@ public class Agent extends Player{
         return coords;           
     }
     
+    /**
+     * returns an ArrayList of card names which are marked as unseen in the players detective card
+     * @return ArrayList of Strings of card names
+     */
+    @Override
+    public ArrayList<String> getUnseenCards() {
+        ArrayList<String> unseenCards = new ArrayList<>();
+        detectiveCard.keySet().stream().filter((s) -> (!detectiveCard.get(s))).forEachOrdered((s) -> {
+            unseenCards.add(s);
+        });
+        return unseenCards;
+    }
+    
+    /**
+     * marks the cards in the agents hand as seen in the agents detective card
+     */
+    @Override
+    public void markHandAsSeenInDetectiveCard() {
+        hand.forEach((c) -> {
+            detectiveCard.put(c.getName(), true);
+        });
+    }
 }

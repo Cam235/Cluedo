@@ -19,7 +19,6 @@ public class Player implements PlayerInterface {
     protected ArrayList<Card> hand; //the players hand of cards
     protected Token token; //represents the players token
     protected Boolean isPlaying; //represents whether the player is currently playing
-    protected Boolean isTurn; //represents whether it is currently the players turn
     protected String mostRecentlySuggestedRoom = ""; //the players last suggested room, used to disable successive suggestions
     protected HashMap<String, Boolean> detectiveCard; //represents the detective card of the player
     protected String detectiveNotes; // represents detective Notes of player
@@ -81,14 +80,6 @@ public class Player implements PlayerInterface {
     public void setIsPlaying(Boolean isPlaying) {
         this.isPlaying = isPlaying;
     }
-
-    public Boolean getIsTurn() {
-        return isTurn;
-    }
-
-    public void setIsTurn(Boolean isTurn) {
-        this.isTurn = isTurn;
-    }
     
     public Integer[] getMove(int x, int y){
         return null;
@@ -128,4 +119,12 @@ public class Player implements PlayerInterface {
         this.mostRecentlySuggestedRoom = mostRecentlySuggestedRoom;
     }
     
+    
+    public ArrayList<String> getUnseenCards() {
+        throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
+    }
+    
+    public void markHandAsSeenInDetectiveCard() {
+        throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
+    }
 }
