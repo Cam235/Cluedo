@@ -52,6 +52,7 @@ public class PlayerSelectionBox {
         selectedCharacterView = new ImageView(selectedCharacterImage);
         //Textfield Value
         playerTextField = new TextField();
+        playerTextField.setPrefColumnCount(14);
         playerTextField.setPromptText("Player Name...");
         playerTextField.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -95,8 +96,7 @@ public class PlayerSelectionBox {
         agentButton.setToggleGroup(radioGroup);
         humanButton.setToggleGroup(radioGroup);
 
-        characterSelectBox.getChildren()
-                .addAll(playerTextField, characterSelectionCombobox, agentButton, humanButton);
+        characterSelectBox.getChildren().addAll(playerTextField, characterSelectionCombobox, agentButton, humanButton);
 
         return characterSelectBox;
     }

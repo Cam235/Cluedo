@@ -140,10 +140,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     ImageView currentPlayerImageView;
     Text currentPlayerText;
 
-    public VBox CreatePreGameContent() {
+    public VBox createPreGameContent() {
         VBox preGameBox = new VBox();
         preGameBox.setAlignment(Pos.TOP_CENTER);
-        preGameBox.setPrefSize(600, 280);
+        preGameBox.setPrefSize(650, 280);
         VBox selectionBoxesView = new VBox();
         HBox characterSelectionViews = new HBox();
         characterSelectionViews.setSpacing(5);
@@ -157,7 +157,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    newSelectionBox.getPlayerTextField().getText();
                     newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
                     System.out.println(newSelectionBox.getSelectedCharacter());
                     newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
@@ -173,19 +172,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             newSelectionBox.getPlayerTextField().setOnKeyReleased(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent key) {
-                    newSelectionBox.getPlayerTextField().getText();
-                    String selectedCharacter = (String) newSelectionBox.getCharacterSelectionCombobox().getValue();
-                    if(selectedCharacter != null){
-                        newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
-                        System.out.println(newSelectionBox.getSelectedCharacter());
-                        newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
-                        newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
-                    }
-                    Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText() + key.getCharacter());
+                    Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
                     VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
                     nameAndDisplay.setAlignment(Pos.CENTER);
                     characterSelectionViews.getChildren().remove(nodeIndex);
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
+                }
+            });
+            newSelectionBox.getPlayerTextField().setOnKeyTyped(event -> {
+                int maxCharacters = 16;
+                if (newSelectionBox.getPlayerTextField().getText().length() > maxCharacters) {
+                    preGameText.setText("Maximum of 16 characters for player names");
+                    event.consume();
                 }
             });
         }
@@ -221,25 +219,23 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     newSelectionBox.getPlayerTextField().setOnKeyReleased(new EventHandler<KeyEvent>() {
                         @Override
                         public void handle(KeyEvent key) {
-                            newSelectionBox.getPlayerTextField().getText();
-                            String selectedCharacter = (String) newSelectionBox.getCharacterSelectionCombobox().getValue();
-                            if (selectedCharacter != null) {
-                                newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
-                                System.out.println(newSelectionBox.getSelectedCharacter());
-                                newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
-                                newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
-                            }
-                            Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText() + key.getCharacter());
+                            Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
                             VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
                             nameAndDisplay.setAlignment(Pos.CENTER);
                             characterSelectionViews.getChildren().remove(nodeIndex);
                             characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                         }
                     });
+                    newSelectionBox.getPlayerTextField().setOnKeyTyped(e -> {
+                        int maxCharacters = 16;
+                        if (newSelectionBox.getPlayerTextField().getText().length() > maxCharacters) {
+                            preGameText.setText("Maximum of 16 characters for player names");
+                            e.consume();
+                        }
+                    });
                     System.out.println(playerSelectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List number:" + selectionBoxesView.getChildren().size());
-                    
                 } else {
                     System.out.println("Too much mate!");
                 }
@@ -269,7 +265,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         HBox preSetupButtons = new HBox();
         preSetupButtons.getChildren().addAll(addPlayerButton, removePlayerButton, startButton);
         //Display a text for guidance 
-        preGameText = new Text("Please fill player details");
+        preGameText = new Text("Please fill in player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
         preGameBox.getChildren().addAll(selectionBoxesView, preSetupButtons, characterSelectionViews, preGameTextPane);
         //Set up position of nodes 
@@ -1027,7 +1023,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * @param e
      * @return
      */
-    private boolean IsGameStarting(ActionEvent e) {
+    private boolean isGameStarting(ActionEvent e) {
         boolean gameStarting = true;
         //List To check if characters are choosen twice or more
         ArrayList<String> characterRepetitionChecklist = new ArrayList<String>();
@@ -1041,14 +1037,14 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             if (!playerNameRepetitionChecklist.contains(playerselectionbox.getPlayerTextField().getText())) {
                 playerNameRepetitionChecklist.add(playerselectionbox.getPlayerTextField().getText());
             } else {
-                preGameText.setText("Name of players cannot be same!");
+                preGameText.setText("Names of players cannot be same!");
                 gameStarting = false;
                 break;
             }
             //Checks for unfilled variables 
             if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.getAgentButton().isSelected() && !playerselectionbox.getHumanButton().isSelected())) {
                 //In any errors, prevents initialisation of the game
-                preGameText.setText("Please fill player details completely!");
+                preGameText.setText("Please fill in player details completely!");
                 gameStarting = false;
                 break;
             }
@@ -1071,7 +1067,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(CreatePreGameContent(), 800, 450);
+        preGameScene = new Scene(createPreGameContent(), 800, 450);
 
         primaryStage.setTitle("Please Choose Your Characters!");
         primaryStage.getIcons().add(new Image("stageIcon.png"));
@@ -1083,7 +1079,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             @Override
             public void handle(ActionEvent e) {
                 //when setup fullfils all requirements,then START GAME!!!
-                if (IsGameStarting(e)) {
+                if (isGameStarting(e)) {
                     //plays the game
                     playGame(primaryStage);
                 }
