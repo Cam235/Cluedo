@@ -67,7 +67,7 @@ public class Tile extends Rectangle implements TileInterface{
      * @return whether or not the tile is occupied by pawn
      */
     @Override
-    public boolean IsOccupied() {
+    public boolean isOccupied() {
         return occupied;
     }
     
@@ -82,7 +82,7 @@ public class Tile extends Rectangle implements TileInterface{
       
     //For Wall
     @Override
-    public boolean getIsWall() {
+    public boolean isWall() {
         return wall;
     }
 
@@ -93,7 +93,7 @@ public class Tile extends Rectangle implements TileInterface{
 
     //For the Doors
     @Override
-    public boolean getIsDoor() {
+    public boolean isDoor() {
         return door;
     }
 

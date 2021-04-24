@@ -229,7 +229,7 @@ public class Board implements BoardInterface {
         String s = "";
         for (int _h = 0; _h < rows; _h++) {
             for (int _w = 0; _w < columns; _w++) {
-                if ((rooms != null) && !tileMap[_w][_h].IsOccupied()) {
+                if ((rooms != null) && !tileMap[_w][_h].isOccupied()) {
                     //iterate through each room
                     for (Room room : rooms) {
                         if (room.checkTileInRoom(tileMap[_w][_h])) {
@@ -237,7 +237,7 @@ public class Board implements BoardInterface {
                         }
                     }
                     s += "R";
-                } else if (tileMap[_w][_h].IsOccupied()) {
+                } else if (tileMap[_w][_h].isOccupied()) {
                     s += "O";
                 } else {
                     s += "X";
@@ -446,7 +446,7 @@ public class Board implements BoardInterface {
                 int exitY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
                 //use the coordinates of the door exit to move player
                 p.getToken().getTokenLocation().setOccupied(false);
-                if (!getDoorExit(getTileMap()[exitX][exitY]).IsOccupied()) {
+                if (!getDoorExit(getTileMap()[exitX][exitY]).isOccupied()) {
                     //also remove door text
                     for (Tile t : playerRoom.getRoomDoors()) {
                         t.setText("");
@@ -454,9 +454,9 @@ public class Board implements BoardInterface {
                     p.moveToken(getDoorExit(getTileMap()[exitX][exitY]));
                 }
             } //If the tile to be moved is not wall or occupied
-            else if (!getTileMap()[x][y].getIsWall() && !getTileMap()[x][y].IsOccupied()) {
+            else if (!getTileMap()[x][y].isWall() && !getTileMap()[x][y].isOccupied()) {
                 //if the tile is a door
-                if (getTileMap()[x][y].getIsDoor()) {
+                if (getTileMap()[x][y].isDoor()) {
                     //find the room that the door belongs to
                     for (Room room : getRooms()) {
                         if (room.getRoomDoors().contains(getTileMap()[x][y])) {
@@ -549,17 +549,17 @@ public class Board implements BoardInterface {
     }
 
     public Tile getDoorExit(Tile door) {
-        if (!door.getIsDoor()) {
+        if (!door.isDoor()) {
             System.out.println("Tile is not a door");
             return null;
         } else {
-            if (getRoomOfTile(tileMap[door.getColIndex() + 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() + 1][door.getRowIndex()].getIsWall()) {
+            if (getRoomOfTile(tileMap[door.getColIndex() + 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() + 1][door.getRowIndex()].isWall()) {
                 return (tileMap[door.getColIndex() + 1][door.getRowIndex()]);
-            } else if (getRoomOfTile(tileMap[door.getColIndex() - 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() - 1][door.getRowIndex()].getIsWall()) {
+            } else if (getRoomOfTile(tileMap[door.getColIndex() - 1][door.getRowIndex()]) == null && !tileMap[door.getColIndex() - 1][door.getRowIndex()].isWall()) {
                 return (tileMap[door.getColIndex() - 1][door.getRowIndex()]);
-            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() + 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() + 1].getIsWall()) {
+            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() + 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() + 1].isWall()) {
                 return (tileMap[door.getColIndex()][door.getRowIndex() + 1]);
-            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() - 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() - 1].getIsWall()) {
+            } else if (getRoomOfTile(tileMap[door.getColIndex()][door.getRowIndex() - 1]) == null && !tileMap[door.getColIndex()][door.getRowIndex() - 1].isWall()) {
                 return (tileMap[door.getColIndex()][door.getRowIndex() - 1]);
             } else {
                 System.out.println("No valid tile to move to");
@@ -598,7 +598,7 @@ public class Board implements BoardInterface {
                     if (i <= r.getRoomDoors().size()) {
                         int x = getDoorExit(r.getRoomDoors().get(i - 1)).getColIndex();
                         int y = getDoorExit(r.getRoomDoors().get(i - 1)).getRowIndex();
-                        if (!tileMap[x][y].IsOccupied()) {
+                        if (!tileMap[x][y].isOccupied()) {
                             movePlayer(currentPlayer, x, y);
                             alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
                                     + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();

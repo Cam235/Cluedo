@@ -7,10 +7,10 @@ package cluedo_board_game;
 public interface TileInterface {
     public int getColIndex();
     public int getRowIndex();
-    public boolean IsOccupied();
+    public boolean isOccupied();
     public void setOccupied(boolean isOccupied);
-    public boolean getIsWall();
+    public boolean isWall();
     public void setWall(boolean isWall);
-    public boolean getIsDoor();
+    public boolean isDoor();
     public void setDoor(boolean isDoor);
 }

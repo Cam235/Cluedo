@@ -642,7 +642,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (int _r = 0; _r < rows; _r++) {
             for (int _c = 0; _c < columns; _c++) {
                 for (Player p : board.getPlayerList()) {
-                    if (board.getTileMap()[_c][_r].IsOccupied() && p.getToken().getTokenLocation() == board.getTileMap()[_c][_r]) {
+                    if (board.getTileMap()[_c][_r].isOccupied() && p.getToken().getTokenLocation() == board.getTileMap()[_c][_r]) {
                         boardView.add(p.getToken(), _c, _r);
                     }
                 }

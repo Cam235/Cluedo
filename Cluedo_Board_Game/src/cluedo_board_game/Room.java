@@ -81,7 +81,7 @@ public class Room implements RoomInterface {
         //Sets weapon to random tile in roomSpace
         Random r = new Random();
         Tile weaponTile = roomSpace.get(r.nextInt(roomSpace.size()));
-        if (!weaponTile.IsOccupied()) {
+        if (!weaponTile.isOccupied()) {
             roomWeapons.add(roomWeapon);
             roomWeapon.setWeaponLocation(weaponTile);
         }else{
@@ -109,7 +109,7 @@ public class Room implements RoomInterface {
     @Override
     public void addRoomDoor(Tile roomDoor) {
         //firstly if the tile is wall,initiate for loop to see if the wall covers the correct room
-        if (roomDoor.getIsWall()) {
+        if (roomDoor.isWall()) {
             for (int i = 0; i < roomSpace.size(); i++) {
                 if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
@@ -180,7 +180,7 @@ public class Room implements RoomInterface {
     public ArrayList<Tile> getFreeSpace() {
         ArrayList<Tile> freeSpace = new ArrayList<>();
         for(Tile t: roomSpace){
-            if(!t.IsOccupied()){
+            if(!t.isOccupied()){
                 freeSpace.add(t);
             }
         }

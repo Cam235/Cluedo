@@ -14,62 +14,34 @@ import static org.junit.Assert.*;
  * @author cwood
  */
 public class TokenTest {
-    
-    public TokenTest() {
-    }
-    
+    private Token testToken;
+    private String name;
+    private Tile testLocation;
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+        name = "test Token";
+        testToken = new Token(name);
     }
-
-    /**
-     * Test of getName method, of class Token.
-     */
+    
     @Test
     public void testGetName() {
-        System.out.println("getName");
-        Token instance = null;
-        String expResult = "";
-        String result = instance.getName();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        //Test name is given test name
+        assertEquals(testToken.getName(), name);
     }
-
-    /**
-     * Test of setName method, of class Token.
-     */
     @Test
     public void testSetName() {
-        System.out.println("setName");
-        String name = "";
-        Token instance = null;
-        instance.setName(name);
-        fail("The test case is a prototype.");
+        String newName = "new Test Token";
+        testToken.setName(newName);
+        assertEquals(testToken.getName(),newName);
     }
-
-    /**
-     * Test of getTokenLocation method, of class Token.
-     */
     @Test
     public void testGetTokenLocation() {
-        System.out.println("getTokenLocation");
-        Token instance = null;
-        Tile expResult = null;
-        Tile result = instance.getTokenLocation();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
+        
+        //Test location to be equal as set
     }
-
-    /**
-     * Test of setTokenLocation method, of class Token.
-     */
     @Test
     public void testSetTokenLocation() {
-        System.out.println("setTokenLocation");
-        Tile tokenLocation = null;
-        Token instance = null;
-        instance.setTokenLocation(tokenLocation);
-        fail("The test case is a prototype.");
+        
     }
     
 }
