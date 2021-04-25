@@ -108,7 +108,7 @@ public class SuggestionPanel {
 
     public ChoiceDialog createSuggestionResponderContent(String responderName, ArrayList<String> suggestedCardPossessions) {
         // create a choice dialog
-        ChoiceDialog postSuggestionContent = new ChoiceDialog("", suggestedCardPossessions);
+        ChoiceDialog<String> postSuggestionContent = new ChoiceDialog<>("", suggestedCardPossessions);
         postSuggestionContent.setTitle("Player " + responderName + " has a card to show!");
         postSuggestionContent.setHeaderText("Please choose a card to show!");
         //Removes Cancel button

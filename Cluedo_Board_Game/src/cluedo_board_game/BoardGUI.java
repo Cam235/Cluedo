@@ -118,7 +118,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private int playerSelectionBoxesNumber = 2;
     private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     //Combobox Values
-    private String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    private final String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    private final String[] roomNames = {"Dagger", "Candlestick" , "Revolver", "Rope", "Leadpiping", "Spanner"};
+    private final String[] weaponNames = {"Kitchen","Diningroom","Lounge","Ballroom","Conservatory","Billiardroom","Library","Hall","Study"};
     //Buttons
     private Button startButton;
     private Button passageBtn;
@@ -157,7 +159,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
+                    newSelectionBox.setSelectedCharacter(newSelectionBox.getCharacterSelectionCombobox().getValue());
                     System.out.println(newSelectionBox.getSelectedCharacter());
                     newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
                     newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
@@ -503,12 +505,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Create Rooms on board
         setUpRooms();
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
-        //Shuffles weapons list,so in each game different weapons can be placed in different rooms       
+        //Shuffles weapons list,so in each game different weapons can be placed in different roomNames       
         Collections.shuffle(board.getWeapons());
         Collections.shuffle(board.getRooms());
         for (int i = 0; i < board.getWeapons().size(); i++) {
             if (!board.getRooms().get(i).getRoomName().equals("Staircase")) {
-                // Puts the weapon into room
+                // Puts the weaponNames into room
                 board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
                 //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
             }
@@ -583,7 +585,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         ArrayList<String> tempCharacterNames = new ArrayList<>();
 
-        tempCharacterNames.addAll(Arrays.asList(characters));
+        tempCharacterNames.addAll(Arrays.asList(characterNames));
 
         //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
@@ -717,7 +719,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             }
                         }  
                     }
-                    //Call suggested weapon into room
+                    //Call suggested weaponNames into room
                     for (Room room : board.getRooms()) {
                         for (Weapon weapon : board.getWeapons()) {
                             //If room does not have already have suggested object
@@ -828,7 +830,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         //Starts from character selection
                         ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                        //Restarts the game with same characters
+                        //Restarts the game with same characterNames
                         ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(restartBtn);
                         //ENDS GAME
@@ -843,7 +845,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //Starts new Game
                             startNewGame();
                         } else if (result.get() == restartBtn) {
-                            // starts with same characters
+                            // starts with same characterNames
                             playGame(primaryStage);
                         } else if (result.get() == endGameBtn) {
                             //Exits the game
@@ -903,7 +905,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //Starts from character selection
                             ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                            //Restarts the game with same characters
+                            //Restarts the game with same characterNames
                             ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(restartBtn);
                             //End game 
@@ -918,7 +920,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 //Starts new Game
                                 startNewGame();
                             } else if (result.get() == restartBtn) {
-                                // starts with same characters
+                                // starts with same characterNames
                                 playGame(primaryStage);
                             } else if (result.get() == endGameBtn) {
                                 //Exits the game
@@ -1021,7 +1023,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     private boolean isGameStarting(ActionEvent e) {
         boolean gameStarting = true;
-        //List To check if characters are choosen twice or more
+        //List To check if characterNames are choosen twice or more
         ArrayList<String> characterRepetitionChecklist = new ArrayList<String>();
         //List to checks if player namefield contains same values
         ArrayList<String> playerNameRepetitionChecklist = new ArrayList<String>();
@@ -1038,13 +1040,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 break;
             }
             //Checks for unfilled variables 
-            if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characters).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.getAgentButton().isSelected() && !playerselectionbox.getHumanButton().isSelected())) {
+            if (playerselectionbox.getPlayerName().isEmpty() || !Arrays.asList(characterNames).contains(playerselectionbox.getPlayerCharacter()) || (!playerselectionbox.getAgentButton().isSelected() && !playerselectionbox.getHumanButton().isSelected())) {
                 //In any errors, prevents initialisation of the game
                 preGameText.setText("Please fill in player details completely!");
                 gameStarting = false;
                 break;
             }
-            //Checks for repetition of characters
+            //Checks for repetition of characterNames
             if (!characterRepetitionChecklist.contains(playerselectionbox.getPlayerCharacter())) {
                 characterRepetitionChecklist.add(playerselectionbox.getPlayerCharacter());
             } else {
@@ -1066,7 +1068,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         preGameScene = new Scene(createPreGameContent(), 800, 450);
 
         primaryStage.setTitle("Please Choose Your Characters!");
-        primaryStage.getIcons().add(new Image("stageIcon.png"));
+        primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setScene(preGameScene);
         primaryStage.setResizable(false);
         primaryStage.show();
@@ -1099,7 +1101,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //For setting gameScene and showing labels
         setUpBoard();
         gameScene = new Scene(gameBox);
-        primaryStage.getIcons().add(new Image("stageIcon.png"));
+        primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
         setUpControls();
@@ -1156,7 +1158,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             public void handle(ActionEvent event) {
                 if (!board.getCurrentPlayer().isAgent()) {
                     Stage detectiveCardStage = new Stage();
-                    detectiveCardStage.getIcons().add(new Image("stageIcon.png"));
+                    detectiveCardStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
                     detectiveCardStage.initModality(Modality.APPLICATION_MODAL);
                     displayDetectiveCard(detectiveCardStage);
                 } else {
@@ -1173,7 +1175,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if(!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())){
                         //Create new Stage for popup
                         suggestionStage = new Stage();
-                        suggestionStage.getIcons().add(new Image("stageIcon.png"));
+                        suggestionStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
                         suggestionStage.initModality(Modality.APPLICATION_MODAL);
                         suggestionStage.setResizable(false);
                         // Create new suggestion panel 
@@ -1210,7 +1212,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     System.out.println(cardDistributor.getMurderer().getName());
                     //setting up accusation stage
                     accusationStage = new Stage();
-                    accusationStage.getIcons().add(new Image("stageIcon.png"));
+                    accusationStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
                     accusationStage.initModality(Modality.APPLICATION_MODAL);
                     accusationStage.setResizable(false);
                     //Create new AcqusationPanel
@@ -1241,28 +1243,48 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * controls the actions of an agent player during its turn
      */
     private void handleAgentTurn() {
-        //----agent just moves for now----//
         endTurnBtn.setDisable(true);
-        //rolls the dice
-        diceRoller.getRollButton().fire();
-        //use current agent to make sure thread doesn't try to move the next player 
-        Player currentAgent = board.getCurrentPlayer();
-        //Starts the thread
-        Thread thread = new Thread(() -> {
-            Runnable updater = () -> handleAgentMove(currentAgent);
-            while (board.getCounter() < diceRoller.getDiceTotal()) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
+        switch(board.getAgentTurn()){
+            case "Move":
+                //rolls the dice
+                diceRoller.getRollButton().fire();
+                //use current agent to make sure thread doesn't try to move the next player 
+                Player currentAgent = board.getCurrentPlayer();
+                //Starts the thread
+                Thread thread = new Thread(() -> {
+                    Runnable updater = () -> handleAgentMove(currentAgent);
+                    while (board.getCounter() < diceRoller.getDiceTotal()) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException ex) {
+                        }
+                        //runs the handleAgentMove() on the Application thread
+                        Platform.runLater(updater);
+                    }
+                    endTurnBtn.setDisable(false);
+                    //automatically end turn
+                    endTurnBtn.fire();
+                });
+                thread.start();
+                break;
+                
+            case "Accuse":
+                System.out.println("Accuse");
+                endTurnBtn.setDisable(false);
+                //automatically end turn
+                endTurnBtn.fire();
+                break;
+                
+            case "Suggest":
+                for(String s: board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames)){
+                    System.out.println(s);
                 }
-                //runs the handleAgentMove() on the Application thread
-                Platform.runLater(updater);
-            }
-            endTurnBtn.setDisable(false);
-            //automatically end turn
-            endTurnBtn.fire();
-        });
-        thread.start();
+                endTurnBtn.setDisable(false);
+                //automatically end turn
+                endTurnBtn.fire();
+                break;
+        }
+        
     }
 
     /**
@@ -1294,7 +1316,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     public void displayCardList(Stage pStage) {
         if (!board.getCurrentPlayer().isAgent()) {
             final Stage dialog = new Stage();
-            dialog.getIcons().add(new Image("stageIcon.png"));
+            dialog.getIcons().add(new Image("stageIcon/stageIcon.png"));
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(pStage);
             VBox dialogVbox = new VBox(20);
@@ -1362,7 +1384,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         detectiveCardPanel.getCardUpdates();
         stage.setScene(detectiveCardScene);
-        stage.getIcons().add(new Image("stageIcon.png"));
+        stage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         stage.setResizable(false);
         stage.show();
         stage.setTitle(board.getCurrentPlayer().getName() + "'s Detective Card");

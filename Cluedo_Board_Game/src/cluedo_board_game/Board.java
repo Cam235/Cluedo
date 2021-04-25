@@ -658,11 +658,35 @@ public class Board implements BoardInterface {
                 
                 if(p.isAgent()){
                     //auto update agent players detective card
-                    p.markHandAsSeenInDetectiveCard();
+                    p.markHandAsSeen();
                 }
             }
         }
     }
 
+    /**
+     * returns a decision for what the current players turn should be, assuming the current player
+     * is an agent
+     * @return string representing turn decision
+     */
+    public String getAgentTurn(){
+        Room currentPlayerRoom = getRoomOfPlayer(currentPlayer);
+        if(currentPlayer.getUnseenCards().size() < 4){
+            //make accusation
+            return "Accuse";
+        }
+        else if(currentPlayerRoom == null){
+            //move token
+            return "Move";
+        }
+        else if(currentPlayerRoom.getRoomName().equals(currentPlayer.getMostRecentlySuggestedRoom())){
+            //move token
+            return "Move";
+        }
+        else{
+            //make suggestion
+            return "Suggest";
+        }
+    }
 
 }

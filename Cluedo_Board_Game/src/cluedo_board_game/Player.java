@@ -82,7 +82,7 @@ public class Player implements PlayerInterface {
     }
     
     public Integer[] getMove(int x, int y){
-        return null;
+        throw new UnsupportedOperationException("Unsupported Player class for moving token");
     }
 
     /**
@@ -119,12 +119,15 @@ public class Player implements PlayerInterface {
         this.mostRecentlySuggestedRoom = mostRecentlySuggestedRoom;
     }
     
-    
     public ArrayList<String> getUnseenCards() {
         throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
     }
     
-    public void markHandAsSeenInDetectiveCard() {
+    public void markHandAsSeen() {
         throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
+    }
+    
+    public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
+        throw new UnsupportedOperationException("Unsupported Player class for suggestions");
     }
 }

@@ -58,7 +58,7 @@ public class AccusationPanel {
         roomBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                accusedRoom = (String) roomBox.getValue();
+                accusedRoom = roomBox.getValue();
                 roomCardView.setImage(new Image("/RoomCards/" + accusedRoom + ".jpg", 130, 200, false, false));
             }
         });
@@ -73,7 +73,7 @@ public class AccusationPanel {
         suspectBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                accusedSuspect = (String) suspectBox.getValue();
+                accusedSuspect = suspectBox.getValue();
                 suspectCardView.setImage(new Image("/CharacterCards/" + accusedSuspect + ".jpg", 130, 200, false, false));
             }
         });
@@ -89,7 +89,7 @@ public class AccusationPanel {
         weaponBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                accusedWeapon = (String) weaponBox.getValue();
+                accusedWeapon = weaponBox.getValue();
                 weaponCardView.setImage(new Image("/weaponCards/" + accusedWeapon + ".jpg", 130, 200, false, false));
             }
         });
