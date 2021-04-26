@@ -796,138 +796,117 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
     }
 
-    private void accusationHelper(CardDistributor cardDistributor) {
-        //Set on Actions
-        accusationPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
+    private void handleAccusation(String characterName, String weaponName, String roomName, CardDistributor cardDistributor) {
+        //compare accusation with murder envelope, if accusation is correct
+        if (cardDistributor.getMurderRoom().getName().equals(roomName)
+                && cardDistributor.getMurderWeapon().getName().equals(weaponName)
+                && cardDistributor.getMurderer().getName().equals(characterName)) {
+            //create correct accusation alert
+            Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
+                    board.getCurrentPlayer().getName(),
+                    cardDistributor.getMurderer().getName(),
+                    cardDistributor.getMurderRoom().getName(),
+                    cardDistributor.getMurderWeapon().getName()
+            );
+            correctAccusationAlert.initStyle(StageStyle.UTILITY);
+            //remove all default buttons                
+            correctAccusationAlert.getButtonTypes().clear();
+            //button for starting from character selection
+            ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
+            correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
+            //button for restarting the game with same characters
+            ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
+            correctAccusationAlert.getButtonTypes().add(restartBtn);
+            //button for quitting application
+            ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
+            correctAccusationAlert.getButtonTypes().add(endGameBtn);
+            //wait for a user to click a button
+            Optional<ButtonType> result = correctAccusationAlert.showAndWait();
+            if (!result.isPresent()) {
+                //re-open alert until something is chosen
+                correctAccusationAlert.showAndWait();
+            } else if (result.get() == startNewGameBtn) {
+                //start new Game
+                startNewGame();
+            } else if (result.get() == restartBtn) {
+                //start again with same characters
+                playGame(primaryStage);
+            } else if (result.get() == endGameBtn) {
+                //quit application
+                Platform.exit();
+                System.exit(0);
+            }
+        //else, accusation is incorrect
+        } else {
+            //get the number of active players
+            int activePlayers = 0;
+            for (Player p : board.getPlayerList()) {
+                if (p.isPlaying) {
+                    activePlayers++;
+                }
+            }
 
-                if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
-                    //Put envelope card names to strng to display and compare with accusation cards
-                    if (cardDistributor.getMurderRoom().getName().equals(accusationPanel.getAccusedRoomName())
-                            && cardDistributor.getMurderWeapon().getName().equals(accusationPanel.getAccusedWeaponName())
-                            && cardDistributor.getMurderer().getName().equals(accusationPanel.getAccusedSuspectName())) {
-                        //Closes accusation stage
-                        accusationStage.close();
-                        //Creates correct accusation Content
-                        Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
-                                board.getCurrentPlayer().getName(),
-                                cardDistributor.getMurderer().getName(),
-                                cardDistributor.getMurderRoom().getName(),
-                                cardDistributor.getMurderWeapon().getName()
-                        );
-                        correctAccusationAlert.initStyle(StageStyle.UTILITY);
-
-                        // Removes all default buttons                
-                        correctAccusationAlert.getButtonTypes().clear();
-                        //Starts from character selection
-                        ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
-                        correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                        //Restarts the game with same characters
-                        ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
-                        correctAccusationAlert.getButtonTypes().add(restartBtn);
-                        //ENDS GAME
-                        ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
-                        correctAccusationAlert.getButtonTypes().add(endGameBtn);
-                        //When correct accusation alert is shown,onclick algorihtm below starts
-                        Optional<ButtonType> result = correctAccusationAlert.showAndWait();
-                        if (!result.isPresent()) {
-                            // opens new tap until something is choosen
-                            correctAccusationAlert.showAndWait();
-                        } else if (result.get() == startNewGameBtn) {
-                            //Starts new Game
-                            startNewGame();
-                        } else if (result.get() == restartBtn) {
-                            // starts with same characters
-                            playGame(primaryStage);
-                        } else if (result.get() == endGameBtn) {
-                            //Exits the game
-                            Platform.exit();
-                            System.exit(0);
-                        }
-                    } else {
-                        accusationStage.close();
-                        //Gets the number of active players
-                        int activePlayerNumber = 0;
-                        for (Player p : board.getPlayerList()) {
-                            if (p.isPlaying) {
-                                activePlayerNumber++;
-                            }
-                        }
-
-                        //Creates Alert when accusation is not correct,player name and murder cards as parameters
-                        Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(
-                                board.getCurrentPlayer().getName(),
-                                cardDistributor.getMurderer().getName(),
-                                cardDistributor.getMurderRoom().getName(),
-                                cardDistributor.getMurderWeapon().getName()
-                        );
-                        falseAccusationAlert.initStyle(StageStyle.UTILITY);
-                        //False accusation alerts have different messages depending on current active players in game
-                        String compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
-                                + accusationPanel.getEnvelopeRoom() + " with a "
-                                + accusationPanel.getEnvelopeWeapon() + "\n"
-                                + board.getCurrentPlayer().getName() + "'s accusation was "
-                                + accusationPanel.getAccusedSuspectName() + " in the "
-                                + accusationPanel.getAccusedRoomName() + " with a "
-                                + accusationPanel.getAccusedWeaponName() + "\n\n";
-                        // Gives different strings
-                        if (activePlayerNumber > 1) {
-                            String noMoreTurns = "*** " + board.getCurrentPlayer().getName() + " is out of the game! ***";
-                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noMoreTurns);
-                            falseAccusationAlert.showAndWait();
-                            if (!falseAccusationAlert.isShowing()) {
-                                //If more than 1 player is active in game ,disables player
-                                if (activePlayerNumber > 1) {
-                                    //Disables the player who made false acqusation
-                                    Player playerToBeDisabled = board.getCurrentPlayer();
-                                    endTurnBtn.fire();
-                                    playerToBeDisabled.setIsPlaying(false);
-                                    activePlayerNumber--;
-                                    if (activePlayerNumber == 1) {
-                                        alertTxt.setText(board.getCurrentPlayer().getName() + " is the only player left");
-                                    }
-                                    //If the only active player makes the wrong accusation ,ends the game
-                                }
-                            }
-                        } else {
-                            String noPlayerWins = "*** Nobody won the game! ***";
-                            falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noPlayerWins);
-                            // Removes all default buttons                           
-                            falseAccusationAlert.getButtonTypes().clear();
-                            //Starts from character selection
-                            ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
-                            falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                            //Restarts the game with same characters
-                            ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
-                            falseAccusationAlert.getButtonTypes().add(restartBtn);
-                            //End game 
-                            ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
-                            falseAccusationAlert.getButtonTypes().add(endGameBtn);
-                            //When false accusation alert is shown,onclick algorihtm below starts
-                            Optional<ButtonType> result = falseAccusationAlert.showAndWait();
-                            if (!result.isPresent()) {
-                                // opens new tap until something is choosen
-                                falseAccusationAlert.showAndWait();
-                            } else if (result.get() == startNewGameBtn) {
-                                //Starts new Game
-                                startNewGame();
-                            } else if (result.get() == restartBtn) {
-                                // starts with same characters
-                                playGame(primaryStage);
-                            } else if (result.get() == endGameBtn) {
-                                //Exits the game
-                                Platform.exit();
-                                System.exit(0);
-                            }
-                        }
-                    }
-                } else {
-                    alertTxt.setText("Please fill all boxes to make accusation !");
+            //create an Alert for incorrect accusation
+            Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(
+                    board.getCurrentPlayer().getName(),
+                    cardDistributor.getMurderer().getName(),
+                    cardDistributor.getMurderRoom().getName(),
+                    cardDistributor.getMurderWeapon().getName()
+            );
+            falseAccusationAlert.initStyle(StageStyle.UTILITY);
+            //false accusation alerts have different messages depending on current active players in game
+            String compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
+                    + accusationPanel.getEnvelopeRoom() + " with a "
+                    + accusationPanel.getEnvelopeWeapon() + "\n"
+                    + board.getCurrentPlayer().getName() + "'s accusation was "
+                    + accusationPanel.getAccusedSuspectName() + " in the "
+                    + accusationPanel.getAccusedRoomName() + " with a "
+                    + accusationPanel.getAccusedWeaponName() + "\n\n";
+            //if there are still other players
+            if (activePlayers > 1) {
+                //show alert and remove falsely accusing player from the game 
+                String noMoreTurns = "*** " + board.getCurrentPlayer().getName() + " is out of the game! ***";
+                falseAccusationAlert.setContentText(compareAccusationAndMurderCards + noMoreTurns);
+                falseAccusationAlert.showAndWait();
+                board.getCurrentPlayer().setIsPlaying(false);
+                endTurnBtn.fire();
+                activePlayers--;
+                //if there is only one player left, inform that player
+                if (activePlayers == 1) {
+                    alertTxt.setText(board.getCurrentPlayer().getName() + " is the only player left");
+                }
+            //else, last remaining player has lost the game
+            } else {
+                falseAccusationAlert.setContentText(compareAccusationAndMurderCards + "*** Nobody won the game! ***");
+                //remove all default buttons                           
+                falseAccusationAlert.getButtonTypes().clear();
+                //button for starting from character selection
+                ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
+                falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
+                //button for restarting the game with same characters
+                ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
+                falseAccusationAlert.getButtonTypes().add(restartBtn);
+                //button for quitting application
+                ButtonType endGameBtn = new ButtonType("Quit", ButtonData.YES);
+                falseAccusationAlert.getButtonTypes().add(endGameBtn);
+                //wait for a user to click a button
+                Optional<ButtonType> result = falseAccusationAlert.showAndWait();
+                if (!result.isPresent()) {
+                    //re-open alert until something is chosen
+                    falseAccusationAlert.showAndWait();
+                } else if (result.get() == startNewGameBtn) {
+                    //start new Game
+                    startNewGame();
+                } else if (result.get() == restartBtn) {
+                    //start again with same characters
+                    playGame(primaryStage);
+                } else if (result.get() == endGameBtn) {
+                    //quit application
+                    Platform.exit();
+                    System.exit(0);
                 }
             }
         }
-        );
     }
 
     /**
@@ -1228,7 +1207,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     accusationStage.setScene(accusationScene);
                     accusationStage.show();
                     //Set on Actions
-                    accusationHelper(cardDistributor);
+                    accusationPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
+                                accusationStage.close();
+                                handleAccusation(accusationPanel.getAccusedSuspectName(), accusationPanel.getAccusedWeaponName(),
+                                        accusationPanel.getAccusedRoomName(), cardDistributor);
+                            } else {
+                                alertTxt.setText("Please fill all boxes to make accusation!");
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -1276,6 +1266,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
             case "Accuse":
                 System.out.println("Accuse");
+                
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();
