@@ -129,6 +129,7 @@ public class AccusationPanel {
         Alert falseAccusationAlert = new Alert(Alert.AlertType.ERROR);
         falseAccusationAlert.setTitle("Player " + lostPlayerName + " loses!");
         falseAccusationAlert.setHeaderText("Accusation Incorrect!");
+        //if player is not agents show the accusation cards
         if(!isAgent){
             ImageView murderer = new ImageView(new Image("/CharacterCards/" + envelopeSuspect + ".jpg", 130, 200, false, false));
             ImageView murderRoom = new ImageView(new Image("/RoomCards/" + envelopeRoom + ".jpg", 130, 200, false, false));
