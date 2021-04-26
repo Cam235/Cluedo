@@ -796,14 +796,19 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
     }
 
-    private void handleAccusation(String characterName, String weaponName, String roomName, CardDistributor cardDistributor) {
+    private void handleAccusation(String characterName, String weaponName, String roomName) {
+        //card distributor from board is used here for murder envlope functionality
+        CardDistributor cardDistributor = board.getCardDistributor();
         //compare accusation with murder envelope, if accusation is correct
         if (cardDistributor.getMurderRoom().getName().equals(roomName)
                 && cardDistributor.getMurderWeapon().getName().equals(weaponName)
                 && cardDistributor.getMurderer().getName().equals(characterName)) {
+            //if accuser is an agent set up cards display
+            if (board.getCurrentPlayer().isAgent()) {
+                accusationPanel.initialiseCardsDisplay(characterName, roomName, weaponName);
+            }
             //create correct accusation alert
-            Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(
-                    board.getCurrentPlayer().getName(),
+            Alert correctAccusationAlert = accusationPanel.createCorrectAccusationContent(board.getCurrentPlayer().getName(),
                     cardDistributor.getMurderer().getName(),
                     cardDistributor.getMurderRoom().getName(),
                     cardDistributor.getMurderWeapon().getName()
@@ -845,23 +850,32 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     activePlayers++;
                 }
             }
-
             //create an Alert for incorrect accusation
-            Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(
-                    board.getCurrentPlayer().getName(),
+            Alert falseAccusationAlert = accusationPanel.createFalseAccusationContent(board.getCurrentPlayer().getName(),
                     cardDistributor.getMurderer().getName(),
                     cardDistributor.getMurderRoom().getName(),
-                    cardDistributor.getMurderWeapon().getName()
+                    cardDistributor.getMurderWeapon().getName(),
+                    board.getCurrentPlayer().isAgent()
             );
             falseAccusationAlert.initStyle(StageStyle.UTILITY);
             //false accusation alerts have different messages depending on current active players in game
-            String compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
-                    + accusationPanel.getEnvelopeRoom() + " with a "
-                    + accusationPanel.getEnvelopeWeapon() + "\n"
-                    + board.getCurrentPlayer().getName() + "'s accusation was "
-                    + accusationPanel.getAccusedSuspectName() + " in the "
-                    + accusationPanel.getAccusedRoomName() + " with a "
-                    + accusationPanel.getAccusedWeaponName() + "\n\n";
+            String compareAccusationAndMurderCards;
+            if(board.getCurrentPlayer().isAgent()){
+                compareAccusationAndMurderCards = "Agent " + board.getCurrentPlayer().getName() 
+                        + " made an accusation and was incorrect\nTheir Accusation was "
+                        + characterName + " in the "
+                        + roomName + " with a "
+                        + weaponName + "\n\n";
+            }
+            else{
+                compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
+                        + accusationPanel.getEnvelopeRoom() + " with a "
+                        + accusationPanel.getEnvelopeWeapon() + "\n"
+                        + board.getCurrentPlayer().getName() + "'s accusation was "
+                        + characterName + " in the "
+                        + roomName + " with a "
+                        + weaponName + "\n\n";
+            }
             //if there are still other players
             if (activePlayers > 1) {
                 //show alert and remove falsely accusing player from the game 
@@ -1212,8 +1226,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         public void handle(ActionEvent event) {
                             if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
                                 accusationStage.close();
-                                handleAccusation(accusationPanel.getAccusedSuspectName(), accusationPanel.getAccusedWeaponName(),
-                                        accusationPanel.getAccusedRoomName(), cardDistributor);
+                                handleAccusation(accusationPanel.getAccusedSuspectName(), accusationPanel.getAccusedWeaponName(), accusationPanel.getAccusedRoomName());
                             } else {
                                 alertTxt.setText("Please fill all boxes to make accusation!");
                             }
@@ -1265,8 +1278,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 break;
 
             case "Accuse":
-                System.out.println("Accuse");
-                
+                //Create new AccusationPanel
+                accusationPanel = new AccusationPanel();
+                String[] agentAccusation = board.getCurrentPlayer().getAccusation(characterNames, roomNames, weaponNames);
+                handleAccusation(agentAccusation[0], agentAccusation[1], agentAccusation[2]);
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();

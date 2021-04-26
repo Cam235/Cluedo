@@ -102,10 +102,10 @@ public class Agent extends Player{
             if(Arrays.asList(characters).contains(s)){
                 suggestion[0] = s;
             }
-            else if(Arrays.asList(rooms).contains(s)){
+            else if(Arrays.asList(weapons).contains(s)){
                 suggestion[1] = s;
             }
-            else if(Arrays.asList(weapons).contains(s)){
+            else if(Arrays.asList(rooms).contains(s)){
                 suggestion[2] = s;
             }
             else{
