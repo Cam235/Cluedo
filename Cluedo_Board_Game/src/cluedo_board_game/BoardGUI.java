@@ -511,7 +511,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         for (int i = 0; i < board.getWeapons().size(); i++) {
             if (!board.getRooms().get(i).getRoomName().equals("Staircase")) {
                 // Puts the weapons into rooms
-                board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
+                board.moveWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
                 //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
             }
         }
@@ -701,79 +701,67 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         suggestionPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //if characterSelectionCombobox values are not empty start iterating
+                //if characterSelectionCombobox values are not empty allow suggestion
                 if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
+                    //Close the suggestionStage
+                    suggestionStage.close();
                     board.getCurrentPlayer().setMostRecentlySuggestedRoom(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName());
                     //Set suggestion alertText as 
-                    alertTxt.setText("Player " + board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
+                    alertTxt.setText(board.getCurrentPlayer().getName() + " suggested " + suggestionPanel.getSuggestedSuspect()
                             + "\n" + " commited murder in " + suggestionPanel.getSuggestedRoom() + " with a " + suggestionPanel.getSuggestedWeapon());
                     //Call suggested token into room
+                    Room suggestedRoom = board.getRoomFromName(suggestionPanel.getSuggestedRoom());
                     for (Player p : board.getPlayerList()) {
                         if (p.getToken().getName().equals(suggestionPanel.getSuggestedSuspect())) {
-                            for (Room r : board.getRooms()) {
-                                if (r.getRoomName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    board.playerEntersRoom(p, r);
-                                    updateView();
-                                    break;
-                                }
-                            }
+                            board.playerEntersRoom(p, suggestedRoom);
+                            updateView();
+                            break;
                         }  
                     }
                     //move suggested weapon into room
-                    for (Room room : board.getRooms()) {
-                        for (Weapon weapon : board.getWeapons()) {
-                            //If room does not have already have suggested object
-                            if (weapon.getName().equals(suggestionPanel.getSuggestedWeapon()) && room.getRoomName().equals(suggestionPanel.getSuggestedRoom())
-                                    && !room.getRoomWeapons().contains(weapon)) {
-                                board.placeWeaponToRoom(room, weapon);
-                                for (ImageView weaponImageView : weaponImageViews) {
-                                    if (weaponImageView.getImage().equals(weapon.getWeaponImage())) {
-                                        boardView.getChildren().remove(weaponImageView);
-                                        boardView.add(weaponImageView, weapon.getWeaponLocation().getColIndex(), weapon.getWeaponLocation().getRowIndex());
-                                    }
+                    for (Weapon weapon : board.getWeapons()) {
+                        //If room does not already contain suggested weapon
+                        if (weapon.getName().equals(suggestionPanel.getSuggestedWeapon())
+                                && !suggestedRoom.getRoomWeapons().contains(weapon)) {
+                            board.moveWeaponToRoom(suggestedRoom, weapon);
+                            for (ImageView weaponImageView : weaponImageViews) {
+                                if (weaponImageView.getImage().equals(weapon.getWeaponImage())) {
+                                    boardView.getChildren().remove(weaponImageView);
+                                    boardView.add(weaponImageView, weapon.getWeaponLocation().getColIndex(), weapon.getWeaponLocation().getRowIndex());
                                 }
-
                             }
                         }
                     }
 
-                    //Close the suggestionStage
-                    suggestionStage.close();
-                    //set suggested card is not found at someones hand yet
-                    boolean suggestedCardsFound = false;
-                    //Loop to get hand of players starting from one player after the current player
+                    //represents whether the suggested cards have been found in another players hand
+                    boolean suggestedCardFound = false;
+                    //loop to get hand of players starting from one player after the current player
                     for (int i = 0; i < board.getPlayerList().size(); i++) {
                         //pointer j is used to iterate through all other players until index hits the current player again  
                         int j = (i + board.getPlayerList().indexOf(board.getCurrentPlayer())) % board.getPlayerList().size();
-                        // Gets the nearest player which is not a non-playing player ,and not a currentPlayer
+                        //get the next player that is not a non-playing player and not the currentPlayer
                         if ((board.getPlayerList().get(j).getHand() != null) && !board.getPlayerList().get(j).equals(board.getCurrentPlayer())) {
-                            //Shuffles players hand
-                            Collections.shuffle(board.getPlayerList().get(j).getHand());
-                            //If players hand include suggested cards,suggestedCardfound becomes true, and loop breaks
-                            //the card found is shown to player through counterTxt
-                            ArrayList<String> suggestedCardPossessions = new ArrayList<>();
-                            //Let its first value be emtpty
-
+                            //if players hand includes suggested cards, suggestedCardfound becomes true and loop breaks
+                            ArrayList<String> foundCards = new ArrayList<>();
                             for (Card card : board.getPlayerList().get(j).getHand()) {
                                 if (card.getName().equals(suggestionPanel.getSuggestedSuspect())
                                         || card.getName().equals(suggestionPanel.getSuggestedWeapon())
                                         || card.getName().equals(suggestionPanel.getSuggestedRoom())) {
-                                    //suggestedCardFound = true;
-                                    suggestedCardPossessions.add(card.getName());
+                                    foundCards.add(card.getName());
                                 }
                             }
-                            //If suggested card/s appear in players hand,break the loop
-                            if (!suggestedCardPossessions.isEmpty()) {
-                                suggestedCardsFound = true;
+                            //if suggested cards appear in players hand, make the player show a card and stop searching
+                            if (!foundCards.isEmpty()) {
+                                suggestedCardFound = true;
                                 Alert postSuggestionAlert;
-                                //If responding player is agent,automatically shows first value of arrayList
+                                //if responding player is agent, shows first found card
                                 if (board.getPlayerList().get(j).isAgent()) {
-                                    postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), suggestedCardPossessions.get(0));
+                                    postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
                                     postSuggestionAlert.showAndWait();
+                                //otherwise make the player choose a card to show
                                 } else {
                                     suggestionStage.close();
-                                    ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), suggestedCardPossessions);
-                                    //responderChoiceBox.showAndWait();
+                                    ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
                                     boolean validItemChosen = false;
                                     while (!validItemChosen) {
                                         responderChoiceBox.showAndWait();
@@ -785,15 +773,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     }
                                 }
                                 break;
-                            } else {
-                                suggestedCardsFound = false;
                             }
                         }
                     }
-                    //If other players do not have the suggested cards gives a message
-                    if (!suggestedCardsFound) {
-                        Alert NoCharacterHaveCardAlert = suggestionPanel.createCardNotFoundAlert();
-                        NoCharacterHaveCardAlert.showAndWait();
+                    //if no other player has a suggested card, give a message
+                    if (!suggestedCardFound) {
+                        Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert();
+                        noPlayerHasCardAlert.showAndWait();
                     }
                 } else {
                     alertTxt.setText("Please fill all boxes to make suggestion!");
@@ -1276,7 +1262,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 break;
                 
             case "Suggest":
-                for(String s: board.getCurrentPlayer().getAccusation(characterNames, roomNames, weaponNames)){
+                for(String s: board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames)){
                     System.out.println(s);
                 }
                 endTurnBtn.setDisable(false);
