@@ -115,12 +115,12 @@ public class Board implements BoardInterface {
     }
 
     /**
-     * Places selected weapon into selected room
+     * Moves a given weapon into a given room
      *
      * @param room
      * @param weapon
      */
-    public void placeWeaponToRoom(Room room, Weapon weapon) {
+    public void moveWeaponToRoom(Room room, Weapon weapon) {
         //If weapon is already in any room, remove from that room
         for (Room potentialRoom : rooms) {
             if (potentialRoom.getRoomWeapons().contains(weapon)) {
@@ -687,6 +687,25 @@ public class Board implements BoardInterface {
             //make suggestion
             return "Suggest";
         }
+    }
+    
+    /**
+     * given a string s return a room with a name equal to s if one exists, else null
+     * @param s
+     * @return room or null
+     */
+    public Room getRoomFromName(String s){
+        int i = 0;
+        boolean found = false;
+        Room r = null;
+        while(!found && i < rooms.size()){
+            if(rooms.get(i).getRoomName().equals(s)){
+                r = rooms.get(i);
+                found = true;
+            }
+            i ++;
+        }
+        return r;
     }
 
 }

@@ -89,7 +89,7 @@ public class Agent extends Player{
     
     /**
      * given arrays of character, room and weapon names, returns a character, weapon and room
-     * to use in a suggestion
+     * to use in an accusation
      * @param characters array list of character names
      * @param rooms array list of room names
      * @param weapons array list of weapon names
