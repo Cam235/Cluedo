@@ -119,8 +119,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     //Combobox Values
     private final String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
-    private final String[] roomNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
-    private final String[] weaponNames = {"Kitchen", "Diningroom", "Lounge", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
+    private final String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
+    private final String[] roomNames = {"Kitchen", "Diningroom", "Lounge", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
     //Buttons
     private Button startButton;
     private Button passageBtn;
@@ -692,9 +692,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * private method to actions after suggestion is done Shows card
-     * automatically if responding player is agent, else opens a post suggestion
-     * window for responding human player to choose which card to show
+     * handles a suggestion with a given suspected character, weapon and rooms name
+     * @param characterName
+     * @param roomName
+     * @param weaponName
      */
     private void handleSuggestion(String characterName, String roomName, String weaponName) {
         board.getCurrentPlayer().setMostRecentlySuggestedRoom(roomName);
@@ -748,8 +749,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     Alert postSuggestionAlert;
                     //if responding player is agent, shows first found card
                     if (board.getPlayerList().get(j).isAgent()) {
-                        postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
-                        postSuggestionAlert.showAndWait();
+                        //if an agent is showing an agent a card do it in secret
+                        if(board.getCurrentPlayer().isAgent()){
+                            board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
+                            alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
+                            postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
+                                    board.getPlayerList().get(j).getName(), characterName, weaponName, roomName);
+                            postSuggestionAlert.showAndWait();
+                        }//else show an alert to the person for which card is shown
+                        else{
+                            postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
+                            postSuggestionAlert.showAndWait();
+                        }
                     } //otherwise make the player choose a card to show
                     else {
                         suggestionStage.close();
@@ -759,8 +770,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             responderChoiceBox.showAndWait();
                             if (!responderChoiceBox.getSelectedItem().equals("")) {
                                 validItemChosen = true;
-                                postSuggestionAlert = suggestionPanel.createPostSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
-                                postSuggestionAlert.showAndWait();
+                                //if a human is showing an agent a card do it in secret
+                                if (board.getCurrentPlayer().isAgent()) {
+                                    board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
+                                    alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
+                                    postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
+                                            board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
+                                    postSuggestionAlert.showAndWait();
+                                }//else show an alert to the person for which card is shown 
+                                else {
+                                    postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
+                                    postSuggestionAlert.showAndWait();
+                                }
                             }
                         }
                     }
@@ -1211,8 +1232,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         });
-        if (board.getCurrentPlayer()
-                .isAgent() && board.getCurrentPlayer().getIsPlaying()) {
+        if (board.getCurrentPlayer().isAgent() && board.getCurrentPlayer().getIsPlaying()) {
             handleAgentTurn();
         }
     }
@@ -1262,9 +1282,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 break;
 
             case "Suggest":
-                for (String s : board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames)) {
-                    System.out.println(s);
-                }
+                String[] agentSuggestion = board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames);
+                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName() , agentSuggestion[1]);
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();

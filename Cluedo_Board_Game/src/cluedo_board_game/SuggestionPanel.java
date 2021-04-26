@@ -118,25 +118,35 @@ public class SuggestionPanel {
         return postSuggestionContent;
     }
 
-    public Alert createPostSuggestionAlert(String responderPlayer, String responseCardName) {
-        Alert correctAccusationAlert = new Alert(Alert.AlertType.INFORMATION);
-        correctAccusationAlert.setTitle("Card is Shown!");
-        correctAccusationAlert.setHeaderText("Player " + responderPlayer + " shows you a " + responseCardName + " card!!!");
-        correctAccusationAlert.setContentText("Please make accusation or end your turn!");
+    public Alert createPostHumanSuggestionAlert(String responderPlayer, String responseCardName) {
+        Alert postSuggestionAlert = new Alert(Alert.AlertType.INFORMATION);
+        postSuggestionAlert.setTitle("Card is Shown!");
+        postSuggestionAlert.setHeaderText("Player " + responderPlayer + " shows you a " + responseCardName + " card!");
+        postSuggestionAlert.setContentText("Please make accusation or end your turn!");
         //Gets the correct image view of suggested card!
         try {
             ImageView ShownCardIsWeapon = new ImageView(new Image("/weaponCards/" + responseCardName + ".jpg", 130, 200, false, false));
-            correctAccusationAlert.setGraphic(ShownCardIsWeapon);
+            postSuggestionAlert.setGraphic(ShownCardIsWeapon);
         } catch (IllegalArgumentException e) {
             try {
                 ImageView ShownCardIsSuspect = new ImageView(new Image("/CharacterCards/" + responseCardName + ".jpg", 130, 200, false, false));
-                correctAccusationAlert.setGraphic(ShownCardIsSuspect);
+                postSuggestionAlert.setGraphic(ShownCardIsSuspect);
             } catch (IllegalArgumentException t) {
                 ImageView ShownCardIsSuspect = new ImageView(new Image("/RoomCards/" + responseCardName + ".jpg", 130, 200, false, false));
-                correctAccusationAlert.setGraphic(ShownCardIsSuspect);
+                postSuggestionAlert.setGraphic(ShownCardIsSuspect);
             }
         }
-        return correctAccusationAlert;
+        return postSuggestionAlert;
+    }
+    
+    public Alert createPostAgentSuggestionAlert(String suggestingPlayer, String respondingPlayer, 
+            String suggestedCharacter, String suggestedRoom, String suggestedWeapon) {
+        Alert postAgentSuggestionAlert = new Alert(Alert.AlertType.INFORMATION);
+        postAgentSuggestionAlert.setTitle("Agent " + suggestingPlayer + " Made A Suggestion!");
+        postAgentSuggestionAlert.setHeaderText("Agent " + suggestingPlayer + " suggested it was " + suggestedCharacter + " in the \n" + 
+                suggestedRoom + " with a " + suggestedWeapon + ", " + respondingPlayer + " shows them a card");
+        postAgentSuggestionAlert.setContentText("Agent " + suggestingPlayer + " ends their turn");
+        return postAgentSuggestionAlert;
     }
 
     public Alert createCardNotFoundAlert() {
