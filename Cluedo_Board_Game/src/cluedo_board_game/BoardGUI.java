@@ -38,6 +38,9 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -141,8 +144,18 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     Image currentPlayerImage;
     ImageView currentPlayerImageView;
     Text currentPlayerText;
+    
+    //Adding MenuBar
+    MenuBar menuBar =new MenuBar();
+    Menu menu =new Menu("Game Settings!");
+    MenuItem quitItem =new MenuItem("Quit");
+    MenuItem newGameItem= new MenuItem("Start New Game");
+    MenuItem restartItem = new MenuItem("Restart");
+    
+    
 
     public VBox createPreGameContent() {
+        
         VBox preGameBox = new VBox();
         preGameBox.setAlignment(Pos.TOP_CENTER);
         preGameBox.setPrefSize(650, 280);
@@ -488,6 +501,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
+        
+        menu.getItems().addAll(quitItem,newGameItem,restartItem);
+        menuBar.getMenus().add(menu);
 
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
@@ -675,7 +691,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
         //controlsVbx.setSpacing(5);
-        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
+        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt, menuBar);
         currentPlayerText.setTextAlignment(TextAlignment.CENTER);
         counterTxt.setTextAlignment(TextAlignment.CENTER);
         profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
