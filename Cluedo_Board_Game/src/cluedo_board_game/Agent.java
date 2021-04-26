@@ -96,7 +96,7 @@ public class Agent extends Player{
      * @return string array of length 3
      */
     @Override
-    public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
+    public String[] getAccusation(String[] characters, String[] rooms, String[] weapons) {
         String[] suggestion = new String[3];
         getUnseenCards().forEach((s) -> {
             if(Arrays.asList(characters).contains(s)){
@@ -109,7 +109,32 @@ public class Agent extends Player{
                 suggestion[2] = s;
             }
             else{
-                System.err.println("Agent " + name + " has invalid detective card");
+                System.err.println("Agent " + name + " has an invalid detective card");
+            }
+        });
+        return suggestion;
+    }
+    
+    /**
+     * given arrays of character, room and weapon names, returns a character and weapon name
+     * to use in a suggestion
+     * @param characters array list of character names
+     * @param rooms array list of room names
+     * @param weapons array list of weapon names
+     * @return string array of length 2
+     */
+    @Override
+    public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
+        String[] suggestion = new String[2];
+        getUnseenCards().forEach((s) -> {
+            if(Arrays.asList(characters).contains(s)){
+                suggestion[0] = s;
+            }
+            else if(Arrays.asList(weapons).contains(s)){
+                suggestion[1] = s;
+            }
+            else if(!Arrays.asList(rooms).contains(s)){
+                System.err.println("Agent " + name + " has an invalid detective card");
             }
         });
         return suggestion;

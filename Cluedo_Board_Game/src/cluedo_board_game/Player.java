@@ -127,6 +127,10 @@ public class Player implements PlayerInterface {
         throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
     }
     
+    public String[] getAccusation(String[] characters, String[] rooms, String[] weapons) {
+        throw new UnsupportedOperationException("Unsupported Player class for suggestions");
+    }
+    
     public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
         throw new UnsupportedOperationException("Unsupported Player class for suggestions");
     }

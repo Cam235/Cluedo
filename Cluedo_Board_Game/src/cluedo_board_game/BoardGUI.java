@@ -505,12 +505,12 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         //Create Rooms on board
         setUpRooms();
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
-        //Shuffles weapons list,so in each game different weapons can be placed in different roomNames       
+        //Shuffles weapons list,so in each game different weapons can be placed in different rooms    
         Collections.shuffle(board.getWeapons());
         Collections.shuffle(board.getRooms());
         for (int i = 0; i < board.getWeapons().size(); i++) {
             if (!board.getRooms().get(i).getRoomName().equals("Staircase")) {
-                // Puts the weaponNames into room
+                // Puts the weapons into rooms
                 board.placeWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
                 //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
             }
@@ -719,7 +719,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             }
                         }  
                     }
-                    //Call suggested weaponNames into room
+                    //move suggested weapon into room
                     for (Room room : board.getRooms()) {
                         for (Weapon weapon : board.getWeapons()) {
                             //If room does not have already have suggested object
@@ -830,7 +830,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         //Starts from character selection
                         ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                        //Restarts the game with same characterNames
+                        //Restarts the game with same characters
                         ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                         correctAccusationAlert.getButtonTypes().add(restartBtn);
                         //ENDS GAME
@@ -845,7 +845,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //Starts new Game
                             startNewGame();
                         } else if (result.get() == restartBtn) {
-                            // starts with same characterNames
+                            // starts with same characters
                             playGame(primaryStage);
                         } else if (result.get() == endGameBtn) {
                             //Exits the game
@@ -905,7 +905,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             //Starts from character selection
                             ButtonType startNewGameBtn = new ButtonType("Start New Game", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(startNewGameBtn);
-                            //Restarts the game with same characterNames
+                            //Restarts the game with same characters
                             ButtonType restartBtn = new ButtonType("Restart", ButtonData.YES);
                             falseAccusationAlert.getButtonTypes().add(restartBtn);
                             //End game 
@@ -920,7 +920,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                 //Starts new Game
                                 startNewGame();
                             } else if (result.get() == restartBtn) {
-                                // starts with same characterNames
+                                // starts with same characters
                                 playGame(primaryStage);
                             } else if (result.get() == endGameBtn) {
                                 //Exits the game
@@ -1023,7 +1023,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      */
     private boolean isGameStarting(ActionEvent e) {
         boolean gameStarting = true;
-        //List To check if characterNames are choosen twice or more
+        //List To check if characters are choosen twice or more
         ArrayList<String> characterRepetitionChecklist = new ArrayList<String>();
         //List to checks if player namefield contains same values
         ArrayList<String> playerNameRepetitionChecklist = new ArrayList<String>();
@@ -1046,7 +1046,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 gameStarting = false;
                 break;
             }
-            //Checks for repetition of characterNames
+            //Checks for repetition of characters
             if (!characterRepetitionChecklist.contains(playerselectionbox.getPlayerCharacter())) {
                 characterRepetitionChecklist.add(playerselectionbox.getPlayerCharacter());
             } else {
@@ -1276,7 +1276,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 break;
                 
             case "Suggest":
-                for(String s: board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames)){
+                for(String s: board.getCurrentPlayer().getAccusation(characterNames, roomNames, weaponNames)){
                     System.out.println(s);
                 }
                 endTurnBtn.setDisable(false);
