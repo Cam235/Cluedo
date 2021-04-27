@@ -86,6 +86,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
     //Used to Combine Board movements with Dice Image
     private HBox gameBox;
+    //GameBox With Settings
+    private VBox gameBoxWithSettings;
+
     //Pane will be used for Board
     private GridPane boardView;
     //Board and repsenetation of Board with Rectangles
@@ -144,18 +147,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     Image currentPlayerImage;
     ImageView currentPlayerImageView;
     Text currentPlayerText;
-    
+
     //Adding MenuBar
-    MenuBar menuBar =new MenuBar();
-    Menu menu =new Menu("Game Settings!");
-    MenuItem quitItem =new MenuItem("Quit");
-    MenuItem newGameItem= new MenuItem("Start New Game");
-    MenuItem restartItem = new MenuItem("Restart");
-    
-    
+    MenuBar menuBar;
+    Menu menu;
+    MenuItem quitItem;
+    MenuItem newGameItem; 
+    MenuItem restartItem;
 
     public VBox createPreGameContent() {
-        
+
         VBox preGameBox = new VBox();
         preGameBox.setAlignment(Pos.TOP_CENTER);
         preGameBox.setPrefSize(650, 280);
@@ -456,7 +457,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * @return
      */
     @Override
-    public HBox setUpBoard() {
+    public VBox setUpBoard() {
+        gameBoxWithSettings = new VBox();
         gameBox = new HBox();
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
@@ -501,9 +503,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
-        
-        menu.getItems().addAll(quitItem,newGameItem,restartItem);
-        menuBar.getMenus().add(menu);
+
 
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
@@ -691,24 +691,44 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
         //controlsVbx.setSpacing(5);
-        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt, menuBar);
+        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
         currentPlayerText.setTextAlignment(TextAlignment.CENTER);
+        alertTxt.setTextAlignment(TextAlignment.CENTER);
         counterTxt.setTextAlignment(TextAlignment.CENTER);
+
         profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
         profileAndAlertVBox.setSpacing(10);
 
         gameBox.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
         gameBox.setAlignment(Pos.TOP_CENTER);
-        //Set Background 
+
+        //Create GameSettings MenuBAr
+        
+        menu = new Menu("Game Settings!");
+        quitItem = new MenuItem("Quit");
+        newGameItem = new MenuItem("Start New Game");
+        restartItem = new MenuItem("Restart");
+        menu.getItems().addAll(quitItem,newGameItem,restartItem);
+        MenuBar menuBar = new MenuBar(menu);
+        //Actions on menuItems
+        quitItem.setOnAction(e->Platform.exit());
+        newGameItem.setOnAction(e->startNewGame());
+        restartItem.setOnAction(e->playGame(primaryStage));
+ 
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
+
         // set background
-        gameBox.setBackground(bg);
-        return gameBox;
+        gameBoxWithSettings.setBackground(bg);
+        gameBoxWithSettings.getChildren().addAll(menuBar, gameBox);
+
+        return gameBoxWithSettings;
     }
 
     /**
-     * handles a suggestion with a given suspected character, weapon and rooms name
+     * handles a suggestion with a given suspected character, weapon and rooms
+     * name
+     *
      * @param characterName
      * @param roomName
      * @param weaponName
@@ -766,7 +786,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //if responding player is agent, shows first found card
                     if (board.getPlayerList().get(j).isAgent()) {
                         //if an agent is showing an agent a card do it in secret
-                        if(board.getCurrentPlayer().isAgent()){
+                        if (board.getCurrentPlayer().isAgent()) {
                             suggestionPanel = new SuggestionPanel();
                             board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
                             alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
@@ -774,7 +794,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                                     board.getPlayerList().get(j).getName(), characterName, weaponName, roomName);
                             postSuggestionAlert.showAndWait();
                         }//else show an alert to the person for which card is shown
-                        else{
+                        else {
                             postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
                             postSuggestionAlert.showAndWait();
                         }
@@ -858,7 +878,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 Platform.exit();
                 System.exit(0);
             }
-        //else, accusation is incorrect
+            //else, accusation is incorrect
         } else {
             //get the number of active players
             int activePlayers = 0;
@@ -877,14 +897,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             falseAccusationAlert.initStyle(StageStyle.UTILITY);
             //false accusation alerts have different messages depending on current active players in game
             String compareAccusationAndMurderCards;
-            if(board.getCurrentPlayer().isAgent()){
-                compareAccusationAndMurderCards = "Agent " + board.getCurrentPlayer().getName() 
+            if (board.getCurrentPlayer().isAgent()) {
+                compareAccusationAndMurderCards = "Agent " + board.getCurrentPlayer().getName()
                         + " made an accusation and was incorrect\nTheir Accusation was "
                         + characterName + " in the "
                         + roomName + " with a "
                         + weaponName + "\n\n";
-            }
-            else{
+            } else {
                 compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
                         + accusationPanel.getEnvelopeRoom() + " with a "
                         + accusationPanel.getEnvelopeWeapon() + "\n"
@@ -906,7 +925,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 if (activePlayers == 1) {
                     alertTxt.setText(board.getCurrentPlayer().getName() + " is the only player left");
                 }
-            //else, last remaining player has lost the game
+                //else, last remaining player has lost the game
             } else {
                 falseAccusationAlert.setContentText(compareAccusationAndMurderCards + "*** Nobody won the game! ***");
                 //remove all default buttons                           
@@ -1103,7 +1122,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         this.primaryStage = primaryStage;
         //For setting gameScene and showing labels
         setUpBoard();
-        gameScene = new Scene(gameBox);
+        gameScene = new Scene(gameBoxWithSettings);
         primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
@@ -1293,7 +1312,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         endTurnBtn.fire();
                     };
                     Platform.runLater(endTrunRunnalble);
-                    
+
                 });
                 thread.start();
                 break;
@@ -1310,7 +1329,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
             case "Suggest":
                 String[] agentSuggestion = board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames);
-                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName() , agentSuggestion[1]);
+                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(), agentSuggestion[1]);
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();

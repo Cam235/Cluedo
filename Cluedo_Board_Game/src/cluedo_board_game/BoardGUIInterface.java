@@ -9,7 +9,7 @@ import javafx.stage.Stage;
  * @author Mazon
  */
 public interface BoardGUIInterface {
-    public HBox setUpBoard();
+    public VBox setUpBoard();
     
     
     // Move these to Board class
