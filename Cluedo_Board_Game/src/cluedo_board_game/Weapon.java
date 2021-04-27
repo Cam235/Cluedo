@@ -10,8 +10,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
- * The weapon class which are placed in rooms to indicate previous suggestions 
+ * The weapon class which is for creating and placing game weapons in rooms to indicate previous suggestions 
  * @author Anilz
+ * @version 1.0
  */
 public class Weapon extends Circle {
 

@@ -25,8 +25,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- *
+ * Accusation panel class which includes displays and fields to fulfil accusation functions of the game
  * @author Anilz
+ * @version 1.0
  */
 public class AccusationPanel {
 

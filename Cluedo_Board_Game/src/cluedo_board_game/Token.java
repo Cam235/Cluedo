@@ -10,25 +10,25 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 
 /**
- * Represents token which is used to make movements on board
+ * Represents token which is used by a player to move around the board, and be
+ * summoned into rooms.
+ *
+ * It extends to Circle , so a circle represents the token on the board
  *
  * @author Anilz
  * @version 1.0
  */
-public class Token extends Circle implements TokenInterface{
+public class Token extends Circle implements TokenInterface {
 
-    //Token name, if boolean or agent, and which tile it does steps on
-    private String name;
-    //private boolean agent = true;
-    private Tile tokenLocation = null;
+    private String name; // Token name
+    private Tile tokenLocation = null; //Token location , initially set to null
 
     /**
-     * Constructor for Token
+     * Constructor for Token,creates token with desired circle properties
      *
      * @param name name of the Token
      */
     public Token(String name) {
-        //Initialise Token, with circle properties
         this.name = name;
         setFill(Color.RED);
         setRadius(7.5);
@@ -37,11 +37,11 @@ public class Token extends Circle implements TokenInterface{
         setStrokeType(StrokeType.CENTERED);
         setStroke(Color.BLACK);
         setTranslateX(+2);
-        //this.tokenLocation = tokenLocation;
     }
 
     /**
-     * @return the name of Token
+     * Gets the name of token
+     * @return name
      */
     @Override
     public String getName() {
@@ -49,7 +49,8 @@ public class Token extends Circle implements TokenInterface{
     }
 
     /**
-     * sets the name of Token
+     * Sets the name of token
+     * @param name
      */
     @Override
     public void setName(String name) {
@@ -57,8 +58,8 @@ public class Token extends Circle implements TokenInterface{
     }
 
     /**
-     *
-     * @return location of the Token
+     * Gets tokens location
+     * @return tokenLocation
      */
     @Override
     public Tile getTokenLocation() {
@@ -66,9 +67,8 @@ public class Token extends Circle implements TokenInterface{
     }
 
     /**
-     * sets Token's location on new selected tile
-     *
-     * @param tokenLocation is the new selected tile
+     * Sets Token's location on selected tile
+     * @param tokenLocation
      */
     @Override
     public void setTokenLocation(Tile tokenLocation) {
