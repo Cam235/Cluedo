@@ -6,44 +6,27 @@
  */
 package cluedo_board_game;
 
-import java.awt.Paint;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
-import static javafx.application.Application.STYLESHEET_MODENA;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import static javafx.print.PrintColor.COLOR;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -61,100 +44,93 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 /**
- * Representation of the boardGUI where player can throw a dice and move the
- * token
+ * Representation of the Cluedo game, where characters are chosen and game is
+ * played
  *
  * @author Anilz
+ * @version 4.0
  */
 public class BoardGUI extends Application {
 
-    //Scene for preGame player selection, and game gameScene
-    private Scene preGameScene;
-    private Scene gameScene;
+    //-------Most Basics---------//
+    private Stage primaryStage; //A global stage which hold pregameScene, gameScene and facilitate restart,start new game
+    private Board board; // Board object created to apply board functions and play the game
+    boolean isRunning = true; //Field to start game after successful character selection
+    //-----For the preGame Window-------//
+    private Scene preGameScene; //pregame Scene
+    //Setting of minimum player selection box number,and create arraylist with defined size
+    private int minSelectionBoxes = 2;
+    private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
+    private Text preGameText; // text for pregame guidence    
+    private Button startButton; //Pregame button to start the game
 
-    //Used to Combine Board movements with Dice Image
-    private HBox gameBox;
-    //GameBox With Settings
-    private VBox gameBoxWithSettings;
+    //-----For the Game Window-------//
+    private Scene gameScene; //Game scene    
+    private VBox gameBox; //Contains the gameContent        
+    private GridPane boardView; // GridPane for gameboard
 
-    //Pane will be used for Board
-    private GridPane boardView;
-    //Board and repsenetation of Board with Rectangles
-    private Board board;
-
-    //For Token with representation
-    //private Token token;
-    //IsGameRunning
-    boolean isRunning = true;
-    //Size of tiles
-    public static final int TILE_SIZE = 20;
-    //public static final int Token_Radius = 15;
-    //Number of Rows and Column
+    //Number of Rows and Column of boards tileMap(boardGameView), and Tile Size
+    private static final int TILE_SIZE = 20;
     private final int columns = 28;
     private final int rows = 28;
-    //DiceRoll object to step as much as dice Values
-    private DiceRoller diceRoller;
-    //To measure steps not surpassing value of dice
 
-    //ImageView of Weapon
-    private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
-
+    
+    //Game Buttons(Left hand side of the board)
     private Button showHandBtn;
+    private Button detectiveCardButton;
+    private Button suggestionBtn;
+    private Button accusationBtn;
     private Button endTurnBtn;
+    private Button passageBtn;
+    //Control box to include all buttons
     private VBox controlsVbx;
 
-    private VBox profileAndAlertVBox;
+    //Profile,alert and diceroller items(On right hand side of board)
+    Text currentPlayerNameText;
+    Image currentPlayerImage;
+    ImageView currentPlayerImageView;
+    //Alert and counter texts
     private Text alertTxt;
     private Text counterTxt;
-    // text for pregame guidence
-    private Text preGameText;
-    //NO of player SelectionBoxes
-    private int playerSelectionBoxesNumber = 2;
-    private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
-    //Combobox Values
+    //Diceroller object to play game
+    private DiceRoller diceRoller; 
+    //Profile and alertBox to include all from players name text to diceroller
+    private VBox profileAndAlertVBox; 
+    
+    //Adding MenuBar and items for gameSettings( Top left corner of the game)
+    MenuBar gameSettingsMenuBar;
+    Menu gameSettingsMenu;
+    MenuItem quitItem;//Button to quit game
+    MenuItem newGameItem;//Button to start new game
+    MenuItem restartItem;//Button to restart game
+    
+    //Weapon Image Views which are displayed in the room weapon belong to.
+    private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
+    //Card name values for accusation,suggestions and Image setting functions
     private final String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
     private final String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     private final String[] roomNames = {"Kitchen", "Diningroom", "Lounge", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
-    //Buttons
-    private Button startButton;
-    private Button passageBtn;
-    private Button suggestionBtn;
-    private Button accusationBtn;
-    private Button detectiveCardButton;
 
-    //Make primary stage global
-    private Stage primaryStage;
+    //-------Accusation and Suggestion panels------//
     //the suggestion Panel and stage
     private SuggestionPanel suggestionPanel;
     private Stage suggestionStage;
-    //for acqusationPanel and Stage
+    //For acqusationPanel and Stage for accusation attempts
     private AccusationPanel accusationPanel;
     private Stage accusationStage;
 
-    //Fields to get current player image 
-    Image currentPlayerImage;
-    ImageView currentPlayerImageView;
-    Text currentPlayerText;
 
-    //Adding MenuBar
-    MenuBar menuBar;
-    Menu menu;
-    MenuItem quitItem;
-    MenuItem newGameItem;
-    MenuItem restartItem;
 
     public VBox createPreGameContent() {
 
@@ -164,7 +140,7 @@ public class BoardGUI extends Application {
         VBox selectionBoxesView = new VBox();
         HBox characterSelectionViews = new HBox();
         characterSelectionViews.setSpacing(5);
-        for (int i = 0; i < playerSelectionBoxesNumber; i++) {
+        for (int i = 0; i < minSelectionBoxes; i++) {
             final int nodeIndex = i;
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
             selectionBoxesList.add(newSelectionBox);
@@ -210,12 +186,12 @@ public class BoardGUI extends Application {
         addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (playerSelectionBoxesNumber < 6) {
-                    final int nodeIndex = playerSelectionBoxesNumber;
+                if (minSelectionBoxes < 6) {
+                    final int nodeIndex = minSelectionBoxes;
                     PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
                     selectionBoxesList.add(newSelectionBox);
                     selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
-                    playerSelectionBoxesNumber++;
+                    minSelectionBoxes++;
                     VBox nameAndDisplay = new VBox(new Text(""), selectionBoxesList.get(selectionBoxesList.size() - 1).getSelectedCharacterView());
                     characterSelectionViews.getChildren().add(nameAndDisplay);
                     newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
@@ -251,7 +227,7 @@ public class BoardGUI extends Application {
                             e.consume();
                         }
                     });
-                    System.out.println(playerSelectionBoxesNumber);
+                    System.out.println(minSelectionBoxes);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List number:" + selectionBoxesView.getChildren().size());
                 } else {
@@ -264,12 +240,12 @@ public class BoardGUI extends Application {
         removePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (playerSelectionBoxesNumber > 2) {
+                if (minSelectionBoxes > 2) {
                     selectionBoxesList.remove(selectionBoxesList.size() - 1);
                     selectionBoxesView.getChildren().remove(selectionBoxesView.getChildren().size() - 1);
                     characterSelectionViews.getChildren().remove(characterSelectionViews.getChildren().size() - 1);
-                    playerSelectionBoxesNumber--;
-                    System.out.println(playerSelectionBoxesNumber);
+                    minSelectionBoxes--;
+                    System.out.println(minSelectionBoxes);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List no:" + selectionBoxesView.getChildren().size());
                 } else {
@@ -458,10 +434,9 @@ public class BoardGUI extends Application {
      *
      * @return
      */
-    
     public VBox setUpBoard() {
-        gameBoxWithSettings = new VBox();
-        gameBox = new HBox();
+        gameBox = new VBox();
+        HBox gameBoxWithoutSettings = new HBox();
         //DiceRoller added to play with dice
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
@@ -586,7 +561,7 @@ public class BoardGUI extends Application {
         //Iterate through total player number ( 6 )
         for (int i = 0; i < 6; i++) {
             //If player is defined in selection boxes , then receive selection boxes
-            if (i < playerSelectionBoxesNumber) {
+            if (i < minSelectionBoxes) {
                 playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
                 playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
                 System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
@@ -606,7 +581,7 @@ public class BoardGUI extends Application {
 
         //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
-            if (i < playerSelectionBoxesNumber) {
+            if (i < minSelectionBoxes) {
                 board.initialisePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
                 tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
             } else {
@@ -678,9 +653,9 @@ public class BoardGUI extends Application {
         //Give players required stuff
         board.initialisePlayerDetectiveCards();
         //Displays current players Image
-        currentPlayerText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
-        currentPlayerText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-        currentPlayerText.setWrappingWidth(170);
+        currentPlayerNameText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
+        currentPlayerNameText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        currentPlayerNameText.setWrappingWidth(170);
         currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 160, 250, false, false);
         currentPlayerImageView = new ImageView(currentPlayerImage);
 
@@ -692,24 +667,24 @@ public class BoardGUI extends Application {
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
         //controlsVbx.setSpacing(5);
-        profileAndAlertVBox.getChildren().addAll(currentPlayerText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
-        currentPlayerText.setTextAlignment(TextAlignment.CENTER);
+        profileAndAlertVBox.getChildren().addAll(currentPlayerNameText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
+        currentPlayerNameText.setTextAlignment(TextAlignment.CENTER);
         alertTxt.setTextAlignment(TextAlignment.CENTER);
         counterTxt.setTextAlignment(TextAlignment.CENTER);
 
         profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
         profileAndAlertVBox.setSpacing(10);
 
-        gameBox.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
-        gameBox.setAlignment(Pos.TOP_CENTER);
+        gameBoxWithoutSettings.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
+        gameBoxWithoutSettings.setAlignment(Pos.TOP_CENTER);
 
         //Create GameSettings MenuBAr
-        menu = new Menu("Game Settings");
+        gameSettingsMenu = new Menu("Game Settings");
         quitItem = new MenuItem("Quit");
         newGameItem = new MenuItem("Start New Game");
         restartItem = new MenuItem("Restart");
-        menu.getItems().addAll(quitItem, newGameItem, restartItem);
-        MenuBar menuBar = new MenuBar(menu);
+        gameSettingsMenu.getItems().addAll(quitItem, newGameItem, restartItem);
+        MenuBar menuBar = new MenuBar(gameSettingsMenu);
         //Actions on menuItems
         quitItem.setOnAction(e -> Platform.exit());
         newGameItem.setOnAction(e -> startNewGame());
@@ -719,10 +694,10 @@ public class BoardGUI extends Application {
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
 
         // set background
-        gameBoxWithSettings.setBackground(bg);
-        gameBoxWithSettings.getChildren().addAll(menuBar, gameBox);
+        gameBox.setBackground(bg);
+        gameBox.getChildren().addAll(menuBar, gameBoxWithoutSettings);
 
-        return gameBoxWithSettings;
+        return gameBox;
     }
 
     /**
@@ -828,7 +803,7 @@ public class BoardGUI extends Application {
         }
         //if no other player has a suggested card, give a message
         if (!suggestedCardFound) {
-            Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert(board.getCurrentPlayer().isAgent(), 
+            Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert(board.getCurrentPlayer().isAgent(),
                     board.getCurrentPlayer().getName(), characterName, roomName, weaponName);
             noPlayerHasCardAlert.showAndWait();
         }
@@ -964,7 +939,6 @@ public class BoardGUI extends Application {
      * sets up handlers for key presses during game play, including human player
      * movement controls
      */
-    
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
             if (!board.getCurrentPlayer().isAgent()) {
@@ -1030,7 +1004,6 @@ public class BoardGUI extends Application {
      * Updates GUI by removing all the tokens from boardView then adding them
      * back again in their updated positions
      */
-    
     public void updateView() {
         for (Player p : board.getPlayerList()) {
             boardView.getChildren().remove(p.getToken());
@@ -1123,7 +1096,7 @@ public class BoardGUI extends Application {
         this.primaryStage = primaryStage;
         //For setting gameScene and showing labels
         setUpBoard();
-        gameScene = new Scene(gameBoxWithSettings);
+        gameScene = new Scene(gameBox);
         primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
@@ -1138,7 +1111,7 @@ public class BoardGUI extends Application {
                 alertTxt.setText("Current Player: " + board.getCurrentPlayer().getName());
                 counterTxt.setText("Please Roll The Dice");
                 //Displays current players Image
-                currentPlayerText.setText(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
+                currentPlayerNameText.setText(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
                 currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 150, 250, false, false);
                 currentPlayerImageView.setImage(currentPlayerImage);
 
@@ -1345,7 +1318,7 @@ public class BoardGUI extends Application {
                 //automatically end turn
                 endTurnBtn.fire();
                 break;
-                
+
             case "Skip":
                 String currentAgentName = board.getCurrentPlayer().getName();
                 endTurnBtn.setDisable(false);
@@ -1353,7 +1326,7 @@ public class BoardGUI extends Application {
                 endTurnBtn.fire();
                 alertTxt.setText("Agent " + currentAgentName + " skips their turn!");
                 break;
-            
+
             default:
                 System.err.println("Unsupported agent trun requested, skipping turn");
                 endTurnBtn.setDisable(false);
@@ -1373,18 +1346,17 @@ public class BoardGUI extends Application {
     private void handleAgentMove(Player p) {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             Integer[] newCoords;
-            do{
+            do {
                 newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-            //don't let agent try and move out of bounds, to an occupied tile or to a wall
-            }while(newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27 ||
-                    board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
+                //don't let agent try and move out of bounds, to an occupied tile or to a wall
+            } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
+                    || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
             updateView();
         }
     }
 
-    
     public void selectCharacters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -1394,7 +1366,6 @@ public class BoardGUI extends Application {
      *
      * @param pStage
      */
-    
     public void displayCardList(Stage pStage) {
         if (!board.getCurrentPlayer().isAgent()) {
             final Stage dialog = new Stage();
