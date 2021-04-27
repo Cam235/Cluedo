@@ -18,7 +18,7 @@ import javafx.scene.text.Text;
  *
  * @author Anilz
  */
-public class Tile extends Rectangle implements TileInterface{
+public class Tile extends Rectangle{
 
     private int colIndex, rowIndex;
     //to see if pawn on Tile  
@@ -49,7 +49,7 @@ public class Tile extends Rectangle implements TileInterface{
     /**
      * @return column index
      */
-    @Override
+    
     public int getColIndex() {
         return colIndex;
     }
@@ -57,7 +57,7 @@ public class Tile extends Rectangle implements TileInterface{
     /**
      * @return row index
      */
-    @Override
+    
     public int getRowIndex() {
         return rowIndex;
     }
@@ -66,7 +66,7 @@ public class Tile extends Rectangle implements TileInterface{
      * 
      * @return whether or not the tile is occupied by pawn
      */
-    @Override
+    
     public boolean isOccupied() {
         return occupied;
     }
@@ -75,29 +75,29 @@ public class Tile extends Rectangle implements TileInterface{
      * Set the tile to occupied or not based on parameter 
      * @param isOccupied 
      */
-    @Override
+    
     public void setOccupied(boolean isOccupied) {
         this.occupied = isOccupied;
     }
       
     //For Wall
-    @Override
+    
     public boolean isWall() {
         return wall;
     }
 
-    @Override
+    
     public void setWall(boolean isWall) {
         this.wall = isWall;
     }
 
     //For the Doors
-    @Override
+    
     public boolean isDoor() {
         return door;
     }
 
-    @Override
+    
     public void setDoor(boolean isDoor) {
         //if its door, its no longer wall
         setWall(false);

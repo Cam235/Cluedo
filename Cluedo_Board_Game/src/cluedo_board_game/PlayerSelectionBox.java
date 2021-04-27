@@ -35,7 +35,7 @@ public class PlayerSelectionBox {
     //Fields for character via combobox, show character display 
     private ComboBox<String> characterSelectionCombobox;
     //String array of character names,which make up the characterSelectionCombobox
-    public String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mrs.Peacock", "Mr.Green", "Professor Plum"};
+    public String characters[] = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
 
     //Field of image and view of selected character
     private Image selectedCharacterImage;

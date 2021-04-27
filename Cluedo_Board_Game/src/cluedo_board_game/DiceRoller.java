@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
  *
  * @author Anilz
  */
-public class DiceRoller implements DiceRollerInterface{
+public class DiceRoller{
     private boolean diceRolled;
     //Initial Dice Values are given 1
     private int diceNumber = 1;
@@ -46,7 +46,7 @@ public class DiceRoller implements DiceRollerInterface{
      *
      * @return
      */
-    @Override
+    
     public VBox createContent() {
         rollButton = new Button();
         rollButton.setText("Roll the Dice");
@@ -92,7 +92,7 @@ public class DiceRoller implements DiceRollerInterface{
      *
      * @return true if dice is rolled, and false if dice has not rolled yet
      */
-    @Override
+    
     public boolean isDiceRolled() {
         return diceRolled;
     }
@@ -102,7 +102,7 @@ public class DiceRoller implements DiceRollerInterface{
      *
      * @param diceRolled
      */
-    @Override
+    
     public void setDiceRolled(boolean diceRolled) {
         this.diceRolled = diceRolled;
     }
@@ -110,7 +110,7 @@ public class DiceRoller implements DiceRollerInterface{
     /**
      * Enables the diceRoller Button to roll the dice
      */
-    @Override
+    
     public void enableDiceRollerButton() {
         rollButton.setDisable(false);
     }
@@ -118,7 +118,7 @@ public class DiceRoller implements DiceRollerInterface{
     /**
      * @return total Dice value from
      */
-    @Override
+    
     public int getDiceTotal() {
         return diceNumber + diceNumber2;
     }

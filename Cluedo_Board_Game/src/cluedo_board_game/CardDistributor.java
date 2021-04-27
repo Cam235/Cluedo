@@ -16,7 +16,7 @@ import java.util.Random;
  * @author cwood
  * @version 1.01
  */
-public class CardDistributor implements CardDistributorInterface{
+public class CardDistributor{
     //Array lists for person, weapon and room cards
     private ArrayList<Card> pCards;
     private ArrayList<Card> wCards;
@@ -63,7 +63,7 @@ public class CardDistributor implements CardDistributorInterface{
     /**
      * Sets the envelope for the board game with one card from each of the three types
      */
-    @Override
+    
     public void setEnvelope(){
         //create new empty envelope
         envelope = new HashMap<>();
@@ -80,7 +80,7 @@ public class CardDistributor implements CardDistributorInterface{
     /**
      * Puts all the cards into one deck and shuffles them into a random order
      */
-    @Override
+    
     public void shuffleCards(){
         //add all elements from pCards, wCards and rCards to finalDeck
         finalDeck.addAll(pCards);
@@ -91,12 +91,12 @@ public class CardDistributor implements CardDistributorInterface{
         Collections.shuffle(finalDeck);
     }
     
-    @Override
+    
     public Card getMurderer(){
         return envelope.get("Person");
     }
     
-    @Override
+    
     public Card getMurderWeapon(){
         return envelope.get("Weapon");
     }
@@ -106,13 +106,13 @@ public class CardDistributor implements CardDistributorInterface{
      * 
      * @return returns murder room
      */
-    @Override
+    
     public Card getMurderRoom(){
         return envelope.get("Room");
     }
     
     /*used only for testing*/
-    @Override
+    
     public ArrayList<Card> getFinalDeck(){
         return finalDeck;
     }
@@ -122,7 +122,7 @@ public class CardDistributor implements CardDistributorInterface{
      * 
      * @param pList
      */
-    @Override
+
     public void dealCards(ArrayList<Player> pList){
         
         ArrayList<ArrayList<Card>> playerHands = new ArrayList<>(); //list of list for the hand of each player

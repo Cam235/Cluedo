@@ -22,7 +22,7 @@ import javafx.util.Pair;
  *
  * @author Anilz
  */
-public class Board implements BoardInterface {
+public class Board {
 
     //These should not be on board 
     private Random idGenerator; //used to generate unique player Ids
@@ -70,7 +70,7 @@ public class Board implements BoardInterface {
      *
      * @return board
      */
-    @Override
+    
     public Tile[][] getTileMap() {
         return tileMap;
     }
@@ -79,7 +79,7 @@ public class Board implements BoardInterface {
      *
      * @return column size of the board
      */
-    @Override
+    
     public int getColumns() {
         return columns;
     }
@@ -88,7 +88,7 @@ public class Board implements BoardInterface {
      *
      * @return row size of the board
      */
-    @Override
+    
     public int getRows() {
         return rows;
     }
@@ -136,7 +136,7 @@ public class Board implements BoardInterface {
      *
      * @return rooms
      */
-    @Override
+    
     public ArrayList<Room> getRooms() {
         return rooms;
     }
@@ -149,7 +149,7 @@ public class Board implements BoardInterface {
      * @param roomDoors
      * @return newRoom
      */
-    @Override
+    
     public Room initialiseRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
         try {
             //Creates Room
@@ -224,7 +224,7 @@ public class Board implements BoardInterface {
     /**
      * @return textual representation of board
      */
-    @Override
+    
     public String toString() {
         String s = "";
         for (int _h = 0; _h < rows; _h++) {
@@ -254,7 +254,7 @@ public class Board implements BoardInterface {
      * @param cardList a list of card Objects used to instantiate the
      * cardDistributor
      */
-    @Override
+    
     public void setCardDistributor(List<Card> cardList) {
         cardDistributor = new CardDistributor(cardList);
     }
@@ -266,7 +266,7 @@ public class Board implements BoardInterface {
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
      */
-    @Override
+    
     public void addPlayers(List<String> playerNames, List<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
@@ -290,7 +290,7 @@ public class Board implements BoardInterface {
         }
     }
 
-    @Override
+    
     public ArrayList<Player> getPlayerList() {
         return playerList;
     }
@@ -305,7 +305,7 @@ public class Board implements BoardInterface {
      * @param diceRolled
      * @param diceTotal
      */
-    @Override
+    
     public void moveCurrentPlayer(int x, int y, boolean diceRolled, int diceTotal) {
         Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
         if (diceRolled) {
@@ -337,7 +337,7 @@ public class Board implements BoardInterface {
      * order: "Miss Scarlett","Colonel
      * Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
      */
-    @Override
+    
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
         //creates array of character names in appropriate order
@@ -357,7 +357,7 @@ public class Board implements BoardInterface {
         playerList = tempList;
     }
 
-    @Override
+    
     public void initialiseWeapons() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -365,7 +365,7 @@ public class Board implements BoardInterface {
     /**
      * increments the current Player to the next playing player
      */
-    @Override
+    
     public void incrementCurrentPlayer() {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }

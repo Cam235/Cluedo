@@ -79,7 +79,7 @@ import javafx.stage.WindowEvent;
  *
  * @author Anilz
  */
-public class BoardGUI extends Application implements BoardGUIInterface {
+public class BoardGUI extends Application {
 
     //Scene for preGame player selection, and game gameScene
     private Scene preGameScene;
@@ -228,6 +228,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
                             Text playerNameDisplay = new Text(newSelectionBox.getPlayerTextField().getText());
                             VBox nameAndDisplay = new VBox(playerNameDisplay, newSelectionBox.getSelectedCharacterView());
+                            nameAndDisplay.setAlignment(Pos.CENTER);
                             characterSelectionViews.getChildren().remove(nodeIndex);
                             characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                         }
@@ -457,7 +458,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      *
      * @return
      */
-    @Override
+    
     public VBox setUpBoard() {
         gameBoxWithSettings = new VBox();
         gameBox = new HBox();
@@ -510,7 +511,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         profileAndAlertVBox.setAlignment(Pos.CENTER);
 
-        //Some Stuff
+        //Informative texts for user interface
         alertTxt = new Text();
         counterTxt = new Text();
 
@@ -963,7 +964,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * sets up handlers for key presses during game play, including human player
      * movement controls
      */
-    @Override
+    
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
             if (!board.getCurrentPlayer().isAgent()) {
@@ -1029,7 +1030,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      * Updates GUI by removing all the tokens from boardView then adding them
      * back again in their updated positions
      */
-    @Override
+    
     public void updateView() {
         for (Player p : board.getPlayerList()) {
             boardView.getChildren().remove(p.getToken());
@@ -1383,7 +1384,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
     }
 
-    @Override
+    
     public void selectCharacters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -1393,7 +1394,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
      *
      * @param pStage
      */
-    @Override
+    
     public void displayCardList(Stage pStage) {
         if (!board.getCurrentPlayer().isAgent()) {
             final Stage dialog = new Stage();

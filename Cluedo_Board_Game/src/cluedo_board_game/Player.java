@@ -12,7 +12,7 @@ import javafx.util.Pair;
  * @author cwood
  * @version 4.0
  */
-public class Player implements PlayerInterface {
+public class Player {
     
     protected int playerId; //uniquely identifies a player
     protected String name; //display name for player, doesn't have to be unique
@@ -35,22 +35,22 @@ public class Player implements PlayerInterface {
         isPlaying = true;
     }
 
-    @Override
+    
     public int getPlayerId() {
         return playerId;
     }
 
-    @Override
+    
     public String getName() {
         return name;
     }
 
-    @Override
+    
     public ArrayList<Card> getHand() {
         return hand;
     }
 
-    @Override
+    
     public void setHand(ArrayList<Card> hand) {
         this.hand = hand;
     }
@@ -63,12 +63,12 @@ public class Player implements PlayerInterface {
         this.token = token;
     }
 
-    @Override
+    
     public void moveToken(Tile tile) {
         throw new UnsupportedOperationException("Unsupported Player class for move token");
     }
     
-    @Override
+    
     public Boolean isAgent(){
         return null;
     }

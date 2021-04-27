@@ -12,7 +12,7 @@ import java.util.Random;
  *
  * @author Anilz
  */
-public class Room implements RoomInterface {
+public class Room{
 
     private String roomName;
     private ArrayList<Tile> roomSpace; //for inside of room
@@ -35,7 +35,7 @@ public class Room implements RoomInterface {
      *
      * @return roomName
      */
-    @Override
+    
     public String getRoomName() {
         return roomName;
     }
@@ -45,7 +45,7 @@ public class Room implements RoomInterface {
      *
      * @return roomSpace
      */
-    @Override
+    
     public ArrayList<Tile> getRoomSpace() {
         return roomSpace;
     }
@@ -55,7 +55,7 @@ public class Room implements RoomInterface {
      *
      * @return roomDoors
      */
-    @Override
+    
     public ArrayList<Tile> getRoomDoors() {
         return roomDoors;
     }
@@ -95,7 +95,7 @@ public class Room implements RoomInterface {
      * @param tile
      * @return
      */
-    @Override
+    
     public boolean checkTileInRoom(Tile tile) {
         return roomSpace.contains(tile);
     }
@@ -106,7 +106,7 @@ public class Room implements RoomInterface {
      *
      * @param roomDoor
      */
-    @Override
+    
     public void addRoomDoor(Tile roomDoor) {
         //firstly if the tile is wall,initiate for loop to see if the wall covers the correct room
         if (roomDoor.isWall()) {

@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
  * @author cwood 
  * @version 1.0
  */
-public class Card implements CardInterface{
+public class Card{
     
     private CardType type; //determines card type
     private String name;   //display name of card
@@ -29,7 +29,7 @@ public class Card implements CardInterface{
         name = cardName;
     }
     
-    @Override
+    
     public String getName(){
         return name;
     }
@@ -37,12 +37,12 @@ public class Card implements CardInterface{
     /**
      * @param newName 
      */
-    @Override
+    
     public void setName(String newName){
         name = newName;
     }
     
-    @Override
+    
     public CardType getType(){
         return type;
     }
@@ -50,7 +50,7 @@ public class Card implements CardInterface{
     /**
      * @param newType 
      */
-    @Override
+    
     public void setType(CardType newType){
         type = newType;
     }

@@ -18,7 +18,7 @@ import javafx.scene.shape.StrokeType;
  * @author Anilz
  * @version 1.0
  */
-public class Token extends Circle implements TokenInterface {
+public class Token extends Circle {
 
     private String name; // Token name
     private Tile tokenLocation = null; //Token location , initially set to null
@@ -43,7 +43,7 @@ public class Token extends Circle implements TokenInterface {
      * Gets the name of token
      * @return name
      */
-    @Override
+    
     public String getName() {
         return name;
     }
@@ -52,7 +52,7 @@ public class Token extends Circle implements TokenInterface {
      * Sets the name of token
      * @param name
      */
-    @Override
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -61,7 +61,7 @@ public class Token extends Circle implements TokenInterface {
      * Gets tokens location
      * @return tokenLocation
      */
-    @Override
+    
     public Tile getTokenLocation() {
         return tokenLocation;
     }
@@ -70,7 +70,7 @@ public class Token extends Circle implements TokenInterface {
      * Sets Token's location on selected tile
      * @param tokenLocation
      */
-    @Override
+    
     public void setTokenLocation(Tile tokenLocation) {
         this.tokenLocation = tokenLocation;
         tokenLocation.setOccupied(true);
