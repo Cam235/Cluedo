@@ -1220,12 +1220,12 @@ public class BoardGUI extends Application {
                             @Override
                             public void handle(ActionEvent event) {
                                 //if characterSelectionCombobox values are not empty allow suggestion
-                                if (suggestionPanel.getSuggestedSuspect() != null && suggestionPanel.getSuggestedWeapon() != null) {
+                                if (suggestionPanel.getSuggestedSuspectName() != null && suggestionPanel.getSuggestedWeaponName() != null) {
                                     //Close the suggestionStage
                                     suggestionStage.close();
                                     //calls private method to start submission suggestion process 
-                                    handleSuggestion(suggestionPanel.getSuggestedSuspect(), board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(),
-                                            suggestionPanel.getSuggestedWeapon());
+                                    handleSuggestion(suggestionPanel.getSuggestedSuspectName(), board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(),
+                                            suggestionPanel.getSuggestedWeaponName());
                                 } else {
                                     alertTxt.setText("Please fill all boxes to make suggestion!");
                                 }
