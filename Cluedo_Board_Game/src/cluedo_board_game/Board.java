@@ -713,7 +713,14 @@ public class Board implements BoardInterface {
         }
         return r;
     }
-
+    
+    /**
+     * given a player p, returns whether the player is trapped by checking its adjacent
+     * tiles to see if there is one that the player can move to
+     * 
+     * @param p
+     * @return boolean for whether player is trapped
+     */
     private boolean isPlayerTrapped(Player p) {
         boolean trapped = true;
         int x = p.getToken().getTokenLocation().getColIndex();
