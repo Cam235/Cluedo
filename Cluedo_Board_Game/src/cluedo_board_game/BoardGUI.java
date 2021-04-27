@@ -47,6 +47,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
@@ -152,7 +153,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     MenuBar menuBar;
     Menu menu;
     MenuItem quitItem;
-    MenuItem newGameItem; 
+    MenuItem newGameItem;
     MenuItem restartItem;
 
     public VBox createPreGameContent() {
@@ -504,7 +505,6 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
 
-
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
         profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -703,18 +703,17 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gameBox.setAlignment(Pos.TOP_CENTER);
 
         //Create GameSettings MenuBAr
-        
-        menu = new Menu("Game Settings!");
+        menu = new Menu("game settings");
         quitItem = new MenuItem("Quit");
         newGameItem = new MenuItem("Start New Game");
         restartItem = new MenuItem("Restart");
-        menu.getItems().addAll(quitItem,newGameItem,restartItem);
+        menu.getItems().addAll(quitItem, newGameItem, restartItem);
         MenuBar menuBar = new MenuBar(menu);
         //Actions on menuItems
-        quitItem.setOnAction(e->Platform.exit());
-        newGameItem.setOnAction(e->startNewGame());
-        restartItem.setOnAction(e->playGame(primaryStage));
- 
+        quitItem.setOnAction(e -> Platform.exit());
+        newGameItem.setOnAction(e -> startNewGame());
+        restartItem.setOnAction(e -> playGame(primaryStage));
+
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
 
@@ -791,7 +790,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                             board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
                             alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
                             postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
-                                    board.getPlayerList().get(j).getName(), characterName, weaponName, roomName);
+                                    board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
                             postSuggestionAlert.showAndWait();
                         }//else show an alert to the person for which card is shown
                         else {
@@ -1188,10 +1187,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 }
             }
         });
+
+        suggestionBtn.setOnMouseReleased((MouseEvent event) -> {
+            if (board.getCurrentPlayer().isAgent()) {
+                alertTxt.setText("Can't suggest during agent's turn!");
+            }
+        });
+
         suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
                 //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
                     if (!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())) {
@@ -1228,17 +1233,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         alertTxt.setText("Player cannot make successive suggestions in the same room");
                     }
                 } else {
-                    alertTxt.setText("Player cannot make suggestion outside of rooms");
+                    if (!board.getCurrentPlayer().isAgent()) {
+                        alertTxt.setText("Player cannot make suggestion outside of rooms");
+                    }
                 }
             }
         }
         );
+        accusationBtn.setOnMouseReleased((MouseEvent event) -> {
+            if (board.getCurrentPlayer().isAgent()) {
+                alertTxt.setText("Can't accuse during agent's turn!");
+            }
+        });
         accusationBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //SET ALERT AND COUNTER texts TO EMPTY TEXTS
-                alertTxt.setText("");
-                counterTxt.setText("");
                 //Get card distributor
                 CardDistributor cardDistributor = board.getCardDistributor();
                 if (!board.getCurrentPlayer().isAgent()) {
@@ -1417,10 +1426,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
-        detectiveCardPanel.setDetectiveCard(board.getCurrentPlayer().getDetectiveCard());
+        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveCard());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Prints the data of players first
-        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveCard());
+        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveChecklist());
         System.out.println("Players current notes are : " + detectiveCardPanel.getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
@@ -1429,7 +1438,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
             //Assigns detective Card and Notes values as players detective Card and notes
-            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
             board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
         });
 
@@ -1446,7 +1455,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
                 detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Prints for cvalidation
                 System.out.println(board.getCurrentPlayer().getDetectiveCard());

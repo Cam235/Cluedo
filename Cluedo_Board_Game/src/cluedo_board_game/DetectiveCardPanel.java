@@ -7,45 +7,44 @@ package cluedo_board_game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import javafx.stage.Stage;
-import javafx.util.Pair;
-
 /**
- *
+ * For the creation of detective card where player can take notes and select suspect,weapon,and room items 
+ * to help finding murder cards 
  * @author Anilz
+ * @version 1.0
  */
 public class DetectiveCardPanel {
 
+    //String arrays of suspect ,weapon and room names
     private String[] suspectNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
     private String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
     private String[] roomNames = {"Lounge", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
-    //Collection of HBoxes including itemLabels and corresponding ChoiceBoxes
+
+    //Collection of HBoxes including itemLabels and corresponding ChoiceBoxes,and hashmap representations
     private ArrayList<HBox> boxesAndLabels = new ArrayList<HBox>();
+    private HashMap<String, Boolean> detectiveChecklist = new HashMap<String, Boolean>();
 
-    //Hashmap and notes store
-    private HashMap<String, Boolean> detectiveCard = new HashMap<String, Boolean>();
+    //Detective notes field and text area
     private String detectiveNotes;
-
     private TextArea detectiveNotesTextArea;
+    
+    //Save button
     private Button saveButton;
 
     /**
-     *
-     * @return the content of detectiveCheckList
+     * Create content of detective Card
+     * @return detectiveCheckList
      */
     public Parent createContent() {
         //VBox to contain suspect names and corresponding boxes
@@ -84,8 +83,6 @@ public class DetectiveCardPanel {
             HBox roomCheckListLine = new HBox(roomCheckBox, roomLabel);
             //Add the HBox to defined arrayList
             boxesAndLabels.add(roomCheckListLine);
-
-            //detectiveCard.put(roomName, roomCheckBox.isSelected());
             //Set Spacings between label and checkbox 
             roomCheckListLine.setSpacing(10);
             //Finally add HBox into VBox
@@ -106,16 +103,14 @@ public class DetectiveCardPanel {
             HBox weaponCheckListLine = new HBox(weaponCheckBox, weaponLabel);
             //Add the HBox to defined arrayList
             boxesAndLabels.add(weaponCheckListLine);
-
-            //detectiveCard.put(weaponName, weaponCheckBox.isSelected());
             //Set Spacings between label and checkbox 
             weaponCheckListLine.setSpacing(10);
             //Finally add HBox into VBox
             weaponList.getChildren().add(weaponCheckListLine);
         }
-        //Final VBox is created for complete checklist
+        
+        //Final VBox is created for complete checklist including suspectList,roomList and weaponList
         VBox completeCheckList = new VBox(suspectList, roomList, weaponList);
-
         //A text area is created for a player to take notes
         detectiveNotesTextArea = new TextArea(detectiveNotes);
         detectiveNotesTextArea.setPromptText("Case Notes...");
@@ -124,41 +119,42 @@ public class DetectiveCardPanel {
         Pane detectiveNotesPane = new Pane(detectiveNotesTextArea);
 
         saveButton = new Button("Save CheckList!");
-        //Finally checklist and detective note area is combined into HBox
-        HBox detectiveCheckList = new HBox(completeCheckList, detectiveNotesPane, saveButton);
+        //Finally checklist and detective note area is combined into HBox detective checklist
+        HBox detectiveCard = new HBox(completeCheckList, detectiveNotesPane, saveButton);
 
-        return detectiveCheckList;
+        return detectiveCard;
     }
 
+    
     /**
-     * selects / unselects the label
+     * Selects / deselects the box corresponding to label,
+     * therefore saving the data in HashMap
      *
      * @param itemName
      */
     private boolean toggleSelect(String itemName) {
-        detectiveCard.replace(itemName, !detectiveCard.get(itemName));
-        return !detectiveCard.get(itemName);
+        detectiveChecklist.replace(itemName, !detectiveChecklist.get(itemName));
+        return !detectiveChecklist.get(itemName);
     }
 
+    
     /**
      * Returns updated detective card when a checkbox is selected
      *
-     * @return detectiveCard
+     * @return detectiveChecklist
      */
     public HashMap getCardUpdates() {
-
         for (HBox boxAndName : boxesAndLabels) {
             // child 0 is selection box and child 1 is label
             CheckBox selectionBox = (CheckBox) boxAndName.getChildren().get(0);
             Label selectionLabel = (Label) boxAndName.getChildren().get(1);
             //if value not selected not select , if selected select
-            if (detectiveCard.get(selectionLabel.getText()) == Boolean.TRUE) {
+            if (detectiveChecklist.get(selectionLabel.getText()) == Boolean.TRUE) {
                 selectionBox.setSelected(true);
             } else {
                 selectionBox.setSelected(false);
             }
             //On click a print is provided
-
             selectionBox.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -168,34 +164,55 @@ public class DetectiveCardPanel {
             });
 
         }
-        //detectiveNotes = detectiveNotesTextArea.getText();
-        return detectiveCard;
+        return detectiveChecklist;
     }
 
-    public HashMap<String, Boolean> getDetectiveCard() {
-        return detectiveCard;
+    /**
+     * Gets the detectiveChecklist
+     * @return detectiveChecklist
+     */
+    public HashMap<String, Boolean> getDetectiveChecklist() {
+        return detectiveChecklist;
     }
 
-    public void setDetectiveCard(HashMap<String, Boolean> detectiveCard) {
-        this.detectiveCard = detectiveCard;
+    /**
+     * Sets the detective card
+     * @param detectiveChecklist 
+     */
+    public void setDetectiveChecklist(HashMap<String, Boolean> detectiveChecklist) {
+        this.detectiveChecklist = detectiveChecklist;
     }
 
+    /**
+     * Gets detective notes
+     * @return detectiveNotes
+     */
     public String getDetectiveNotes() {
         return detectiveNotes;
     }
 
+    /**
+     * Sets detective notes
+     * @param detectiveNotes 
+     */
     public void setDetectiveNotes(String detectiveNotes) {
         this.detectiveNotes = detectiveNotes;
     }
 
+    /**
+     * Gets Text area
+     * @return detectiveNotesTextArea
+     */
     public TextArea getDetectiveNotesTextArea() {
         return detectiveNotesTextArea;
     }
 
+    /**
+     * Gets the save button
+     * @return saveButton
+     */
     public Button getSaveButton() {
         return saveButton;
     }
 
-    
-    
 }
