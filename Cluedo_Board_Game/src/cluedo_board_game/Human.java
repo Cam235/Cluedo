@@ -14,7 +14,7 @@ package cluedo_board_game;
 public class Human extends Player{
     /**
      * Constructor for human player
-     * Creates a human player and assigns a token to it
+     * Creates a human player and assigns specified token to it
      * @param playerId
      * @param name 
      */
@@ -33,7 +33,7 @@ public class Human extends Player{
     }
     
     /**
-     * A method to move token to specified tile
+     * A method to move player token to specified tile
      * @param tile 
      */
     @Override
