@@ -149,11 +149,18 @@ public class SuggestionPanel {
         return postAgentSuggestionAlert;
     }
 
-    public Alert createCardNotFoundAlert() {
+    public Alert createCardNotFoundAlert(boolean isAgent, String suggestingPlayer, 
+            String suggestedCharacter, String suggestedRoom, String suggestedWeapon) {
         Alert NoPlayerHaveCardAlert = new Alert(Alert.AlertType.ERROR);
         NoPlayerHaveCardAlert.setHeaderText("Other players do not have suggested cards");
         NoPlayerHaveCardAlert.setTitle("Cards not found");
-        NoPlayerHaveCardAlert.setContentText("Please make accusation or end your turn!");
+        if(isAgent){
+            NoPlayerHaveCardAlert.setContentText("Agent " + suggestingPlayer + " suggested it was "+ suggestedCharacter + " in the \n" + 
+                suggestedRoom + " with a " + suggestedWeapon + ", no one has a card to show");
+        }
+        else{
+            NoPlayerHaveCardAlert.setContentText("Please make accusation or end your turn!");
+        }
         return NoPlayerHaveCardAlert;
         
     }

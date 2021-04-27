@@ -827,7 +827,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         }
         //if no other player has a suggested card, give a message
         if (!suggestedCardFound) {
-            Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert();
+            Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert(board.getCurrentPlayer().isAgent(), 
+                    board.getCurrentPlayer().getName(), characterName, roomName, weaponName);
             noPlayerHasCardAlert.showAndWait();
         }
     }
