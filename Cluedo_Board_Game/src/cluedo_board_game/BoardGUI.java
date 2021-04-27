@@ -767,6 +767,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     if (board.getPlayerList().get(j).isAgent()) {
                         //if an agent is showing an agent a card do it in secret
                         if(board.getCurrentPlayer().isAgent()){
+                            suggestionPanel = new SuggestionPanel();
                             board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
                             alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
                             postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
@@ -1286,9 +1287,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         //runs the handleAgentMove() on the Application thread
                         Platform.runLater(updater);
                     }
-                    endTurnBtn.setDisable(false);
-                    //automatically end turn
-                    endTurnBtn.fire();
+                    Runnable endTrunRunnalble = () -> {
+                        endTurnBtn.setDisable(false);
+                        //automatically end turn
+                        endTurnBtn.fire();
+                    };
+                    Platform.runLater(endTrunRunnalble);
+                    
                 });
                 thread.start();
                 break;
