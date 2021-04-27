@@ -653,7 +653,7 @@ public class Board {
                 for (String r : roomNames) {
                     currDetectCard.put(r, Boolean.FALSE);
                 }
-                p.setDetectiveCard(currDetectCard);
+                p.setDetectiveChecklist(currDetectCard);
                 p.setDetectiveNotes(currString);
                 
                 if(p.isAgent()){

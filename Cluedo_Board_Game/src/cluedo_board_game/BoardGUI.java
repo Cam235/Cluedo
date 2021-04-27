@@ -788,7 +788,7 @@ public class BoardGUI extends Application {
                         //if an agent is showing an agent a card do it in secret
                         if (board.getCurrentPlayer().isAgent()) {
                             suggestionPanel = new SuggestionPanel();
-                            board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
+                            board.getCurrentPlayer().updateDetectiveChecklist(foundCards.get(0), true);
                             alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
                             postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
                                     board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
@@ -809,7 +809,7 @@ public class BoardGUI extends Application {
                                 validItemChosen = true;
                                 //if a human is showing an agent a card do it in secret
                                 if (board.getCurrentPlayer().isAgent()) {
-                                    board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
+                                    board.getCurrentPlayer().updateDetectiveChecklist(foundCards.get(0), true);
                                     alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
                                     postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
                                             board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
@@ -1448,7 +1448,7 @@ public class BoardGUI extends Application {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
-        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveCard());
+        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveChecklist());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Prints the data of players first
         System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveChecklist());
@@ -1460,7 +1460,7 @@ public class BoardGUI extends Application {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
             //Assigns detective Card and Notes values as players detective Card and notes
-            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
+            board.getCurrentPlayer().setDetectiveChecklist(detectiveCardPanel.getDetectiveChecklist());
             board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
         });
 
@@ -1477,10 +1477,10 @@ public class BoardGUI extends Application {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
                 detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
+                board.getCurrentPlayer().setDetectiveChecklist(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Prints for cvalidation
-                System.out.println(board.getCurrentPlayer().getDetectiveCard());
+                System.out.println(board.getCurrentPlayer().getDetectiveChecklist());
                 System.out.println(board.getCurrentPlayer().getDetectiveNotes());
                 //Close string
                 stage.hide();
