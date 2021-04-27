@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cluedo_board_game;
 
 import java.util.ArrayList;
@@ -12,187 +7,190 @@ import java.util.Random;
  *
  * @author Anilz
  */
-public class Room{
+public class Room {
 
-    private String roomName;
-    private ArrayList<Tile> roomSpace; //for inside of room
-    private ArrayList<Tile> roomDoors = new ArrayList<Tile>(); // roomdoors
-    private ArrayList<Weapon> roomWeapons = new ArrayList<Weapon>();
-    private Room passageExit;
+    private String name; // room Name
+    private ArrayList<Tile> roomSpace; //List of tiles which constitutes room space
+    private ArrayList<Tile> roomDoors = new ArrayList<Tile>(); // room doors
+    private ArrayList<Weapon> roomWeapons = new ArrayList<Weapon>(); // Weapons in room
+    private Room passageExit; //Passage exit to transport other linked room
 
     /**
-     * Constructor for room taking roomName and roomSpace
+     * Constructor for room taking name and roomSpace
      *
      * @param roomName
      * @param roomSpace
      */
     public Room(String roomName, ArrayList<Tile> roomSpace) {
-        this.roomName = roomName;
+        this.name = roomName;
         this.roomSpace = roomSpace;
     }
 
     /**
+     * Gets name of room
      *
-     * @return roomName
+     * @return name
      */
-    
-    public String getRoomName() {
-        return roomName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * returns list of tiles that creates the room space
+     * Gets list of tiles that creates the room space
      *
      * @return roomSpace
      */
-    
     public ArrayList<Tile> getRoomSpace() {
         return roomSpace;
     }
 
     /**
-     * returns doors of room
+     * Gets room doors
      *
      * @return roomDoors
      */
-    
     public ArrayList<Tile> getRoomDoors() {
         return roomDoors;
     }
 
     /**
-     * Returns roomWeapons
+     * Gets weapons currently in the room
      *
      * @return roomWeapon
-     *
-     * public Weapon getRoomWeapon() { return roomWeapon; }
-    *
      */
     public ArrayList<Weapon> getRoomWeapons() {
         return roomWeapons;
     }
 
     /**
-     * Places selected weapon on random tile within roomSpace
+     * Places selected weapon on random tile within roomSpace ,which is not
+     * occupied
      *
      * @param roomWeapon
      */
     public void addRoomWeapon(Weapon roomWeapon) {
-        //Sets weapon to random tile in roomSpace
         Random r = new Random();
         Tile weaponTile = roomSpace.get(r.nextInt(roomSpace.size()));
         if (!weaponTile.isOccupied()) {
             roomWeapons.add(roomWeapon);
             roomWeapon.setWeaponLocation(weaponTile);
-        }else{
+        } else {
             addRoomWeapon(roomWeapon);
         }
     }
 
     /**
-     * Checks tile if in room
+     * Checks tile if it is in room
      *
      * @param tile
      * @return
      */
-    
     public boolean checkTileInRoom(Tile tile) {
         return roomSpace.contains(tile);
     }
 
     /**
-     * Adds door to rooms, The door must be part of wall tiles that covers
-     * roomspace The tile will be set to door, and tile will no longer be wall
+     * Adds door to room, The door must be part of wall tiles that covers
+     * roomspace. Once the tile is set to be door, tile will no longer be wall
      *
      * @param roomDoor
      */
-    
     public void addRoomDoor(Tile roomDoor) {
         //firstly if the tile is wall,initiate for loop to see if the wall covers the correct room
         if (roomDoor.isWall()) {
             for (int i = 0; i < roomSpace.size(); i++) {
+                // Do the for loop,to check if roomDoor tile is part of the walls surrounding the current room
                 if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    if(!roomDoors.contains(roomDoor)){
+                    if (!roomDoors.contains(roomDoor)) {
                         roomDoors.add(roomDoor);
                     }
                 } else {
-                    //System.out.println("Door is not near this tile of "+ roomName);
+                    //System.out.println("Door is not near this tile of "+ name);
                 }
 
             }
         }
 
     }
-    
+
     /**
-     * returns all the non-occupied tiles in roomSpace
-     * @return arrayList of non occupied tiles
+     * Gets all the non-occupied tiles in roomSpace
+     *
+     * @return freeSpace
      */
     public ArrayList<Tile> getFreeSpace() {
         ArrayList<Tile> freeSpace = new ArrayList<>();
-        for(Tile t: roomSpace){
-            if(!t.isOccupied()){
+        for (Tile t : roomSpace) {
+            if (!t.isOccupied()) {
                 freeSpace.add(t);
             }
         }
         return freeSpace;
     }
 
+    /**
+     * Gets the room which passage transfers(exits) to
+     * @return passageExit
+     */
     public Room getPassageExit() {
         return passageExit;
     }
 
+    /**
+     * Sets the room which passage transfers(exists) to
+     * @param passageExit 
+     */
     public void setPassageExit(Room passageExit) {
         this.passageExit = passageExit;
     }
-    
+
 }

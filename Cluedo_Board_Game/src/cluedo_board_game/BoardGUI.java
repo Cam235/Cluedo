@@ -526,7 +526,7 @@ public class BoardGUI extends Application {
         Collections.shuffle(board.getWeapons());
         Collections.shuffle(board.getRooms());
         for (int i = 0; i < board.getWeapons().size(); i++) {
-            if (!board.getRooms().get(i).getRoomName().equals("Staircase")) {
+            if (!board.getRooms().get(i).getName().equals("Staircase")) {
                 // Puts the weapons into rooms
                 board.moveWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
                 //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
@@ -1201,7 +1201,7 @@ public class BoardGUI extends Application {
             public void handle(ActionEvent event) {
                 //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
-                    if (!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName())) {
+                    if (!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getName())) {
                         //Create new Stage for popup
                         suggestionStage = new Stage();
                         suggestionStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
@@ -1210,7 +1210,7 @@ public class BoardGUI extends Application {
                         //Create new suggestion panel 
                         suggestionPanel = new SuggestionPanel();
                         //gets name of current players room as parameter to create content of suggestionPanel
-                        String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName();
+                        String suggestionRoomName = board.getRoomOfPlayer(board.getCurrentPlayer()).getName();
                         //Put suggested panel content into new postSuggestionScene and shows with popup suggestionStage
                         Scene suggestionScene = new Scene(suggestionPanel.createSuggestionContent(suggestionRoomName, board.getCurrentPlayer().getName()));
                         suggestionStage.setScene(suggestionScene);
@@ -1224,7 +1224,7 @@ public class BoardGUI extends Application {
                                     //Close the suggestionStage
                                     suggestionStage.close();
                                     //calls private method to start submission suggestion process 
-                                    handleSuggestion(suggestionPanel.getSuggestedSuspectName(), board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(),
+                                    handleSuggestion(suggestionPanel.getSuggestedSuspectName(), board.getRoomOfPlayer(board.getCurrentPlayer()).getName(),
                                             suggestionPanel.getSuggestedWeaponName());
                                 } else {
                                     alertTxt.setText("Please fill all boxes to make suggestion!");
@@ -1340,7 +1340,7 @@ public class BoardGUI extends Application {
 
             case "Suggest":
                 String[] agentSuggestion = board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames);
-                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(), agentSuggestion[1]);
+                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getName(), agentSuggestion[1]);
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();
@@ -1536,7 +1536,7 @@ public class BoardGUI extends Application {
                 board.setCounter(diceRoller.getDiceTotal());
                 updateView();
                 updateMovementAlerts();
-                alertTxt.setText(board.getCurrentPlayer().getName() + " took passage to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getRoomName());
+                alertTxt.setText(board.getCurrentPlayer().getName() + " took passage to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getName());
                 passageBtn.setVisible(false);
             }
         });
@@ -1545,7 +1545,7 @@ public class BoardGUI extends Application {
     private void enablePassageBtn() {
         Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
         if (currentPlayerRoom.getPassageExit() != null) {
-            passageBtn.setText("Move to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getRoomName());
+            passageBtn.setText("Move to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getName());
             passageBtn.setVisible(true);
         }
     }

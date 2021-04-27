@@ -320,7 +320,7 @@ public class Board {
                         counter++;
                     }
                     if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
-                        alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
+                        alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getName();
                         counter = diceTotal;
                     }
                 }
@@ -609,7 +609,7 @@ public class Board {
                                 counter++;
                             }
                             if ((getRoomOfPlayer(getCurrentPlayer())) != null) {
-                                alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getRoomName();
+                                alertMsg = getCurrentPlayer().getName() + " Is In " + getRoomOfPlayer(getCurrentPlayer()).getName();
                                 counter = diceTotal;
                             }
                         } else {
@@ -685,7 +685,7 @@ public class Board {
                 return "Move";
             }
         }
-        else if(currentPlayerRoom.getRoomName().equals(currentPlayer.getMostRecentlySuggestedRoom())){
+        else if(currentPlayerRoom.getName().equals(currentPlayer.getMostRecentlySuggestedRoom())){
             //move token
             return "Move";
         }
@@ -705,7 +705,7 @@ public class Board {
         boolean found = false;
         Room r = null;
         while(!found && i < rooms.size()){
-            if(rooms.get(i).getRoomName().equals(s)){
+            if(rooms.get(i).getName().equals(s)){
                 r = rooms.get(i);
                 found = true;
             }
