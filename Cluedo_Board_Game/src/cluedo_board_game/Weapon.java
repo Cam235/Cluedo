@@ -10,17 +10,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
- *
+ * The weapon class which are placed in rooms to indicate previous suggestions 
  * @author Anilz
  */
 public class Weapon extends Circle {
 
-    private String name; // Name
+    private String name; // Name of weapon
     private Tile weaponLocation; // Tile Position of weapon
-    private Image weaponImage; // Images of weapon
+    private Image weaponImage; // Image of weapon
 
     /**
-     * constructor for weapon, does not place on any tile yet
+     * Constructor for weapon
+     * Creates weapon but does not place in board yet
      *
      * @param name
      */
@@ -32,9 +33,8 @@ public class Weapon extends Circle {
     }
 
     /**
-     * return name
-     *
-     * @return
+     * Gets name of weapon
+     * @return name
      */
     public String getName() {
         return name;
@@ -42,8 +42,7 @@ public class Weapon extends Circle {
     }
 
     /**
-     * return weapon Location
-     *
+     * Gets the location of weapon
      * @return
      */
     public Tile getWeaponLocation() {
@@ -51,33 +50,30 @@ public class Weapon extends Circle {
     }
 
     /**
-     * Places the weapon on selected tile
-     *
-     * @param newWeaponLocation
+     * Places the weapon on selected tile, and make the tile occupied
+     * @param newWeaponLocation tile in which weapon is put
      */
     public void setWeaponLocation(Tile newWeaponLocation) {
-        //if its not null , set the previous position to null
+        //Removes weapon from previous position if it is not null
         if (weaponLocation != null) {
             weaponLocation.setOccupied(false);
         }
-        //new location is set to weapon location
+        //Puts weapon in new position
         weaponLocation = newWeaponLocation;
         //set the the tile to be occupied
         weaponLocation.setOccupied(true);
     }
 
     /**
-     * returns weapon image
-     *
-     * @return
+     * Gets weapon Image
+     * @return weaponImage
      */
     public Image getWeaponImage() {
         return weaponImage;
     }
 
     /**
-     * sets the weapon Image
-     *
+     * Sets the weapon Image
      * @param weaponImage
      */
     public void setWeaponImage(Image weaponImage) {

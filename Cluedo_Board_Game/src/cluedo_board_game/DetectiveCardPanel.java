@@ -139,7 +139,7 @@ public class DetectiveCardPanel {
 
     
     /**
-     * Returns updated detective card when a checkbox is selected
+     * Returns updated detective checklist when a checkbox is selected
      *
      * @return detectiveChecklist
      */
