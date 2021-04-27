@@ -126,17 +126,23 @@ public class Agent extends Player{
     @Override
     public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
         String[] suggestion = new String[2];
+        ArrayList<String> unseenCharacters = new ArrayList<>();
+        ArrayList<String> unseenWeapons = new ArrayList<>();
         getUnseenCards().forEach((s) -> {
             if(Arrays.asList(characters).contains(s)){
-                suggestion[0] = s;
+                unseenCharacters.add(s);
             }
             else if(Arrays.asList(weapons).contains(s)){
-                suggestion[1] = s;
+                unseenWeapons.add(s);
             }
             else if(!Arrays.asList(rooms).contains(s)){
                 System.err.println("Agent " + name + " has an invalid detective card");
             }
         });
+        int randCharacterIndex = (int)((Math.random()*unseenCharacters.size()));
+        int randWeapnIndex = (int)((Math.random()*unseenWeapons.size()));
+        suggestion[0] = unseenCharacters.remove(randCharacterIndex);
+        suggestion[1] = unseenWeapons.remove(randWeapnIndex);
         return suggestion;
     }
 }
