@@ -703,7 +703,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
         gameBox.setAlignment(Pos.TOP_CENTER);
 
         //Create GameSettings MenuBAr
-        menu = new Menu("game settings");
+        menu = new Menu("Game Settings");
         quitItem = new MenuItem("Quit");
         newGameItem = new MenuItem("Start New Game");
         restartItem = new MenuItem("Restart");
@@ -1339,6 +1339,21 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             case "Suggest":
                 String[] agentSuggestion = board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames);
                 handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(), agentSuggestion[1]);
+                endTurnBtn.setDisable(false);
+                //automatically end turn
+                endTurnBtn.fire();
+                break;
+                
+            case "Skip":
+                String currentAgentName = board.getCurrentPlayer().getName();
+                endTurnBtn.setDisable(false);
+                //automatically end turn
+                endTurnBtn.fire();
+                alertTxt.setText("Agent " + currentAgentName + " skips their turn!");
+                break;
+            
+            default:
+                System.err.println("Unsupported agent trun requested, skipping turn");
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();
