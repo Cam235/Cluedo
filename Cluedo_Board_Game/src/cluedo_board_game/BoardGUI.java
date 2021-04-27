@@ -144,18 +144,16 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     Image currentPlayerImage;
     ImageView currentPlayerImageView;
     Text currentPlayerText;
-    
+
     //Adding MenuBar
-    MenuBar menuBar =new MenuBar();
-    Menu menu =new Menu("Game Settings!");
-    MenuItem quitItem =new MenuItem("Quit");
-    MenuItem newGameItem= new MenuItem("Start New Game");
+    MenuBar menuBar = new MenuBar();
+    Menu menu = new Menu("Game Settings!");
+    MenuItem quitItem = new MenuItem("Quit");
+    MenuItem newGameItem = new MenuItem("Start New Game");
     MenuItem restartItem = new MenuItem("Restart");
-    
-    
 
     public VBox createPreGameContent() {
-        
+
         VBox preGameBox = new VBox();
         preGameBox.setAlignment(Pos.TOP_CENTER);
         preGameBox.setPrefSize(650, 280);
@@ -501,8 +499,8 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
-        
-        menu.getItems().addAll(quitItem,newGameItem,restartItem);
+
+        menu.getItems().addAll(quitItem, newGameItem, restartItem);
         menuBar.getMenus().add(menu);
 
         profileAndAlertVBox = new VBox();
@@ -708,7 +706,9 @@ public class BoardGUI extends Application implements BoardGUIInterface {
     }
 
     /**
-     * handles a suggestion with a given suspected character, weapon and rooms name
+     * handles a suggestion with a given suspected character, weapon and rooms
+     * name
+     *
      * @param characterName
      * @param roomName
      * @param weaponName
@@ -766,50 +766,60 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                     //if responding player is agent, shows first found card
                     if (board.getPlayerList().get(j).isAgent()) {
                         //if an agent is showing an agent a card do it in secret
-                        if(board.getCurrentPlayer().isAgent()){
+
+                        if (board.getCurrentPlayer().isAgent()) {
+
                             suggestionPanel = new SuggestionPanel();
-                            board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
-                            alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
-                            postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
-                                    board.getPlayerList().get(j).getName(), characterName, weaponName, roomName);
-                            postSuggestionAlert.showAndWait();
-                        }//else show an alert to the person for which card is shown
-                        else{
-                            postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
-                            postSuggestionAlert.showAndWait();
-                        }
-                    } //otherwise make the player choose a card to show
-                    else {
-                        suggestionStage.close();
-                        ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
-                        boolean validItemChosen = false;
-                        while (!validItemChosen) {
-                            responderChoiceBox.showAndWait();
-                            if (!responderChoiceBox.getSelectedItem().equals("")) {
-                                validItemChosen = true;
-                                //if a human is showing an agent a card do it in secret
+
+                            if (board.getCurrentPlayer().isAgent()) {
+
                                 if (board.getCurrentPlayer().isAgent()) {
+                                    suggestionPanel = new SuggestionPanel();
+
                                     board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
                                     alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
                                     postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
-                                            board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
+                                            board.getPlayerList().get(j).getName(), characterName, weaponName, roomName);
                                     postSuggestionAlert.showAndWait();
-                                }//else show an alert to the person for which card is shown 
+                                }//else show an alert to the person for which card is shown
                                 else {
-                                    postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
+                                    postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), foundCards.get(0));
                                     postSuggestionAlert.showAndWait();
                                 }
+                            } //otherwise make the player choose a card to show
+                            else {
+                                suggestionStage.close();
+                                ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
+                                boolean validItemChosen = false;
+                                while (!validItemChosen) {
+                                    responderChoiceBox.showAndWait();
+                                    if (!responderChoiceBox.getSelectedItem().equals("")) {
+                                        validItemChosen = true;
+                                        //if a human is showing an agent a card do it in secret
+                                        if (board.getCurrentPlayer().isAgent()) {
+                                            board.getCurrentPlayer().updateDetectiveCard(foundCards.get(0), true);
+                                            alertTxt.setText(alertTxt.getText() + " " + board.getPlayerList().get(j).getName() + " shows them a card");
+                                            postSuggestionAlert = suggestionPanel.createPostAgentSuggestionAlert(board.getCurrentPlayer().getName(),
+                                                    board.getPlayerList().get(j).getName(), characterName, roomName, weaponName);
+                                            postSuggestionAlert.showAndWait();
+                                        }//else show an alert to the person for which card is shown 
+                                        else {
+                                            postSuggestionAlert = suggestionPanel.createPostHumanSuggestionAlert(board.getPlayerList().get(j).getName(), (String) responderChoiceBox.getSelectedItem());
+                                            postSuggestionAlert.showAndWait();
+                                        }
+                                    }
+                                }
                             }
+                            break;
                         }
                     }
-                    break;
+                }
+                //if no other player has a suggested card, give a message
+                if (!suggestedCardFound) {
+                    Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert();
+                    noPlayerHasCardAlert.showAndWait();
                 }
             }
-        }
-        //if no other player has a suggested card, give a message
-        if (!suggestedCardFound) {
-            Alert noPlayerHasCardAlert = suggestionPanel.createCardNotFoundAlert();
-            noPlayerHasCardAlert.showAndWait();
         }
     }
 
@@ -858,7 +868,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 Platform.exit();
                 System.exit(0);
             }
-        //else, accusation is incorrect
+            //else, accusation is incorrect
         } else {
             //get the number of active players
             int activePlayers = 0;
@@ -877,14 +887,13 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             falseAccusationAlert.initStyle(StageStyle.UTILITY);
             //false accusation alerts have different messages depending on current active players in game
             String compareAccusationAndMurderCards;
-            if(board.getCurrentPlayer().isAgent()){
-                compareAccusationAndMurderCards = "Agent " + board.getCurrentPlayer().getName() 
+            if (board.getCurrentPlayer().isAgent()) {
+                compareAccusationAndMurderCards = "Agent " + board.getCurrentPlayer().getName()
                         + " made an accusation and was incorrect\nTheir Accusation was "
                         + characterName + " in the "
                         + roomName + " with a "
                         + weaponName + "\n\n";
-            }
-            else{
+            } else {
                 compareAccusationAndMurderCards = "It was " + accusationPanel.getEnvelopeSuspect() + " in the "
                         + accusationPanel.getEnvelopeRoom() + " with a "
                         + accusationPanel.getEnvelopeWeapon() + "\n"
@@ -906,7 +915,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 if (activePlayers == 1) {
                     alertTxt.setText(board.getCurrentPlayer().getName() + " is the only player left");
                 }
-            //else, last remaining player has lost the game
+                //else, last remaining player has lost the game
             } else {
                 falseAccusationAlert.setContentText(compareAccusationAndMurderCards + "*** Nobody won the game! ***");
                 //remove all default buttons                           
@@ -1293,7 +1302,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                         endTurnBtn.fire();
                     };
                     Platform.runLater(endTrunRunnalble);
-                    
+
                 });
                 thread.start();
                 break;
@@ -1310,7 +1319,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
             case "Suggest":
                 String[] agentSuggestion = board.getCurrentPlayer().getSuggestion(characterNames, roomNames, weaponNames);
-                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName() , agentSuggestion[1]);
+                handleSuggestion(agentSuggestion[0], board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomName(), agentSuggestion[1]);
                 endTurnBtn.setDisable(false);
                 //automatically end turn
                 endTurnBtn.fire();
