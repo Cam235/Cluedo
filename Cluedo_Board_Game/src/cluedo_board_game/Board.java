@@ -11,36 +11,38 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import javafx.scene.text.Text;
-import javafx.util.Pair;
 
 /**
- * Represents board of the game
+ * Represents board of the game including players and tokens
  *
  * @author Anilz
+ * @version 4.0
  */
 public class Board {
 
-    //These should not be on board 
-    private Random idGenerator; //used to generate unique player Ids
-    private ArrayList<Player> playerList; //map of players and their Ids
-    private CardDistributor cardDistributor; //card distributor for board
-    //To measure steps not surpassing value of dice
-    // private int counter = 0;
+    Tile[][] tileMap;   // Map of Tiles that represents gameboard
+    private int columns, rows;  // Row and column numbers of the board
 
-    Tile[][] tileMap;   //Map of Tiles
-    private int columns, rows;  // Parameters
-    private ArrayList<Room> rooms = new ArrayList<Room>(); // Rooms are stored in
-    private ArrayList<Weapon> weapons = new ArrayList<Weapon>(); //Weapons are stored in 
-    //represents the player whos turn it currently is
-    private Player currentPlayer;
-    private int counter = 0;
-    private String alertMsg = "";
+    private ArrayList<Room> rooms = new ArrayList<Room>(); // List of rooms on board
+    private ArrayList<Weapon> weapons = new ArrayList<Weapon>(); // List of weapons on board 
 
-    //Sets Up the Board of Tiles
+    private Random idGenerator; // Used to generate unique player Ids
+    private ArrayList<Player> playerList; // List of Players
+    private CardDistributor cardDistributor; // Card distributor to distribute cards among players
+
+    private Player currentPlayer; //Represents player who has turn currently
+    private int counter = 0; //Represents how many times player can move token
+    private String alertMsg = "";//Alert message
+
+    /**
+     * Constructor to set up the Board Creates a map of tiles as big as column
+     * and row size, Also creates player list and IdGenerator
+     *
+     * @param columns
+     * @param rows
+     */
     public Board(int columns, int rows) {
         // fields determining columns and rows of map
         this.columns = columns;
@@ -59,6 +61,7 @@ public class Board {
     }
 
     /**
+     * Gets card distributor
      *
      * @return cardDistributor
      */
@@ -67,28 +70,28 @@ public class Board {
     }
 
     /**
+     * Gets tileMap
      *
-     * @return board
+     * @return tileMap
      */
-    
     public Tile[][] getTileMap() {
         return tileMap;
     }
 
     /**
+     * Gets column size of the board
      *
-     * @return column size of the board
+     * @return columns
      */
-    
     public int getColumns() {
         return columns;
     }
 
     /**
+     * Gets row size of the board
      *
-     * @return row size of the board
+     * @return rows
      */
-    
     public int getRows() {
         return rows;
     }
@@ -103,11 +106,10 @@ public class Board {
     }
 
     /**
-     * Initialise a new weapon and add to the list Then returns to the
-     * Initialised weapon
+     * Initialise a new weapon and add to the list
      *
      * @param weapon
-     * @return
+     * @return initialised weapon
      */
     public Weapon initialiseWeapon(String weapon) {
         weapons.add(new Weapon(weapon));
@@ -115,7 +117,7 @@ public class Board {
     }
 
     /**
-     * Moves a given weapon into a given room
+     * Moves a selected weapon into a selected room
      *
      * @param room
      * @param weapon
@@ -127,7 +129,7 @@ public class Board {
                 potentialRoom.getRoomWeapons().remove(weapon);
             }
         }
-        //Add to new Room 
+        //Add the new Room 
         room.addRoomWeapon(weapon);
     }
 
@@ -136,20 +138,18 @@ public class Board {
      *
      * @return rooms
      */
-    
     public ArrayList<Room> getRooms() {
         return rooms;
     }
 
     /**
-     * Initialise a new Room taking parameters of
+     * Initialise a new Room on the board
      *
-     * @param name
-     * @param roomSpace
-     * @param roomDoors
+     * @param name roomName
+     * @param roomSpace list of tiles which will create roomSpace
+     * @param roomDoors list of doors of room
      * @return newRoom
      */
-    
     public Room initialiseRoom(String name, ArrayList<Tile> roomSpace, ArrayList<Tile> roomDoors) {
         try {
             //Creates Room
@@ -203,7 +203,7 @@ public class Board {
     }
 
     /**
-     * Initialise token for each playing and non-playing players of board
+     * Initialise token for each playing and non-playing players on board
      *
      * @param player
      * @param tokenName
@@ -211,20 +211,15 @@ public class Board {
     public void initialisePlayerToken(Player player, String tokenName) {
         try {
             Token token = new Token(tokenName);
-            //Sets tokens location on board
-            //token.setTokenLocation(getTileMap()[x][y]);
-            //Adds the token last
             player.setToken(token);
         } catch (Exception e) {
             System.out.println("Cannot initialise");
-
         }
     }
 
     /**
      * @return textual representation of board
      */
-    
     public String toString() {
         String s = "";
         for (int _h = 0; _h < rows; _h++) {
@@ -254,7 +249,6 @@ public class Board {
      * @param cardList a list of card Objects used to instantiate the
      * cardDistributor
      */
-    
     public void setCardDistributor(List<Card> cardList) {
         cardDistributor = new CardDistributor(cardList);
     }
@@ -266,7 +260,6 @@ public class Board {
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
      */
-    
     public void addPlayers(List<String> playerNames, List<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
@@ -290,13 +283,12 @@ public class Board {
         }
     }
 
-    
     public ArrayList<Player> getPlayerList() {
         return playerList;
     }
 
     /**
-     * moves the current player to coordinates x y as long as dice is rolled and
+     * Moves the current player to coordinates x y as long as dice is rolled and
      * counter is less that dice total, increments counter if move is made, max
      * out counter if player enters room
      *
@@ -305,7 +297,6 @@ public class Board {
      * @param diceRolled
      * @param diceTotal
      */
-    
     public void moveCurrentPlayer(int x, int y, boolean diceRolled, int diceTotal) {
         Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
         if (diceRolled) {
@@ -333,11 +324,10 @@ public class Board {
     }
 
     /**
-     * orders the player list based on the name of their character token in the
+     * Orders the player list based on the name of their character token in the
      * order: "Miss Scarlett","Colonel
      * Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
      */
-    
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
         //creates array of character names in appropriate order
@@ -357,15 +347,13 @@ public class Board {
         playerList = tempList;
     }
 
-    
     public void initialiseWeapons() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
-     * increments the current Player to the next playing player
+     * Increments the current Player to the next playing player
      */
-    
     public void incrementCurrentPlayer() {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }
@@ -399,10 +387,20 @@ public class Board {
         }
     }
 
+    /**
+     * Returns to current player
+     *
+     * @return currentPlayer
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Sets the current Player
+     *
+     * @param currentPlayer
+     */
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
@@ -513,7 +511,7 @@ public class Board {
     }
 
     /**
-     * utilises the card distributor object to distribute cards to each playing
+     * Utilises the card distributor object to distribute cards to each playing
      * player fairly, current build uses a predefined list of card names
      */
     public void distributeCards() {
@@ -529,25 +527,45 @@ public class Board {
         cList.addAll(Arrays.asList(pCards));
         cList.addAll(Arrays.asList(wCards));
         cList.addAll(Arrays.asList(rCards));
-        setCardDistributor(cList);
-        cardDistributor.setEnvelope();
-        cardDistributor.shuffleCards();
-        cardDistributor.dealCards(playerList);
+
+        setCardDistributor(cList); //Sets card distributor with card values above
+        cardDistributor.setEnvelope(); // Sets the envelope cards,which will be murder cards for the game
+        cardDistributor.shuffleCards();// Shuffles the rest of the cards
+        cardDistributor.dealCards(playerList);// Deal the cards between active(playing) players
 
     }
 
+    /**
+     * Gets the counter, how many times player can move token
+     *
+     * @return counter
+     */
     public int getCounter() {
         return counter;
     }
 
+    /**
+     * Sets the counter value
+     *
+     * @param counter
+     */
     public void setCounter(int counter) {
         this.counter = counter;
     }
 
+    /**
+     * Gets the alert message
+     * @return alertMsg
+     */
     public String getAlertMsg() {
         return alertMsg;
     }
 
+    /**
+     * Gets door to exit
+     * @param door
+     * @return exitDoor tile
+     */
     public Tile getDoorExit(Tile door) {
         if (!door.isDoor()) {
             System.out.println("Tile is not a door");
@@ -569,9 +587,8 @@ public class Board {
     }
 
     /**
-     * returns the current room of tile t if it is in a room, null
-     * otherwise
-     * 
+     * returns the current room of tile t if it is in a room, null otherwise
+     *
      * @param t
      * @return null or room t's room
      */
@@ -589,6 +606,15 @@ public class Board {
         return r;
     }
 
+    /**
+     * Function is for player to exit room properly,and when doors are not
+     * blocked, and force to stay in room if door is blocked by another player
+     *
+     * @param i
+     * @param diceRolled parameter to identify if the dice is rolled. Player
+     * cannot exit room without rolling dice
+     * @param diceTotal
+     */
     public void currentPlayerExitsRoom(int i, boolean diceRolled, int diceTotal) {
         Tile currentPlayerPos = getCurrentPlayer().getToken().getTokenLocation();
         if (diceRolled) {
@@ -630,20 +656,19 @@ public class Board {
     }
 
     /**
-     * initialises the player detective cards for all playing players,
-     * using a predefined list of characters, weapons and rooms,
-     * initialises all the check list values as false and case notes values
-     * as empty
+     * Initialises the player detective cards for all playing players, using a
+     * predefined list of characters, weapons and rooms, initialises all the
+     * check list values as false and case notes values as empty
      */
-    public void initialisePlayerDetectiveCards(){
+    public void initialisePlayerDetectiveCards() {
         String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
         String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
         String[] roomNames = {"Lounge", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
-        for(Player p: playerList){
-            if(p.getIsPlaying()){
+        for (Player p : playerList) {
+            if (p.getIsPlaying()) {
                 HashMap<String, Boolean> currDetectCard = new HashMap<>();
                 String currString = "";
-                
+
                 for (String c : characterNames) {
                     currDetectCard.put(c, Boolean.FALSE);
                 }
@@ -655,8 +680,8 @@ public class Board {
                 }
                 p.setDetectiveChecklist(currDetectCard);
                 p.setDetectiveNotes(currString);
-                
-                if(p.isAgent()){
+
+                if (p.isAgent()) {
                     //auto update agent players detective card
                     p.markHandAsSeen();
                 }
@@ -665,59 +690,58 @@ public class Board {
     }
 
     /**
-     * returns a decision for what the current players turn should be, assuming the current player
-     * is an agent
+     * Returns a decision for what the current players turn should be, assuming
+     * the current player is an agent
+     *
      * @return string representing turn decision
      */
-    public String getAgentTurn(){
+    public String getAgentTurn() {
         Room currentPlayerRoom = getRoomOfPlayer(currentPlayer);
-        if(currentPlayer.getUnseenCards().size() < 4){
+        if (currentPlayer.getUnseenCards().size() < 4) {
             //make accusation
             return "Accuse";
-        }
-        else if(currentPlayerRoom == null){
-            if(isPlayerTrapped(currentPlayer)){
+        } else if (currentPlayerRoom == null) {
+            if (isPlayerTrapped(currentPlayer)) {
                 //skip turn
                 return "Skip";
-            }
-            else{
+            } else {
                 //move token
                 return "Move";
             }
-        }
-        else if(currentPlayerRoom.getName().equals(currentPlayer.getMostRecentlySuggestedRoom())){
+        } else if (currentPlayerRoom.getName().equals(currentPlayer.getMostRecentlySuggestedRoom())) {
             //move token
             return "Move";
-        }
-        else{
+        } else {
             //make suggestion
             return "Suggest";
         }
     }
-    
+
     /**
-     * given a string s return a room with a name equal to s if one exists, else null
+     * Given a string s return a room with a name equal to s if one exists, else
+     * null
+     *
      * @param s
      * @return room or null
      */
-    public Room getRoomFromName(String s){
+    public Room getRoomFromName(String s) {
         int i = 0;
         boolean found = false;
         Room r = null;
-        while(!found && i < rooms.size()){
-            if(rooms.get(i).getName().equals(s)){
+        while (!found && i < rooms.size()) {
+            if (rooms.get(i).getName().equals(s)) {
                 r = rooms.get(i);
                 found = true;
             }
-            i ++;
+            i++;
         }
         return r;
     }
-    
+
     /**
-     * given a player p, returns whether the player is trapped by checking its adjacent
-     * tiles to see if there is one that the player can move to
-     * 
+     * Given a player p, returns whether the player is trapped by checking its
+     * adjacent tiles to see if there is one that the player can move to
+     *
      * @param p
      * @return boolean for whether player is trapped
      */
@@ -725,23 +749,23 @@ public class Board {
         boolean trapped = true;
         int x = p.getToken().getTokenLocation().getColIndex();
         int y = p.getToken().getTokenLocation().getRowIndex();
-        if((x-1) > -1 && (x-1) < 28){
-            if(!tileMap[x-1][y].isOccupied() && !tileMap[x-1][y].isWall()){
+        if ((x - 1) > -1 && (x - 1) < 28) {
+            if (!tileMap[x - 1][y].isOccupied() && !tileMap[x - 1][y].isWall()) {
                 trapped = false;
             }
         }
-        if((x+1) > -1 && (x+1) < 28){
-            if(!tileMap[x+1][y].isOccupied() && !tileMap[x+1][y].isWall()){
+        if ((x + 1) > -1 && (x + 1) < 28) {
+            if (!tileMap[x + 1][y].isOccupied() && !tileMap[x + 1][y].isWall()) {
                 trapped = false;
             }
         }
-        if((y-1) > -1 && (y-1) < 28){
-            if(!tileMap[x][y-1].isOccupied() && !tileMap[x][y-1].isWall()){
+        if ((y - 1) > -1 && (y - 1) < 28) {
+            if (!tileMap[x][y - 1].isOccupied() && !tileMap[x][y - 1].isWall()) {
                 trapped = false;
             }
         }
-        if((y+1) > -1 && (y+1) < 28){
-            if(!tileMap[x][y+1].isOccupied() && !tileMap[x][y+1].isWall()){
+        if ((y + 1) > -1 && (y + 1) < 28) {
+            if (!tileMap[x][y + 1].isOccupied() && !tileMap[x][y + 1].isWall()) {
                 trapped = false;
             }
         }
