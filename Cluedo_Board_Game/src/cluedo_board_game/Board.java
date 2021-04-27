@@ -676,8 +676,14 @@ public class Board implements BoardInterface {
             return "Accuse";
         }
         else if(currentPlayerRoom == null){
-            //move token
-            return "Move";
+            if(isPlayerTrapped(currentPlayer)){
+                //skip turn
+                return "Skip";
+            }
+            else{
+                //move token
+                return "Move";
+            }
         }
         else if(currentPlayerRoom.getRoomName().equals(currentPlayer.getMostRecentlySuggestedRoom())){
             //move token
@@ -706,6 +712,33 @@ public class Board implements BoardInterface {
             i ++;
         }
         return r;
+    }
+
+    private boolean isPlayerTrapped(Player p) {
+        boolean trapped = true;
+        int x = p.getToken().getTokenLocation().getColIndex();
+        int y = p.getToken().getTokenLocation().getRowIndex();
+        if((x-1) > -1 && (x-1) < 28){
+            if(!tileMap[x-1][y].isOccupied() && !tileMap[x-1][y].isWall()){
+                trapped = false;
+            }
+        }
+        if((x+1) > -1 && (x+1) < 28){
+            if(!tileMap[x+1][y].isOccupied() && !tileMap[x+1][y].isWall()){
+                trapped = false;
+            }
+        }
+        if((y-1) > -1 && (y-1) < 28){
+            if(!tileMap[x][y-1].isOccupied() && !tileMap[x][y-1].isWall()){
+                trapped = false;
+            }
+        }
+        if((y+1) > -1 && (y+1) < 28){
+            if(!tileMap[x][y+1].isOccupied() && !tileMap[x][y+1].isWall()){
+                trapped = false;
+            }
+        }
+        return trapped;
     }
 
 }
