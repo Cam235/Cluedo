@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
  * @author Anilz
  * @version 1.0
  */
-public class Weapon extends Circle {
+public class Weapon  {
 
     private String name; // Name of weapon
     private Tile weaponLocation; // Tile Position of weapon
@@ -28,9 +28,7 @@ public class Weapon extends Circle {
      */
     public Weapon(String name) {
         this.name = name;
-        //Characteristics of Circle
-        setFill(Color.GREEN);
-        setRadius(5);
+
     }
 
     /**

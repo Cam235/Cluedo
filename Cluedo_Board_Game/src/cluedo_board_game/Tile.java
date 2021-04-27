@@ -14,22 +14,23 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Represents tiles of the board
+ * Represents each tile of the board
+ * Extends to rectangle to be displayed on board
  *
  * @author Anilz
+ * @version 1.0
  */
-public class Tile extends Rectangle{
+public class Tile extends Rectangle {
 
-    private int colIndex, rowIndex;
-    //to see if pawn on Tile  
-    private boolean occupied;   
-    
-    //Applied when room is established
-    private boolean wall;     // see if the tile is wall
-    private boolean door;     // if the tile is doorway of the room 
-    
-    private Text text;
-    private Image image;
+    private int colIndex, rowIndex; //Every tile has row and column index to identification   
+    private boolean occupied;       //represents whether tile is occupied by token or weapon
+
+    private boolean wall;   // represents whether tile is wall
+    private boolean door;   // represents whether tile is door
+
+    private Text text;      //numerical text , for the use of exiting rooms
+    private Image image;    //Image of tile ,each tile has its own image
+
     /**
      * Constructor of tile object Takes row and column index parameters to
      * identify tile from other tiles
@@ -47,81 +48,102 @@ public class Tile extends Rectangle{
     }
 
     /**
+     * Gets column index of tile
      * @return column index
      */
-    
     public int getColIndex() {
         return colIndex;
     }
 
     /**
-     * @return row index
+     * Gets Row index of tile
+     * @return rowIndex
      */
-    
     public int getRowIndex() {
         return rowIndex;
     }
 
     /**
-     * 
-     * @return whether or not the tile is occupied by pawn
+     * Get the occupied value,returns true if a weapon or token is on tile
+     * @return occupied 
      */
-    
     public boolean isOccupied() {
         return occupied;
     }
-    
+
     /**
-     * Set the tile to occupied or not based on parameter 
-     * @param isOccupied 
+     * Set the occupied value
+     *
+     * @param isOccupied
      */
-    
     public void setOccupied(boolean isOccupied) {
         this.occupied = isOccupied;
     }
-      
-    //For Wall
-    
+
+    /**
+     * Get the wall value
+     * @return wall
+     */
     public boolean isWall() {
         return wall;
     }
 
-    
+    /**
+     * Set the wall value
+     * @param isWall 
+     */
     public void setWall(boolean isWall) {
         this.wall = isWall;
     }
 
-    //For the Doors
-    
+    /**
+     * Get the door value
+     * @return door
+     */
     public boolean isDoor() {
         return door;
     }
 
-    
+    /**
+     * Set the door value
+     * @param isDoor 
+     */
     public void setDoor(boolean isDoor) {
         //if its door, its no longer wall
         setWall(false);
         this.door = isDoor;
     }
 
-    public void setText(String s) {
-        text.setText(s);
+    /**
+     * Set the tile text
+     * @param tileText 
+     */
+    public void setText(String tileText) {
+        text.setText(tileText);
     }
-    
-    
+
+    /**
+     * Gets the text value of tile
+     * @return text
+     */
     public Text getText() {
         return text;
     }
 
+    /**
+     * Gets the tile image
+     * @return image
+     */
     public Image getImage() {
         return image;
     }
 
+    /**
+     * Sets the tile image
+     * @param image 
+     */
     public void setImage(Image image) {
         this.image = image;
     }
-    
-    
-    
-    
+
 }
