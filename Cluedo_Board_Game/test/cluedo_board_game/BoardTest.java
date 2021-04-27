@@ -26,17 +26,13 @@ public class BoardTest {
     int h = 5;
     int w = 5;
     Board board;
-
+    Player testPlayer;
     public BoardTest() {
     }
 
     @Before
     public void setUp() {
         board = new Board(w, h);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**
@@ -58,7 +54,7 @@ public class BoardTest {
     @Test
     public void testOccupiedMap() {
         System.out.println("TestOccupiedMap");
-        board.initializeToken("Z", 0, 0);
+        board.initialisePlayerToken(testPlayer,"Z");
         String testOccupiedMap = "";
         for (int _h = 0; _h < h; _h++) {
             for (int _w = 0; _w < w; _w++) {
