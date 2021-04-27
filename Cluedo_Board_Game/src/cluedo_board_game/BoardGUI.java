@@ -1417,10 +1417,10 @@ public class BoardGUI extends Application implements BoardGUIInterface {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
-        detectiveCardPanel.setDetectiveCard(board.getCurrentPlayer().getDetectiveCard());
+        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveCard());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Prints the data of players first
-        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveCard());
+        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveChecklist());
         System.out.println("Players current notes are : " + detectiveCardPanel.getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
@@ -1429,7 +1429,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
             //Assigns detective Card and Notes values as players detective Card and notes
-            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+            board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
             board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
         });
 
@@ -1446,7 +1446,7 @@ public class BoardGUI extends Application implements BoardGUIInterface {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
                 detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveCard());
+                board.getCurrentPlayer().setDetectiveCard(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Prints for cvalidation
                 System.out.println(board.getCurrentPlayer().getDetectiveCard());
