@@ -130,9 +130,11 @@ public class BoardGUI extends Application {
     private Stage accusationStage;
 
     /**
-     * Pre-game content is created where number of players is decided using add and remove player buttons.
-     * Subsequently , players name , character and type is assigned via input fields of selection boxes
-     * Image of selected character and name of player is displayed below the selection boxes
+     * Pre-game content is created where number of players is decided using add
+     * and remove player buttons. Subsequently , players name , character and
+     * type is assigned via input fields of selection boxes Image of selected
+     * character and name of player is displayed below the selection boxes
+     *
      * @return preGameBox
      */
     public VBox createPreGameContent() {
@@ -304,8 +306,62 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates rooms of the board and add specified number of doors to specified positions on room walls
-     * By making tile a door, tile is no longer be wall, so tokens can move into room via doors without being blocked
+     * Places weapons to rooms randomly at the start of game
+     */
+    private void randomlyPlaceWeapons() {
+        //Shuffles weapons and rooms list,so in each game different weapons can be placed in different rooms    
+        Collections.shuffle(board.getWeapons());
+        Collections.shuffle(board.getRooms());
+        for (int i = 0; i < board.getWeapons().size(); i++) {
+            if (!board.getRooms().get(i).getName().equals("Staircase")) {
+                // Puts the weapons into rooms
+                board.moveWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
+            }
+        }
+    }
+
+    /**
+     * Sets colour of tokens and places them on specified positions on board
+     */
+    private void placeTokensOnBoard() {
+        for (Player player : board.getPlayerList()) {
+            switch (player.getToken().getName()) {
+                case "Miss Scarlett": // Top Right
+                    player.getToken().setFill(Color.CRIMSON);
+                    player.getToken().setTokenLocation(board.getTileMap()[19][0]);
+                    break;
+                case "Colonel Mustard": // Right Top
+                    player.getToken().setFill(Color.DARKORANGE);
+                    player.getToken().setTokenLocation(board.getTileMap()[27][9]);
+                    break;
+                case "Mrs.White": // Bottom right
+                    player.getToken().setFill(Color.WHITE);
+                    player.getToken().setTokenLocation(board.getTileMap()[19][27]);
+                    break;
+                case "Mr.Green": //Bottom Left
+                    player.getToken().setFill(Color.GREEN);
+                    player.getToken().setTokenLocation(board.getTileMap()[7][27]);
+                    break;
+                case "Mrs.Peacock": // Left Bottom
+                    player.getToken().setFill(Color.AQUA);
+                    player.getToken().setTokenLocation(board.getTileMap()[0][20]);
+                    break;
+                case "Professor Plum": // Left Top
+                    player.getToken().setFill(Color.PURPLE);
+                    player.getToken().setTokenLocation(board.getTileMap()[0][5]);
+                    break;
+                default: //If error
+                    player.getToken().setFill(Color.BLACK);
+                    player.getToken().setTokenLocation(board.getTileMap()[10][0]);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Creates rooms of the board and add specified number of doors to specified
+     * positions on room walls By making tile a door, tile is no longer be wall,
+     * so tokens can move into room via doors without being blocked
      */
     private void setUpRooms() {
         //Create Kithen
@@ -441,12 +497,6 @@ public class BoardGUI extends Application {
         studyDoors.add(studyDoor);
         Room study = board.initialiseRoom("Study", studySpace, studyDoors);
 
-        //Sets up passage exit rooms of doors
-        study.setPassageExit(kitchen);
-        kitchen.setPassageExit(study);
-        lounge.setPassageExit(conservatory);
-        conservatory.setPassageExit(lounge);
-
         //Creates Staircase
         ArrayList<Tile> staircaseSpace = new ArrayList<>();
         for (int i = 11; i < 16; i++) {
@@ -457,19 +507,70 @@ public class BoardGUI extends Application {
         //Add empty arraylist to create staircase as room with no doors
         ArrayList<Tile> staircaseDoors = new ArrayList<>();
         board.initialiseRoom("Staircase", staircaseSpace, staircaseDoors);
+
+        //Sets up passage exit rooms of doors
+        study.setPassageExit(kitchen);
+        kitchen.setPassageExit(study);
+        lounge.setPassageExit(conservatory);
+        conservatory.setPassageExit(lounge);
     }
 
-    
+    /**
+     * Creates visual representation of game board, Giving each tiles some
+     * texture image
+     */
+    private void setUpBoardView() {
+        boardView = new GridPane();
+        //Set up the Image of Board
+        for (int _r = 0; _r < rows; _r++) {
+            for (int _c = 0; _c < columns; _c++) {
+                board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
+                board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
+                try {
+                    Image i = new Image("/tile_textures/" + _r + "/" + _c + ".png", 21, 21, false, false);
+                    board.getTileMap()[_c][_r].setImage(i);
+                    ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
+                    tileView.setSmooth(true);
+                    boardView.add(tileView, _c, _r);
+
+                } catch (Exception e) {
+                    board.getTileMap()[_c][_r].setFill(Color.GOLD);
+                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
+                    boardView.add(board.getTileMap()[_c][_r], _c, _r);
+                }
+
+            }
+        }
+        //To place staircase
+        for (int _r = 10; _r < 19; _r++) {
+            for (int _c = 10; _c < 17; _c++) {
+                int currentTextureRow = _r - 9;
+                int currentTextureCol = _c - 9;
+                Image stairCaseTileImage = new Image("/Staircase_textures/image_" + currentTextureRow + "_" + currentTextureCol + ".png", 21, 21, false, false);
+                board.getTileMap()[_c][_r].setImage(stairCaseTileImage);
+                ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
+                boardView.add(tileView, _c, _r);
+            }
+        }
+        //Add door text objects to board and display on boardView
+        for (Room r : board.getRooms()) {
+            for (Tile t : r.getRoomDoors()) {
+                boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
+                boardView.setHalignment(t.getText(), HPos.CENTER);
+            }
+        }
+    }
+
     /**
      * Creates Board, initialise Token at specified location and put in the
      * boardView Creates DiceRoller object Combines 2 different classes in VBox
      *
-     * @return
+     * @return gameBox
      */
     public VBox setUpBoard() {
         gameBox = new VBox(); // gameBox which will hold whole content         
         HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
-        
+
         //DiceRoller and its content added
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
@@ -523,68 +624,12 @@ public class BoardGUI extends Application {
         alertTxt = new Text();
         counterTxt = new Text();
 
-        
         board = new Board(columns, rows); //Create the Board         
-        setUpWeapons(); //Create Weapons on board        
-        setUpRooms(); //Create Rooms on board
-        
-        //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
-        //Shuffles weapons list,so in each game different weapons can be placed in different rooms    
-        Collections.shuffle(board.getWeapons());
-        Collections.shuffle(board.getRooms());
-        for (int i = 0; i < board.getWeapons().size(); i++) {
-            if (!board.getRooms().get(i).getName().equals("Staircase")) {
-                // Puts the weapons into rooms
-                board.moveWeaponToRoom(board.getRooms().get(i), board.getWeapons().get(i));
-                //System.out.println(board.getRooms().get(i).getRoomWeapon().getName() + "is in "+board.getRooms().get(i).getRoomName());
-            }
-        }
-
-        ////////////////////////////////////////GRIDPANE//////////////////////////////////////
-        // Create a background fill        
-        //Establish array of rectangles
-        boardView = new GridPane();
-        //Set up the Image of Board
-        for (int _r = 0; _r < rows; _r++) {
-            for (int _c = 0; _c < columns; _c++) {
-
-                board.getTileMap()[_c][_r].setWidth(TILE_SIZE);
-                board.getTileMap()[_c][_r].setHeight(TILE_SIZE);
-                try {
-                    Image i = new Image("/tile_textures/" + _r + "/" + _c + ".png", 21, 21, false, false);
-                    board.getTileMap()[_c][_r].setImage(i);
-                    ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
-                    tileView.setSmooth(true);
-                    boardView.add(tileView, _c, _r);
-
-                } catch (Exception e) {
-                    board.getTileMap()[_c][_r].setFill(Color.GOLD);
-                    board.getTileMap()[_c][_r].setStroke(Color.BLACK);
-                    boardView.add(board.getTileMap()[_c][_r], _c, _r);
-                }
-
-            }
-        }
-        //To place staircase
-        for (int _r = 10; _r < 19; _r++) {
-            for (int _c = 10; _c < 17; _c++) {
-                int currentTextureRow = _r - 9;
-                int currentTextureCol = _c - 9;
-                Image stairCaseTileImage = new Image("/Staircase_textures/image_" + currentTextureRow + "_" + currentTextureCol + ".png", 21, 21, false, false);
-                board.getTileMap()[_c][_r].setImage(stairCaseTileImage);
-                ImageView tileView = new ImageView(board.getTileMap()[_c][_r].getImage());
-                boardView.add(tileView, _c, _r);
-            }
-        }
-
-        //add door text objects to board
-        for (Room r : board.getRooms()) {
-            for (Tile t : r.getRoomDoors()) {
-                boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
-                boardView.setHalignment(t.getText(), HPos.CENTER);
-            }
-        }
-        setUpPassageBtn();
+        setUpWeapons(); //Create Weapons of board        
+        setUpRooms(); //Create Rooms of board
+        randomlyPlaceWeapons(); // Randomly place weapons in rooms
+        setUpBoardView(); // Sets the board View as a gridPane
+        setUpPassageBtn(); //Sets upd passage button
 
         //Initialise PlayerName List
         List<String> playerNamesList = new ArrayList<>();
@@ -606,11 +651,8 @@ public class BoardGUI extends Application {
         }
         //Adds players and types ,creates the board
         board.addPlayers(playerNamesList, playerTypesList);
-
         ArrayList<String> tempCharacterNames = new ArrayList<>();
-
         tempCharacterNames.addAll(Arrays.asList(characterNames));
-
         //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
             if (i < selectionBoxesNumber) {
@@ -619,50 +661,15 @@ public class BoardGUI extends Application {
             } else {
                 board.initialisePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
                 board.getPlayerList().get(i).setIsPlaying(false);
-
             }
         }
-
         board.distributeCards();
         board.orderPlayerList();
         //Sets the current player to last player, then increments to start from beginning
         board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
         board.incrementCurrentPlayer();
 
-        /////////////DISPLAY_OF_PLAYER_AND_TOKENS///////////////////
-        //Sets up initial Player Tokens Positions and Colors 
-        for (Player player : board.getPlayerList()) {
-            switch (player.getToken().getName()) {
-                case "Miss Scarlett": // Top Right
-                    player.getToken().setFill(Color.CRIMSON);
-                    player.getToken().setTokenLocation(board.getTileMap()[19][0]);
-                    break;
-                case "Colonel Mustard": // Right Top
-                    player.getToken().setFill(Color.DARKORANGE);
-                    player.getToken().setTokenLocation(board.getTileMap()[27][9]);
-                    break;
-                case "Mrs.White": // Bottom right
-                    player.getToken().setFill(Color.WHITE);
-                    player.getToken().setTokenLocation(board.getTileMap()[19][27]);
-                    break;
-                case "Mr.Green": //Bottom Left
-                    player.getToken().setFill(Color.GREEN);
-                    player.getToken().setTokenLocation(board.getTileMap()[7][27]);
-                    break;
-                case "Mrs.Peacock": // Left Bottom
-                    player.getToken().setFill(Color.AQUA);
-                    player.getToken().setTokenLocation(board.getTileMap()[0][20]);
-                    break;
-                case "Professor Plum": // Left Top
-                    player.getToken().setFill(Color.PURPLE);
-                    player.getToken().setTokenLocation(board.getTileMap()[0][5]);
-                    break;
-                default: //If error
-                    player.getToken().setFill(Color.BLACK);
-                    player.getToken().setTokenLocation(board.getTileMap()[10][0]);
-                    break;
-            }
-        }
+        placeTokensOnBoard();
 
         //Sets up display of playerTokens and weapons in board
         for (int _r = 0; _r < rows; _r++) {
@@ -807,10 +814,10 @@ public class BoardGUI extends Application {
                         }
                     } //otherwise make the player choose a card to show
                     else {
-                        if(suggestionStage != null){
+                        if (suggestionStage != null) {
                             suggestionStage.close();
                         }
-                        if(suggestionPanel == null){
+                        if (suggestionPanel == null) {
                             suggestionPanel = new SuggestionPanel();
                         }
                         ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
