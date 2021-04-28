@@ -557,11 +557,13 @@ public class BoardGUI extends Application {
     /**
      * Sets up players of the game by taking player name, character(token) and
      * player type (agent human) Every character must be assigned to some player
-     * to make corresponding token displayed on board . If player number below 6
-     * , some characters would not be assigned. In order to assign all the
+     * to make corresponding token displayed on board . 
+     * 
+     * If player number is below 6 ,some characters would not be assigned. In order to assign all the
      * characters and display their tokens, non-playing agent players are
-     * created to make player number count to 6. After setting players, cards
-     * are distributed to all playing players,detectiveCardsAreGiven ,and their
+     * created to make player number count to 6. 
+     * 
+     * After setting players, cards are distributed to all playing players, detective cards are given ,and their
      * playing order is set depending on their character.
      */
     private void setUpPlayers() {
@@ -995,7 +997,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * sets up handlers for key presses during game play, including human player
+     * Sets up handlers for key presses during game play, including human player
      * movement controls
      */
     public void setUpControls() {
@@ -1023,8 +1025,6 @@ public class BoardGUI extends Application {
                                 board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex(), diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
                         break;
-                    /*In exiting the room , enable suggestion button,which does not work outside room.
-                     This will enforce players inside room to move outside */
                     case DIGIT1://exit door 1
                         board.currentPlayerExitsRoom(1, diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
                         updateMovementAlerts();
