@@ -593,7 +593,7 @@ public class Board {
      * @param t
      * @return null or room t's room
      */
-    private Room getRoomOfTile(Tile t) {
+    public Room getRoomOfTile(Tile t) {
         boolean found = false;
         int i = 0;
         Room r = null;
@@ -806,5 +806,38 @@ public class Board {
             }
         }
         return blocked;
+    }
+
+    /**
+     * given a player p, returns a door tile adjacent to the player if one exists, else returns null
+     * 
+     * @param p
+     * @return door tile or null
+     */
+    Tile getAdjacentDoor(Player p) {
+        Tile door = null;
+        int x = p.getToken().getTokenLocation().getColIndex();
+        int y = p.getToken().getTokenLocation().getRowIndex();
+        if ((x - 1) > -1 && (x - 1) < 28) {
+            if (tileMap[x - 1][y].isDoor()) {
+                door = tileMap[x - 1][y];
+            }
+        }
+        if ((x + 1) > -1 && (x + 1) < 28) {
+            if (tileMap[x + 1][y].isDoor()) {
+                door = tileMap[x + 1][y];
+            }
+        }
+        if ((y - 1) > -1 && (y - 1) < 28) {
+            if (tileMap[x][y - 1].isDoor()) {
+                door = tileMap[x][y - 1];
+            }
+        }
+        if ((y + 1) > -1 && (y + 1) < 28) {
+            if (tileMap[x][y + 1].isDoor()) {
+                door = tileMap[x][y + 1];
+            }
+        }
+        return door;
     }
 }
