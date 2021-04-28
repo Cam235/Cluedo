@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
+ * Represents a room which is part of the board in the board game
+ * 
  * @author Anilz
  */
 public class Room {

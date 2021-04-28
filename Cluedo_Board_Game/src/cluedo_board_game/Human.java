@@ -7,7 +7,7 @@ package cluedo_board_game;
 
 
 /**
- * Represents the human player in the board game
+ * Represents a human player in the board game
  * @author Mazon
  * @version 4.0
  */

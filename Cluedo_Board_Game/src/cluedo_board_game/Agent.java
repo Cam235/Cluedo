@@ -10,8 +10,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- *
- * @author Mazon
+ * Represents an agent player in the board game
+ * @author cwood
+ * @version 1.0
  */
 public class Agent extends Player {
 
