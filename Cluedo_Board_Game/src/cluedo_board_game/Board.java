@@ -332,8 +332,8 @@ public class Board {
 
     /**
      * Orders the player list based on the name of their character token in the
-     * order: "Miss Scarlett","Colonel
-     * Mustard","Mrs.White","Mr.Green","Mrs.Peacock","Professor Plum"
+     * order: "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green",
+     * "Mrs.Peacock","Professor Plum"
      */
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
@@ -560,6 +560,7 @@ public class Board {
 
     /**
      * Gets the alert message
+     * 
      * @return alertMsg
      */
     public String getAlertMsg() {
@@ -568,6 +569,7 @@ public class Board {
 
     /**
      * Gets door to exit
+     * 
      * @param door
      * @return exitDoor tile
      */
@@ -595,7 +597,7 @@ public class Board {
      * returns the current room of tile t if it is in a room, null otherwise
      *
      * @param t
-     * @return null or room t's room
+     * @return null or tile t's room
      */
     public Room getRoomOfTile(Tile t) {
         boolean found = false;
