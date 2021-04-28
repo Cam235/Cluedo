@@ -1377,19 +1377,23 @@ public class BoardGUI extends Application {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             //add current position to agents previous path
             board.getCurrentPlayer().getPreviousPath().add(board.getCurrentPlayer().getToken().getTokenLocation());
-            Integer[] newCoords;
-            do {
+            Integer[] newCoords = new Integer[2];
+            Tile adjDoor = board.getAdjacentDoor(p);
+            //if agent can enter desirable room do so
+            if(board.getRoomOfPlayer(p) == null && adjDoor != null && !board.getRoomOfTile(adjDoor).getName().equals(p.getMostRecentlySuggestedRoom())) {
+                newCoords[0] = adjDoor.getColIndex();
+                newCoords[1] = adjDoor.getRowIndex();
+            } else { //else make other move 
                 do {
-                    newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                    //don't let agent try and move out of bounds, to an occupied tile or to a wall
-                } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
-                        || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
-                //don't let agent try and retrace a move unless it needs to
-
-            } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer())
-                    && board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
-            //add next move to agents previous path
-            board.getCurrentPlayer().getPreviousPath().add(board.getTileMap()[newCoords[0]][newCoords[1]]);
+                    do {
+                        newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                        //don't let agent try and move out of bounds, to an occupied tile or to a wall
+                    } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
+                            || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
+                    //don't let agent try and retrace a move unless it needs to
+                } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer())
+                        && board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
+            }
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
             updateView();
