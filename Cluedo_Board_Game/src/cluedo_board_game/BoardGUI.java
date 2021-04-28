@@ -93,7 +93,7 @@ public class BoardGUI extends Application {
     private Button endTurnBtn;
     private Button passageBtn;
     //Control box to include all buttons
-    private VBox controlsVbx;
+    private VBox buttonControlsVbx;
 
     //Profile,alert and diceroller items(On right hand side of board)
     Text currentPlayerNameText;
@@ -602,7 +602,7 @@ public class BoardGUI extends Application {
     /**
      * Sets up game Buttons
      */
-    private void setControlsBox() {
+    private void setButtonControlsBox() {
         //Detective Card Button
         detectiveCardButton = new Button("Check Detective Card");
         detectiveCardButton.setTextAlignment(TextAlignment.CENTER);
@@ -642,11 +642,11 @@ public class BoardGUI extends Application {
         passageBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
         setUpPassageBtn(); //Sets up passage functionality
         //Left hand side of game board, Control VBox to hold game buttons
-        controlsVbx = new VBox();
-        controlsVbx.setAlignment(Pos.CENTER);
+        buttonControlsVbx = new VBox();
+        buttonControlsVbx.setAlignment(Pos.CENTER);
         //Puts buttons into controlVBox
-        controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        controlsVbx.setAlignment(Pos.TOP_CENTER);
+        buttonControlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
+        buttonControlsVbx.setAlignment(Pos.TOP_CENTER);
     }
 
     /**
@@ -673,7 +673,7 @@ public class BoardGUI extends Application {
     public VBox setUpGameBox() {
         gameBox = new VBox(); // gameBox which will hold whole content         
         HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
-        setControlsBox(); // Sets the the control Box including buttons of game
+        setButtonControlsBox(); // Sets the the control Box including buttons of game
         setUpGameBoard(); // Sets the board
 
         //-----VBox created to display current user name,image,alerts and diceRoller--/
@@ -709,7 +709,7 @@ public class BoardGUI extends Application {
         profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
         profileAndAlertVBox.setSpacing(10);
         //Put controb box including buttons, boardView with board Display and profileAndAlertVBox in HBox
-        gameBoxWithoutSettings.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
+        gameBoxWithoutSettings.getChildren().addAll(buttonControlsVbx, boardView, profileAndAlertVBox);
         gameBoxWithoutSettings.setAlignment(Pos.TOP_CENTER);
         //------------------------------------------------------------------------------------//
         //Create GameSettings MenuBar
