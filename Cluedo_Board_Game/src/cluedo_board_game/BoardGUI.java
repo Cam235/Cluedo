@@ -672,8 +672,9 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates game box which includes control box of buttons,
-     * grid of game board, and player profile sections with a diceRoller
+     * Creates game box which includes control box of buttons, grid of game
+     * board, and player profile sections with a diceRoller
+     *
      * @return gameBox
      */
     public VBox setUpGameBox() {
@@ -681,7 +682,7 @@ public class BoardGUI extends Application {
         HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
         setControlsBox(); // Sets the the control Box including buttons of game
         setUpGameBoard(); // Sets the board
-        
+
         //-----VBox created to display current user name,image,alerts and diceRoller--/
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
@@ -853,21 +854,19 @@ public class BoardGUI extends Application {
         }
     }
 
-    
-    
-    
     /**
-     * Handles a accusation with a given suspected character, weapon and room name
-     * Makes the correctly accusing player as winner of the game and gives a related display 
-     * with game settings options(Restart, Start new game, quit).
-     * 
-     * Also disables player having turns if player makes false accusation, 
-     * and if all of the players make false accusation, window appears with game settings options 
-     * to indicate no player won the game.
-     * 
+     * Handles a accusation with a given suspected character, weapon and room
+     * name Makes the correctly accusing player as winner of the game and gives
+     * a related display with game settings options(Restart, Start new game,
+     * quit).
+     *
+     * Also disables player having turns if player makes false accusation, and
+     * if all of the players make false accusation, window appears with game
+     * settings options to indicate no player won the game.
+     *
      * @param characterName
      * @param weaponName
-     * @param roomName 
+     * @param roomName
      */
     private void handleAccusation(String characterName, String weaponName, String roomName) {
         //card distributor from board is used here for murder envlope functionality
@@ -1069,9 +1068,9 @@ public class BoardGUI extends Application {
 
     /**
      * Returns true when game starting criterias are obtained
-     *
+     * All box input fields must be filled. Name and Characters of different players must not be same 
      * @param e
-     * @return
+     * @return gameStarting
      */
     private boolean isGameStarting(ActionEvent e) {
         boolean gameStarting = true;
@@ -1117,20 +1116,20 @@ public class BoardGUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        preGameScene = new Scene(createPreGameContent(), 800, 450);
-
+        preGameScene = new Scene(createPreGameContent(), 800, 450); // Pregame scene is created
+        //primary stage is used for preGame process
         primaryStage.setTitle("Please Choose Your Characters!");
         primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setScene(preGameScene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
+        //When button started,criterias for starting game is checked and game starts on primaryStage
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 //when setup fullfils all requirements,then START GAME!!!
                 if (isGameStarting(e)) {
-                    //plays the game
+                    //Start and play the game
                     playGame(primaryStage);
                 }
             }
@@ -1148,6 +1147,11 @@ public class BoardGUI extends Application {
         );
     }
 
+    /**
+     * Method to start and and play the game after characters are selected
+     * This method is also be used for restarting game with same player details
+     * @param primaryStage 
+     */
     private void playGame(Stage primaryStage) {
         this.primaryStage = primaryStage;
         //For setting gameScene and showing labels
@@ -1157,7 +1161,8 @@ public class BoardGUI extends Application {
         primaryStage.setTitle("Cluedo!");
         primaryStage.setScene(gameScene);
         setUpControls();
-        /*Increments the current player*/
+        /*Increments the current player. If Player is only player ,increamentation returns to itself
+        If the current player is in room ,displays door numbers and passage button if room has a passage exit.*/
         endTurnBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1197,14 +1202,14 @@ public class BoardGUI extends Application {
                 }
             }
         });
-        //Shows Your hand
+        //Shows hand of current player, if human
         showHandBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 displayCardList(primaryStage);
             }
         });
-        //Shows DetectiveCards
+        //Shows DetectiveCards of current player ,if human
         detectiveCardButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1218,17 +1223,16 @@ public class BoardGUI extends Application {
                 }
             }
         });
-
+        //Gives and alert when human player tries to suggest in agents turn
         suggestionBtn.setOnMouseReleased((MouseEvent event) -> {
             if (board.getCurrentPlayer().isAgent()) {
                 alertTxt.setText("Can't suggest during agent's turn!");
             }
         });
-
+        //Allows suggestion if player is in room, and human. Open suggestion panel to suggest
         suggestionBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //Allows suggestion if player is in room, and human
                 if (board.getRoomOfPlayer(board.getCurrentPlayer()) != null && (!board.getCurrentPlayer().isAgent())) {
                     if (!board.getCurrentPlayer().getMostRecentlySuggestedRoom().equals(board.getRoomOfPlayer(board.getCurrentPlayer()).getName())) {
                         //Create new Stage for popup
@@ -1252,7 +1256,7 @@ public class BoardGUI extends Application {
                                 if (suggestionPanel.getSuggestedSuspectName() != null && suggestionPanel.getSuggestedWeaponName() != null) {
                                     //Close the suggestionStage
                                     suggestionStage.close();
-                                    //calls private method to start submission suggestion process 
+                                    //calls private method to handle suggestion
                                     handleSuggestion(suggestionPanel.getSuggestedSuspectName(), board.getRoomOfPlayer(board.getCurrentPlayer()).getName(),
                                             suggestionPanel.getSuggestedWeaponName());
                                 } else {
@@ -1271,18 +1275,21 @@ public class BoardGUI extends Application {
             }
         }
         );
+        //Gives and alert when human player tries to accuse during agents turn
         accusationBtn.setOnMouseReleased((MouseEvent event) -> {
             if (board.getCurrentPlayer().isAgent()) {
                 alertTxt.setText("Can't accuse during agent's turn!");
             }
         });
+        //Opens accusation panel for the human current player, to fill boxes and make accusation
         accusationBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //Get card distributor
                 CardDistributor cardDistributor = board.getCardDistributor();
                 if (!board.getCurrentPlayer().isAgent()) {
-                    //Printing names for testing
+                    //Printing names to display make gamePlay easier
+                    System.out.println("Murder cards are:");
                     System.out.println(cardDistributor.getMurderRoom().getName());
                     System.out.println(cardDistributor.getMurderWeapon().getName());
                     System.out.println(cardDistributor.getMurderer().getName());
@@ -1296,10 +1303,11 @@ public class BoardGUI extends Application {
                     Scene accusationScene = new Scene(accusationPanel.createAccusationContent(board.getCurrentPlayer().getName()));
                     accusationStage.setScene(accusationScene);
                     accusationStage.show();
-                    //Set on Actions
+                    //Submit accusation
                     accusationPanel.getSubmitButton().setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
+                            //Compares with murder cards if accusation fields are not empty and returns a result
                             if ((accusationPanel.getAccusedSuspectName() != null) && (accusationPanel.getAccusedRoomName() != null) && (accusationPanel.getAccusedWeaponName() != null)) {
                                 accusationStage.close();
                                 handleAccusation(accusationPanel.getAccusedSuspectName(), accusationPanel.getAccusedWeaponName(), accusationPanel.getAccusedRoomName());
@@ -1325,7 +1333,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * controls the actions of an agent player during its turn
+     * Controls the actions of an agent player during its turn
      */
     private void handleAgentTurn() {
         endTurnBtn.setDisable(true);
@@ -1398,7 +1406,7 @@ public class BoardGUI extends Application {
 
     /**
      * Handles movement of agent player p, calls updateView() after each move to
-     * see agent moves in real time on the board
+     * display agent movement in real time on the board
      *
      * @param p
      */
@@ -1428,10 +1436,10 @@ public class BoardGUI extends Application {
             updateView();
         }
     }
-    
 
     /**
      * Display of current human player's hand on selected stage
+     *
      * @param pStage
      */
     public void displayCardList(Stage pStage) {
@@ -1442,9 +1450,9 @@ public class BoardGUI extends Application {
             dialog.initOwner(pStage);
             VBox dialogVbox = new VBox(20);
             //Header of dialog
-            Text showHandtxt = new Text("--------Cards--------");
-            showHandtxt.setFont(Font.font("Verdana", FontWeight.BLACK, FontPosture.REGULAR, 15));
-            dialogVbox.getChildren().add(showHandtxt);
+            Text cardsTxt = new Text("--------Cards--------");
+            cardsTxt.setFont(Font.font("Verdana", FontWeight.BLACK, FontPosture.REGULAR, 15));
+            dialogVbox.getChildren().add(cardsTxt);
             //Displays cards images on TilePane
             TilePane displayedCards = new TilePane();
             for (Card c : board.getCurrentPlayer().getHand()) {
@@ -1485,9 +1493,10 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Display of the detective card of current player on selected stage, 
-     * which includes detective checklist and notes of player
-     * @param stage 
+     * Display of the detective card of current player on selected stage, which
+     * includes detective checklist and notes of player
+     *
+     * @param stage
      */
     public void displayDetectiveCard(Stage stage) {
 
@@ -1559,8 +1568,8 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Updates movement alerts,counts number of moves left and displays alert messages
-     * Also make passage Button invisible if player is not in room
+     * Updates movement alerts,counts number of moves left and displays alert
+     * messages Also make passage Button invisible if player is not in room
      */
     private void updateMovementAlerts() {
         if (diceRoller.isDiceRolled()) {
@@ -1593,10 +1602,9 @@ public class BoardGUI extends Application {
         });
     }
 
-    
     /**
-     * Enables passage button and makes it visible when player is already 
-     * in room with passage exit while having turn
+     * Enables passage button and makes it visible when player is already in
+     * room with passage exit while having turn
      */
     private void enablePassageBtn() {
         Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
