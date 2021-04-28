@@ -775,7 +775,12 @@ public class BoardGUI extends Application {
                         }
                     } //otherwise make the player choose a card to show
                     else {
-                        suggestionStage.close();
+                        if(suggestionStage != null){
+                            suggestionStage.close();
+                        }
+                        if(suggestionPanel == null){
+                            suggestionPanel = new SuggestionPanel();
+                        }
                         ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
                         boolean validItemChosen = false;
                         while (!validItemChosen) {
@@ -1344,6 +1349,8 @@ public class BoardGUI extends Application {
      */
     private void handleAgentMove(Player p) {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
+            //add current position to agents previous path
+            board.getCurrentPlayer().getPreviousPath().add(board.getCurrentPlayer().getToken().getTokenLocation());
             Integer[] newCoords;
             do {
                 do {
@@ -1354,8 +1361,6 @@ public class BoardGUI extends Application {
                 //don't let agent try and retrace a move unless it needs to
             } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer()) && 
                     board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
-            //add next move to agents previous path
-            board.getCurrentPlayer().getPreviousPath().add(board.getTileMap()[newCoords[0]][newCoords[1]]);
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
             updateView();
