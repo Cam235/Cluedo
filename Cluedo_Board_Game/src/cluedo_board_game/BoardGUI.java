@@ -512,7 +512,7 @@ public class BoardGUI extends Application {
      * Creates visual representation of game board, Giving each tiles some
      * texture image
      */
-    private void setUpBoardView() {
+    private void displayBoardView() {
         boardView = new GridPane();
         //Set up the Image of Board
         for (int _r = 0; _r < rows; _r++) {
@@ -656,63 +656,67 @@ public class BoardGUI extends Application {
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
     }
-    
-    
 
     /**
-     * Creates Board, initialise Token at specified location and put in the
-     * boardView Creates DiceRoller object Combines 2 different classes in VBox
-     *
-     * @return gameBox
+     * Creates the gameBoard
      */
-    public VBox setUpBoard() {
-        gameBox = new VBox(); // gameBox which will hold whole content         
-        HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
-        setControlsBox(); // Sets the the control Box including buttons of game
-
+    private void setUpGameBoard() {
         board = new Board(columns, rows); //Create the Board         
         setUpWeapons(); //Create Weapons of board        
         setUpRooms(); //Create Rooms of board
-        setUpBoardView(); // Sets the board View as a gridPane      
+        displayBoardView(); // Sets the board View as a gridPane      
         setUpPlayers(); //Sets up players of board 
         randomlyPlaceWeaponsInRooms(); // Randomly place weapons in rooms
         placePlayerTokensOnBoard(); // Places tokens to positions
         displayTokensAndWeapons(); //Displays tokens and weapons on grid
+    }
 
-        //DiceRoller and its content added
-        diceRoller = new DiceRoller();
-        VBox diceRollerView = diceRoller.createContent();
-        //Right hand side of game board, displays alerts and current user name,image 
+    /**
+     * Creates game box with all game displays desired
+     * @return gameBox
+     */
+    public VBox setUpGameBox() {
+        gameBox = new VBox(); // gameBox which will hold whole content         
+        HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
+        setControlsBox(); // Sets the the control Box including buttons of game
+        setUpGameBoard(); // Sets the board
+        
+        //-----VBox created to display current user name,image,alerts and diceRoller--/
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
         profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         profileAndAlertVBox.setAlignment(Pos.CENTER);
+        //DiceRoller and its content added
+        diceRoller = new DiceRoller();
+        VBox diceRollerView = diceRoller.createContent();
+        //Displays current players name and Image
+        currentPlayerNameText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
+        //Set font ,alignment and width of current players name
+        currentPlayerNameText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        currentPlayerNameText.setTextAlignment(TextAlignment.CENTER);
+        currentPlayerNameText.setWrappingWidth(170);
+        //Assigns the image and imageview of current player
+        currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 160, 250, false, false);
+        currentPlayerImageView = new ImageView(currentPlayerImage);
         //Informative texts for user interface
         alertTxt = new Text();
         counterTxt = new Text();
-        //Displays current players name and Image
-        currentPlayerNameText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
-        currentPlayerNameText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
-        currentPlayerNameText.setWrappingWidth(170);
-        currentPlayerImage = new Image("/CharacterCards/" + board.getCurrentPlayer().getToken().getName() + ".jpg", 160, 250, false, false);
-        currentPlayerImageView = new ImageView(currentPlayerImage);
-
+        //Set of font of texts
         alertTxt.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 15));
         alertTxt.setWrappingWidth(170);
         counterTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
         counterTxt.setWrappingWidth(100);
-
-        profileAndAlertVBox.getChildren().addAll(currentPlayerNameText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
-        currentPlayerNameText.setTextAlignment(TextAlignment.CENTER);
+        //Text Alignments or texts
         alertTxt.setTextAlignment(TextAlignment.CENTER);
         counterTxt.setTextAlignment(TextAlignment.CENTER);
-
+        //Adds player text,image,informative texts and dicreroller view into VBox
+        profileAndAlertVBox.getChildren().addAll(currentPlayerNameText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
         profileAndAlertVBox.setAlignment(Pos.TOP_CENTER);
         profileAndAlertVBox.setSpacing(10);
-
+        //Put controb box including buttons, boardView with board Display and profileAndAlertVBox in HBox
         gameBoxWithoutSettings.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
         gameBoxWithoutSettings.setAlignment(Pos.TOP_CENTER);
-
+        //------------------------------------------------------------------------------------//
         //Create GameSettings MenuBar
         Menu gameSettingsMenu = new Menu("Game Settings");
         MenuItem quitItem = new MenuItem("Quit");
@@ -721,21 +725,20 @@ public class BoardGUI extends Application {
         gameSettingsMenu.getItems().addAll(quitItem, newGameItem, restartItem);
         MenuBar menuBar = new MenuBar(gameSettingsMenu);
         //Actions on menuItems
-        quitItem.setOnAction(e -> Platform.exit());
-        newGameItem.setOnAction(e -> startNewGame());
-        restartItem.setOnAction(e -> playGame(primaryStage));
+        quitItem.setOnAction(e -> Platform.exit());// quits game
+        newGameItem.setOnAction(e -> startNewGame());// start new game
+        restartItem.setOnAction(e -> playGame(primaryStage));//restart game
 
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
         //Set background
         gameBox.setBackground(bg);
         gameBox.getChildren().addAll(menuBar, gameBoxWithoutSettings);
-
         return gameBox;
     }
 
     /**
-     * handles a suggestion with a given suspected character, weapon and rooms
+     * Handles a suggestion with a given suspected character, weapon and rooms
      * name
      *
      * @param characterName
@@ -758,10 +761,11 @@ public class BoardGUI extends Application {
         }
         //move suggested weapon into room
         for (Weapon weapon : board.getWeapons()) {
-            //If room does not already contain suggested weapon
+            //If room does not contain suggested weapon
             if (weapon.getName().equals(weaponName)
                     && !suggestedRoom.getRoomWeapons().contains(weapon)) {
                 board.moveWeaponToRoom(suggestedRoom, weapon);
+                // Move weapon to the room and set the imageview of weapon to room of suggestion
                 for (ImageView weaponImageView : weaponImageViews) {
                     if (weaponImageView.getImage().equals(weapon.getWeaponImage())) {
                         boardView.getChildren().remove(weaponImageView);
@@ -771,7 +775,7 @@ public class BoardGUI extends Application {
             }
         }
 
-        //represents whether the suggested cards have been found in another players hand
+        //Represents whether the suggested cards have been found in another players hand
         boolean suggestedCardFound = false;
         //loop to get hand of players starting from one player after the current player
         for (int i = 0; i < board.getPlayerList().size(); i++) {
@@ -1130,7 +1134,7 @@ public class BoardGUI extends Application {
     private void playGame(Stage primaryStage) {
         this.primaryStage = primaryStage;
         //For setting gameScene and showing labels
-        setUpBoard();
+        setUpGameBox();
         gameScene = new Scene(gameBox);
         primaryStage.getIcons().add(new Image("stageIcon/stageIcon.png"));
         primaryStage.setTitle("Cluedo!");
