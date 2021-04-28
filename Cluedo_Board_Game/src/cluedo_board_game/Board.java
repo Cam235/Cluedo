@@ -25,14 +25,14 @@ public class Board {
     Tile[][] tileMap;   // Map of Tiles that represents gameboard
     private int columns, rows;  // Row and column numbers of the board
 
-    private ArrayList<Room> rooms = new ArrayList<Room>(); // List of rooms on board
-    private ArrayList<Weapon> weapons = new ArrayList<Weapon>(); // List of weapons on board 
+    private ArrayList<Room> rooms = new ArrayList<>(); // List of rooms on board
+    private ArrayList<Weapon> weapons = new ArrayList<>(); // List of weapons on board 
 
     private Random idGenerator; // Used to generate unique player Ids
     private ArrayList<Player> playerList; // List of Players
     private CardDistributor cardDistributor; // Card distributor to distribute cards among players
 
-    private Player currentPlayer; //Represents player who has turn currently
+    private Player currentPlayer; //Represents player whose turn it currently is
     private int counter = 0; //Represents how many times player can move token
     private String alertMsg = "";//Alert message
 
@@ -47,7 +47,15 @@ public class Board {
         // fields determining columns and rows of map
         this.columns = columns;
         this.rows = rows;
-        // initiate tileMap 
+        playerList = new ArrayList<>();
+        idGenerator = new Random();
+    }
+    
+    /**
+     * initialises the tile map using the columns and rows fields
+     */
+    public void initialiseTileMap(){
+        // initialise tileMap 
         tileMap = new Tile[columns][rows];
         for (int _row = 0; _row < rows; _row++) {
             for (int _column = 0; _column < columns; _column++) {
@@ -55,9 +63,6 @@ public class Board {
                 tileMap[_column][_row] = new Tile(_column, _row);
             }
         }
-
-        playerList = new ArrayList<>();
-        idGenerator = new Random();
     }
 
     /**
@@ -125,8 +130,8 @@ public class Board {
     public void moveWeaponToRoom(Room room, Weapon weapon) {
         //If weapon is already in any room, remove from that room
         for (Room potentialRoom : rooms) {
-            if (potentialRoom.getRoomWeapons().contains(weapon)) {
-                potentialRoom.getRoomWeapons().remove(weapon);
+            if (potentialRoom.getWeapons().contains(weapon)) {
+                potentialRoom.getWeapons().remove(weapon);
             }
         }
         //Add the new Room 
@@ -213,7 +218,7 @@ public class Board {
             Token token = new Token(tokenName);
             player.setToken(token);
         } catch (Exception e) {
-            System.out.println("Cannot initialise");
+            System.err.println("Could not initialise a players token");
         }
     }
 
@@ -259,10 +264,10 @@ public class Board {
      *
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
-     * @param playerTypes a list of character representing which type of player to add
+     * @param playerTypes a list of characters representing which type of player to add
      * for each given player name
      */
-    public void addPlayers(List<String> playerNames, List<Character> playerTypes) {
+    public void addPlayers(ArrayList<String> playerNames, ArrayList<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
         int potentialId; //stores potential ids for players
         Set<Integer> playerIds = new HashSet<>();
@@ -333,15 +338,14 @@ public class Board {
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
         //creates array of character names in appropriate order
-        String[] playerNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
-        //gets each player in the correct order using playerNames and stores them in list
-        for (String name : playerNames) {
+        String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
+        //gets each player in the correct order using characterNames and stores them in a list
+        for (String name : characterNames) {
             if (getPlayerByCharacterName(name) != null) {
                 tempList.add(getPlayerByCharacterName(name));
             } //if any player is missing alert console
             else {
-                //in actual game this should never happen
-                System.out.println("missing character " + name);
+                System.err.println("missing character " + name);
             }
         }
         //reset Player list then set it to tempList
@@ -420,11 +424,11 @@ public class Board {
         int newY = room.getFreeSpace().get(i).getRowIndex();
         player.getToken().getTokenLocation().setOccupied(false);
         if (player == currentPlayer) {
-            for (int j = 0; j < room.getRoomDoors().size(); j++) {
-                room.getRoomDoors().get(j).setText("" + (j + 1));
+            for (int j = 0; j < room.getDoors().size(); j++) {
+                room.getDoors().get(j).setText("" + (j + 1));
             }
         }
-        player.moveToken(getTileMap()[newX][newY]);
+        player.moveToken(tileMap[newX][newY]);
     }
 
     /**
@@ -441,15 +445,15 @@ public class Board {
             //if agent player is exiting room get a random door from room doors
             if (playerRoom != null && p.isAgent()) {
                 Random random = new Random();
-                int doorToExit = random.nextInt(playerRoom.getRoomDoors().size());
-                int exitX = playerRoom.getRoomDoors().get(doorToExit).getColIndex();
-                int exitY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
+                int doorToExit = random.nextInt(playerRoom.getDoors().size());
+                int exitX = playerRoom.getDoors().get(doorToExit).getColIndex();
+                int exitY = playerRoom.getDoors().get(doorToExit).getRowIndex();
                 p.getPreviousPath().add(tileMap[exitX][exitY]);
                 //use the coordinates of the door exit to move player
                 p.getToken().getTokenLocation().setOccupied(false);
                 if (!getDoorExit(tileMap[exitX][exitY]).isOccupied()) {
                     //also remove door text
-                    for (Tile t : playerRoom.getRoomDoors()) {
+                    for (Tile t : playerRoom.getDoors()) {
                         t.setText("");
                     }
                     p.moveToken(getDoorExit(tileMap[exitX][exitY]));
@@ -460,7 +464,7 @@ public class Board {
                 if (tileMap[x][y].isDoor()) {
                     //find the room that the door belongs to
                     for (Room room : getRooms()) {
-                        if (room.getRoomDoors().contains(tileMap[x][y])) {
+                        if (room.getDoors().contains(tileMap[x][y])) {
                             //allow player to enter room
                             playerEntersRoom(currentPlayer, room);
                         }
@@ -600,7 +604,7 @@ public class Board {
         int i = 0;
         Room r = null;
         while (!found && i < rooms.size()) {
-            if (rooms.get(i).getRoomSpace().contains(t) || rooms.get(i).getRoomDoors().contains(t)) {
+            if (rooms.get(i).getRoomSpace().contains(t) || rooms.get(i).getDoors().contains(t)) {
                 r = rooms.get(i);
                 found = true;
             }
@@ -624,14 +628,14 @@ public class Board {
             if ((counter < diceTotal)) {
                 Room r = getRoomOfPlayer(currentPlayer);
                 if (r != null) {
-                    if (i <= r.getRoomDoors().size()) {
-                        int x = getDoorExit(r.getRoomDoors().get(i - 1)).getColIndex();
-                        int y = getDoorExit(r.getRoomDoors().get(i - 1)).getRowIndex();
+                    if (i <= r.getDoors().size()) {
+                        int x = getDoorExit(r.getDoors().get(i - 1)).getColIndex();
+                        int y = getDoorExit(r.getDoors().get(i - 1)).getRowIndex();
                         if (!tileMap[x][y].isOccupied()) {
                             movePlayer(currentPlayer, x, y);
                             alertMsg = getCurrentPlayer().getName() + " Moves To " + getCurrentPlayer().getToken().getTokenLocation().getColIndex()
                                     + "," + getCurrentPlayer().getToken().getTokenLocation().getRowIndex();
-                            for (Tile t : r.getRoomDoors()) {
+                            for (Tile t : r.getDoors()) {
                                 t.setText("");
                             }
                             if (!currentPlayerPos.equals(getCurrentPlayer().getToken().getTokenLocation())) {
@@ -663,7 +667,7 @@ public class Board {
      * predefined list of characters, weapons and rooms, initialises all the
      * check list values as false and case notes values as empty
      */
-    public void initialisePlayersDetectiveCards() {
+    public void initialisePlayerDetectiveCards() {
         String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
         String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
         String[] roomNames = {"Lounge", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
@@ -681,7 +685,7 @@ public class Board {
                 for (String r : roomNames) {
                     currDetectCard.put(r, Boolean.FALSE);
                 }
-                p.setDetectiveChecklist(currDetectCard);
+                p.setCheckList(currDetectCard);
                 p.setDetectiveNotes(currString);
 
                 if (p.isAgent()) {

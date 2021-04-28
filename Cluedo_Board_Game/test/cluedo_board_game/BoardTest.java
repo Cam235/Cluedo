@@ -9,6 +9,8 @@ package cluedo_board_game;
 import cluedo_board_game.Board;
 import cluedo_board_game.Tile;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,128 +20,127 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * Test class for Board class, doesn't test tile or tile map related methods which
+ * require the javaFx thread
  *
  * @author Anilz
  */
 public class BoardTest {
 
-    int h = 5;
-    int w = 5;
     Board board;
-    Player testPlayer;
-    public BoardTest() {
-    }
-
+    String[] characterNames = {"Colonel Mustard", "Professor Plum", "Miss Scarlett", "Mr.Green", "Mrs.Peacock", "Mrs.White"};
+    
     @Before
     public void setUp() {
-        board = new Board(w, h);
-    }
-
-    /**
-     * Test of getTileMap method, of class Board.
-     */
-    @Test
-    public void testNonOccupiedMap() {
-        System.out.println("TestMap");
-        String testNonOccupiedMap = "";
-        for (int _h = 0; _h < h; _h++) {
-            for (int _w = 0; _w < w; _w++) {
-                testNonOccupiedMap += "R";
-            }
-            testNonOccupiedMap += "\n";
+        board = new Board(10, 10);
+        String[] playerNames = {"p1", "p2", "p3", "p4", "p5", "p6"};
+        Character[] playerTypes = {'h', 'h', 'h', 'h', 'h', 'h'};
+        ArrayList<String> playerNamesList = new ArrayList<>();
+        ArrayList<Character> playerTypesList = new ArrayList<>();
+        Collections.addAll(playerNamesList, playerNames);
+        Collections.addAll(playerTypesList, playerTypes);
+        board.addPlayers(playerNamesList, playerTypesList);
+        for(int i = 0; i < board.getPlayerList().size(); i++){
+            board.initialisePlayerToken(board.getPlayerList().get(i), characterNames[i]);
         }
-        assertEquals(board.toString(), testNonOccupiedMap);
-    }
-
-    @Test
-    public void testOccupiedMap() {
-        System.out.println("TestOccupiedMap");
-        board.initialisePlayerToken(testPlayer,"Z");
-        String testOccupiedMap = "";
-        for (int _h = 0; _h < h; _h++) {
-            for (int _w = 0; _w < w; _w++) {
-                //tests if at 0,0 it is occupied)
-                testOccupiedMap += (_h == 0 && _w == 0) ? "O" : "X";
-            }
-            testOccupiedMap += "\n";
-        }
-        assertEquals(board.toString(), testOccupiedMap);
-    }
-
-    @Test
-    public void testFailedPawnInitiation() {
-        System.out.println("TestFailedInitiation");
-        assertEquals(board.initializeToken("Z", -1, 0), null);
-    }
-
-    /*@Test
-    public void testPawnMovementToSide() {
-        System.out.println("TestSideMovement");
-        board.initializePawn("Z", 0, 0);
-        board.movePawn(1, 0);
-        String testOccupiedMap = "";
-        for (int _h = 0; _h < h; _h++) {
-            for (int _w = 0; _w < w; _w++) {
-                //tests if at 0,0 it is occupied)
-                testOccupiedMap += (_w == 1 && _h == 0) ? "O" : "X";
-            }
-            testOccupiedMap += "\n";
-        }
-        assertEquals(board.toString(), testOccupiedMap);
-        System.out.println(testOccupiedMap);
-    }
-
-    @Test
-    public void testPawnMovementToLower() {
-        System.out.println("TestLowerMovement");
-        board.initializePawn("Z", 1, 0);
-        board.movePawn(0, 0);
-        String testOccupiedMap = "";
-        for (int _h = 0; _h < h; _h++) {
-            for (int _w = 0; _w < w; _w++) {
-                //tests if at 0,0 it is occupied)
-                testOccupiedMap += (_w == 0 && _h == 0) ? "O" : "X";
-            }
-            testOccupiedMap += "\n";
-        }
-        assertEquals(board.toString(), testOccupiedMap);
-    }
-
-    @Test
-    public void testFailedMovement() {
-        System.out.println("TestFailedMovement");
-        board.initializePawn("Z", 0, 0);
-        //See it failss
-        board.movePawn(2,0);
-        board.movePawn(-1,3);
-        String testOccupiedMap = "";
-        for (int _h = 0; _h < h; _h++) {
-            for (int _w = 0; _w < w; _w++) {
-                //tests if at 0,0 it is occupied)
-                testOccupiedMap += (_w == 0 && _h == 0) ? "O" : "X";
-            }
-            testOccupiedMap += "\n";
-        }
-        assertEquals(board.toString(),testOccupiedMap);
     }
     
-    */
-    
     /**
-     * Test of addPlayers method, of class Board.
+     * Test of addPlayers method
      */
     @Test
-    public void testaddPlayers() {
-        List<String> playerNames = new ArrayList<>();
-        List<Character> playerTypes = new ArrayList<>();
+    public void testAddPlayers() {
+        ArrayList<String> playerNames = new ArrayList<>();
+        ArrayList<Character> playerTypes = new ArrayList<>();
         for(int i = 0; i < 3; i++){
             playerTypes.add('h');
         }
-        playerNames.add("p1");
-        playerNames.add("p2");
-        playerNames.add("p3");
+        playerNames.add("p7");
+        playerNames.add("p8");
+        playerNames.add("p9");
         board.addPlayers(playerNames,playerTypes);
-        assertEquals(3, board.getPlayerList().size());       
+        assertEquals(9, board.getPlayerList().size());       
+    }
+    
+    /**
+     * Test of initialiseWeapon method
+     */
+    @Test
+    public void testInitialiseWeapon() {
+        assertEquals("Dagger", board.initialiseWeapon("Dagger").getName());
+    }
+    
+    /**
+     * Test of initialisePlayerToken method
+     */
+    @Test
+    public void testInitialisePlayerToken() {
+        Player p = new Player(0,"testPlayer");
+        board.initialisePlayerToken(p, "testToken");
+        assertEquals("testToken", p.getToken().getName());
+    }
+    
+    /**
+     * Test of orderPlayerList method
+     */
+    @Test
+    public void testOrderPlayerList() {
+        String[] orderedCharacterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
+        assertEquals("Colonel Mustard", board.getPlayerList().get(0).getToken().getName());
+        board.orderPlayerList();
+        for(int i = 0; i < orderedCharacterNames.length; i++){
+            assertEquals(orderedCharacterNames[i], board.getPlayerList().get(i).getToken().getName());
+        }
+    }
+    
+    /**
+     * test of incrementCurrentPlayer method
+     */
+    @Test
+    public void testIncrementCurrentPlayer() {
+        board.setCurrentPlayer(board.getPlayerList().get(0));
+        board.getPlayerList().get(1).setIsPlaying(false);
+        board.incrementCurrentPlayer();
+        Player p = board.getCurrentPlayer();
+        assertEquals(2, board.getPlayerList().indexOf(p));
+    }
+    
+    /**
+     * test of getNextActivePlayer method
+     */
+    @Test
+    public void testGetNextActivePlayer() {
+        board.setCurrentPlayer(board.getPlayerList().get(0));
+        board.getPlayerList().get(1).setIsPlaying(false);
+        board.incrementCurrentPlayer();
+        Player p = board.getNextActivePlayer(board.getPlayerList().get(0));
+        assertEquals(2, board.getPlayerList().indexOf(p));
+    }
+    
+    /**
+     * test of getPlayerByCharacterName method
+     */
+    @Test
+    public void testGetPlayerByCharacterName() {
+        assertEquals("p1", board.getPlayerByCharacterName("Colonel Mustard").getName());
+    }
+    
+    /**
+     * test of distributeCards method
+     */
+    @Test
+    public void testDistributeCards() {
+        board.distributeCards();
+        assertEquals(3, board.getPlayerList().get(0).getHand().size());
+    }
+    
+    /**
+     * test of initialisePlayerDetectiveCards method
+     */
+    @Test
+    public void testInitialisePlayerDetectiveCards() {
+        board.initialisePlayerDetectiveCards();
+        assertEquals(21, board.getPlayerList().get(0).getCheckList().keySet().size());
     }
 }
 

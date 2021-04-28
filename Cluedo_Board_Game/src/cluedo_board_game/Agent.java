@@ -90,7 +90,7 @@ public class Agent extends Player {
     @Override
     public ArrayList<String> getUnseenCards() {
         ArrayList<String> unseenCards = new ArrayList<>();
-        detectiveChecklist.keySet().stream().filter((s) -> (!detectiveChecklist.get(s))).forEachOrdered((s) -> {
+        checkList.keySet().stream().filter((s) -> (!checkList.get(s))).forEachOrdered((s) -> {
             unseenCards.add(s);
         });
         return unseenCards;
@@ -102,7 +102,7 @@ public class Agent extends Player {
     @Override
     public void markHandAsSeen() {
         hand.forEach((c) -> {
-            detectiveChecklist.put(c.getName(), true);
+            checkList.put(c.getName(), true);
         });
     }
 

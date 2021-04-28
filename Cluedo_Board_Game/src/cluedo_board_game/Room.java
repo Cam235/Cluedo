@@ -11,8 +11,8 @@ public class Room {
 
     private String name; // room Name
     private ArrayList<Tile> roomSpace; //List of tiles which constitutes room space
-    private ArrayList<Tile> roomDoors = new ArrayList<Tile>(); // room doors
-    private ArrayList<Weapon> roomWeapons = new ArrayList<Weapon>(); // Weapons in room
+    private ArrayList<Tile> doors = new ArrayList<Tile>(); // room doors
+    private ArrayList<Weapon> weapons = new ArrayList<Weapon>(); // Weapons in room
     private Room passageExit; //Passage exit to transport other linked room
 
     /**
@@ -47,10 +47,10 @@ public class Room {
     /**
      * Gets room doors
      *
-     * @return roomDoors
+     * @return doors
      */
-    public ArrayList<Tile> getRoomDoors() {
-        return roomDoors;
+    public ArrayList<Tile> getDoors() {
+        return doors;
     }
 
     /**
@@ -58,8 +58,8 @@ public class Room {
      *
      * @return roomWeapon
      */
-    public ArrayList<Weapon> getRoomWeapons() {
-        return roomWeapons;
+    public ArrayList<Weapon> getWeapons() {
+        return weapons;
     }
 
     /**
@@ -72,7 +72,7 @@ public class Room {
         Random r = new Random();
         Tile weaponTile = roomSpace.get(r.nextInt(roomSpace.size()));
         if (!weaponTile.isOccupied()) {
-            roomWeapons.add(roomWeapon);
+            weapons.add(roomWeapon);
             roomWeapon.setWeaponLocation(weaponTile);
         } else {
             addRoomWeapon(roomWeapon);
@@ -103,55 +103,55 @@ public class Room {
                 if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex()) {
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex()
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() + 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() - 1) {
 
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else if (roomDoor.getColIndex() == roomSpace.get(i).getColIndex() - 1
                         && roomDoor.getRowIndex() == roomSpace.get(i).getRowIndex() + 1) {
 
                     roomDoor.setDoor(true);
-                    if (!roomDoors.contains(roomDoor)) {
-                        roomDoors.add(roomDoor);
+                    if (!doors.contains(roomDoor)) {
+                        doors.add(roomDoor);
                     }
                 } else {
                     //System.out.println("Door is not near this tile of "+ name);

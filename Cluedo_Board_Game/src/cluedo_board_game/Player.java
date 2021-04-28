@@ -20,7 +20,7 @@ public class Player {
     protected Token token; //represents the players token
     protected Boolean isPlaying; //represents whether the player is currently playing
     protected String mostRecentlySuggestedRoom = ""; //the players last suggested room, used to disable successive suggestions
-    protected HashMap<String, Boolean> detectiveChecklist; //represents the detective checklist of the player
+    protected HashMap<String, Boolean> checkList; //represents the detective checklist of the player
     protected String detectiveNotes; // represents detective Notes of player
     protected ArrayList<Tile> previousPath; //represents the moves a player has taken in a given turn
 
@@ -146,25 +146,25 @@ public class Player {
      * @param v
      */
     public void updateDetectiveChecklist(String k, Boolean v) {
-        detectiveChecklist.put(k, v);
+        checkList.put(k, v);
     }
 
     /**
      * Gets the detective checklist
      *
-     * @return detectiveChecklist
+     * @return checkList
      */
-    public HashMap<String, Boolean> getDetectiveChecklist() {
-        return detectiveChecklist;
+    public HashMap<String, Boolean> getCheckList() {
+        return checkList;
     }
 
     /**
      * Sets the detective checklist
      *
-     * @param detectiveChecklist
+     * @param checkList
      */
-    public void setDetectiveChecklist(HashMap<String, Boolean> detectiveChecklist) {
-        this.detectiveChecklist = detectiveChecklist;
+    public void setCheckList(HashMap<String, Boolean> checkList) {
+        this.checkList = checkList;
     }
 
     /**

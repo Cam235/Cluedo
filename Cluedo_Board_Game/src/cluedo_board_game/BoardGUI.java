@@ -539,7 +539,7 @@ public class BoardGUI extends Application {
         }
         //Add door text objects to board and display on boardView
         for (Room r : board.getRooms()) {
-            for (Tile t : r.getRoomDoors()) {
+            for (Tile t : r.getDoors()) {
                 boardView.add(t.getText(), t.getColIndex(), t.getRowIndex());
                 boardView.setHalignment(t.getText(), HPos.CENTER);
             }
@@ -560,9 +560,9 @@ public class BoardGUI extends Application {
      */
     private void setUpPlayers() {
         //Initialise PlayerName List
-        List<String> playerNamesList = new ArrayList<>();
+        ArrayList<String> playerNamesList = new ArrayList<>();
         //Initialise Player Type list
-        List<Character> playerTypesList = new ArrayList<>();
+        ArrayList<Character> playerTypesList = new ArrayList<>();
         //Iterate through maximum player number ( 6 )
         for (int i = 0; i < 6; i++) {
             //If player is defined in selection boxes , then receive selection boxes
@@ -590,7 +590,7 @@ public class BoardGUI extends Application {
             }
         }
         board.distributeCards(); // cards are distrinbuted to players
-        board.initialisePlayersDetectiveCards(); // detective cards are given to players
+        board.initialisePlayerDetectiveCards(); // detective cards are given to players
         board.orderPlayerList(); // orders the playing order
 
         //Sets the current player to last player, then increments to start from beginning
@@ -654,6 +654,7 @@ public class BoardGUI extends Application {
      */
     private void setUpGameBoard() {
         board = new Board(columns, rows); //Create the Board         
+        board.initialiseTileMap();
         setUpWeapons(); //Create Weapons of board        
         setUpRooms(); //Create Rooms of board
         displayBoardView(); // Sets the board View as a gridPane      
@@ -757,7 +758,7 @@ public class BoardGUI extends Application {
         for (Weapon weapon : board.getWeapons()) {
             //If room does not contain suggested weapon
             if (weapon.getName().equals(weaponName)
-                    && !suggestedRoom.getRoomWeapons().contains(weapon)) {
+                    && !suggestedRoom.getWeapons().contains(weapon)) {
                 board.moveWeaponToRoom(suggestedRoom, weapon);
                 // Move weapon to the room and set the imageview of weapon to room of suggestion
                 for (ImageView weaponImageView : weaponImageViews) {
@@ -1165,15 +1166,15 @@ public class BoardGUI extends Application {
                 currentPlayerImageView.setImage(currentPlayerImage);
 
                 for (Room r : board.getRooms()) {
-                    for (int i = 0; i < r.getRoomDoors().size(); i++) {
-                        r.getRoomDoors().get(i).getText().setText("");
+                    for (int i = 0; i < r.getDoors().size(); i++) {
+                        r.getDoors().get(i).getText().setText("");
                     }
                 }
 
                 Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
                 if (currentPlayerRoom != null) {
-                    for (int i = 0; i < currentPlayerRoom.getRoomDoors().size(); i++) {
-                        currentPlayerRoom.getRoomDoors().get(i).getText().setText("" + (i + 1));
+                    for (int i = 0; i < currentPlayerRoom.getDoors().size(); i++) {
+                        currentPlayerRoom.getDoors().get(i).getText().setText("" + (i + 1));
                     }
                     if (!board.getCurrentPlayer().isAgent()) {
                         if (p.isAgent()) {
@@ -1488,7 +1489,7 @@ public class BoardGUI extends Application {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
-        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveChecklist());
+        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getCheckList());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
@@ -1497,7 +1498,7 @@ public class BoardGUI extends Application {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
             //Assigns detective Card and Notes values as players detective Card and notes
-            board.getCurrentPlayer().setDetectiveChecklist(detectiveCardPanel.getDetectiveChecklist());
+            board.getCurrentPlayer().setCheckList(detectiveCardPanel.getDetectiveChecklist());
             board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
         });
 
@@ -1514,7 +1515,7 @@ public class BoardGUI extends Application {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
                 detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setDetectiveChecklist(detectiveCardPanel.getDetectiveChecklist());
+                board.getCurrentPlayer().setCheckList(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Close string
                 stage.hide();
@@ -1568,8 +1569,8 @@ public class BoardGUI extends Application {
             @Override
             public void handle(ActionEvent event) {
                 diceRoller.getRollButton().fire();
-                for (int i = 0; i < board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().size(); i++) {
-                    board.getRoomOfPlayer(board.getCurrentPlayer()).getRoomDoors().get(i).getText().setText("");
+                for (int i = 0; i < board.getRoomOfPlayer(board.getCurrentPlayer()).getDoors().size(); i++) {
+                    board.getRoomOfPlayer(board.getCurrentPlayer()).getDoors().get(i).getText().setText("");
                 }
                 board.playerEntersRoom(board.getCurrentPlayer(), board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit());
                 board.setCounter(diceRoller.getDiceTotal());
