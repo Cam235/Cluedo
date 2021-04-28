@@ -748,27 +748,13 @@ public class Board {
      */
     private boolean isPlayerTrapped(Player p) {
         boolean trapped = true;
-        int x = p.getToken().getTokenLocation().getColIndex();
-        int y = p.getToken().getTokenLocation().getRowIndex();
-        if ((x - 1) > -1 && (x - 1) < 28) {
-            if (!tileMap[x - 1][y].isOccupied() && !tileMap[x - 1][y].isWall()) {
+        int i = 0;
+        ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
+        while(trapped && i < adjTiles.size()){
+            if (!adjTiles.get(i).isOccupied() && !adjTiles.get(i).isWall()) {
                 trapped = false;
             }
-        }
-        if ((x + 1) > -1 && (x + 1) < 28) {
-            if (!tileMap[x + 1][y].isOccupied() && !tileMap[x + 1][y].isWall()) {
-                trapped = false;
-            }
-        }
-        if ((y - 1) > -1 && (y - 1) < 28) {
-            if (!tileMap[x][y - 1].isOccupied() && !tileMap[x][y - 1].isWall()) {
-                trapped = false;
-            }
-        }
-        if ((y + 1) > -1 && (y + 1) < 28) {
-            if (!tileMap[x][y + 1].isOccupied() && !tileMap[x][y + 1].isWall()) {
-                trapped = false;
-            }
+            i++;
         }
         return trapped;
     }
@@ -783,27 +769,13 @@ public class Board {
      */
     public boolean isPlayerBlockedByPreviousPath(Player p) {
         boolean blocked = true;
-        int x = p.getToken().getTokenLocation().getColIndex();
-        int y = p.getToken().getTokenLocation().getRowIndex();
-        if ((x - 1) > -1 && (x - 1) < 28) {
-            if (!tileMap[x - 1][y].isOccupied() && !tileMap[x - 1][y].isWall() && !p.getPreviousPath().contains(tileMap[x - 1][y])) {
+        int i = 0;
+        ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
+        while(blocked && i < adjTiles.size()){
+            if (!adjTiles.get(i).isOccupied() && !adjTiles.get(i).isWall() && !p.getPreviousPath().contains(adjTiles.get(i))) {
                 blocked = false;
             }
-        }
-        if ((x + 1) > -1 && (x + 1) < 28) {
-            if (!tileMap[x + 1][y].isOccupied() && !tileMap[x + 1][y].isWall() && !p.getPreviousPath().contains(tileMap[x + 1][y])) {
-                blocked = false;
-            }
-        }
-        if ((y - 1) > -1 && (y - 1) < 28) {
-            if (!tileMap[x][y - 1].isOccupied() && !tileMap[x][y - 1].isWall() && !p.getPreviousPath().contains(tileMap[x][y - 1])) {
-                blocked = false;
-            }
-        }
-        if ((y + 1) > -1 && (y + 1) < 28) {
-            if (!tileMap[x][y + 1].isOccupied() && !tileMap[x][y + 1].isWall() && !p.getPreviousPath().contains(tileMap[x][y + 1])) {
-                blocked = false;
-            }
+            i++;
         }
         return blocked;
     }
@@ -814,30 +786,45 @@ public class Board {
      * @param p
      * @return door tile or null
      */
-    Tile getAdjacentDoor(Player p) {
+    public Tile getAdjacentDoor(Player p) {
         Tile door = null;
-        int x = p.getToken().getTokenLocation().getColIndex();
-        int y = p.getToken().getTokenLocation().getRowIndex();
-        if ((x - 1) > -1 && (x - 1) < 28) {
-            if (tileMap[x - 1][y].isDoor()) {
-                door = tileMap[x - 1][y];
+        int i = 0;
+        ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
+        while(door == null && i < adjTiles.size()){
+            if (adjTiles.get(i).isDoor()) {
+                door = adjTiles.get(i);
             }
-        }
-        if ((x + 1) > -1 && (x + 1) < 28) {
-            if (tileMap[x + 1][y].isDoor()) {
-                door = tileMap[x + 1][y];
-            }
-        }
-        if ((y - 1) > -1 && (y - 1) < 28) {
-            if (tileMap[x][y - 1].isDoor()) {
-                door = tileMap[x][y - 1];
-            }
-        }
-        if ((y + 1) > -1 && (y + 1) < 28) {
-            if (tileMap[x][y + 1].isDoor()) {
-                door = tileMap[x][y + 1];
-            }
+            i++;
         }
         return door;
+    }
+    
+    /**
+     * given a tile t, return all the tiles that are vertically and horizontally
+     * adjacent to t that exist on the board
+     * 
+     * @param t
+     * @return array list of tiles
+     */
+    public ArrayList<Tile> getAdjacentTiles(Tile t){
+        ArrayList<Tile> adjTiles = new ArrayList<>();
+        int x = t.getColIndex();
+        int y = t.getRowIndex();
+        if(x < 0 || x > 27 || y < 0 || y > 27){
+            throw new IndexOutOfBoundsException("Given tile is not within board range");
+        }
+        if ((x - 1) > -1 && (x - 1) < 28) { 
+            adjTiles.add(tileMap[x - 1][y]);
+        }
+        if ((x + 1) > -1 && (x + 1) < 28) {
+            adjTiles.add(tileMap[x + 1][y]);
+        }
+        if ((y - 1) > -1 && (y - 1) < 28) {
+            adjTiles.add(tileMap[x][y - 1]);
+        }
+        if ((y + 1) > -1 && (y + 1) < 28) {
+            adjTiles.add(tileMap[x][y + 1]);
+        }
+        return adjTiles;
     }
 }
