@@ -154,7 +154,6 @@ public class BoardGUI extends Application {
                 @Override
                 public void handle(ActionEvent event) {
                     newSelectionBox.setSelectedCharacter(newSelectionBox.getCharacterSelectionCombobox().getValue());
-                    System.out.println(newSelectionBox.getSelectedCharacter());
                     newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
                     newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
 
@@ -204,7 +203,6 @@ public class BoardGUI extends Application {
                         @Override
                         public void handle(ActionEvent event) {
                             newSelectionBox.setSelectedCharacter((String) newSelectionBox.getCharacterSelectionCombobox().getValue());
-                            System.out.println(newSelectionBox.getSelectedCharacter());
                             newSelectionBox.setSelectedCharacterImage(new Image("/CharacterCards/" + newSelectionBox.getSelectedCharacter() + ".jpg", 130, 200, false, false));
                             newSelectionBox.setSelectedCharacterView(new ImageView(newSelectionBox.getSelectedCharacterImage()));
 
@@ -233,11 +231,8 @@ public class BoardGUI extends Application {
                             e.consume();
                         }
                     });
-                    System.out.println(selectionBoxesNumber);
-                    System.out.println(selectionBoxesList.size());
-                    System.out.println("List number:" + selectionBoxesView.getChildren().size());
                 } else {
-                    System.out.println("Too much mate!");
+                    preGameText.setText("Maximum 6 players can be in the game");
                 }
             }
         });
@@ -252,11 +247,8 @@ public class BoardGUI extends Application {
                     selectionBoxesView.getChildren().remove(selectionBoxesView.getChildren().size() - 1);
                     characterSelectionViews.getChildren().remove(characterSelectionViews.getChildren().size() - 1);
                     selectionBoxesNumber--;
-                    System.out.println(selectionBoxesNumber);
-                    System.out.println(selectionBoxesList.size());
-                    System.out.println("List no:" + selectionBoxesView.getChildren().size());
                 } else {
-                    System.out.println("Too few allready!");
+                    preGameText.setText("Minimum 2 players can be in the game");
                 }
             }
         });
@@ -577,12 +569,10 @@ public class BoardGUI extends Application {
             if (i < selectionBoxesNumber) {
                 playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
                 playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
-                System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
             } else {
                 //If selection boxes are less than 6, create non-players,to fill up to 6
                 playerNamesList.add("nonplayer");
                 playerTypesList.add('a');
-                System.out.println(playerNamesList.get(i) + " is " + playerTypesList.get(i));
             }
         }
         //Adds players and types ,creates the board
@@ -1043,12 +1033,10 @@ public class BoardGUI extends Application {
                         break;
                     default://non valid Ket
                         alertTxt.setText("Not Valid Key");
-                        System.out.println("Not Valid Key");
                         break;
                 }
                 updateView();
             } else {
-                System.out.println("Agent Players turn");
                 alertTxt.setText("Agent Players Turn");
             }
         });
@@ -1288,7 +1276,7 @@ public class BoardGUI extends Application {
                 //Get card distributor
                 CardDistributor cardDistributor = board.getCardDistributor();
                 if (!board.getCurrentPlayer().isAgent()) {
-                    //Printing names to display make gamePlay easier
+                    //Printing names to display correct cards
                     System.out.println("Murder cards are:");
                     System.out.println(cardDistributor.getMurderRoom().getName());
                     System.out.println(cardDistributor.getMurderWeapon().getName());
@@ -1465,14 +1453,12 @@ public class BoardGUI extends Application {
                     } else {
                         c.setCardImage(new Image("/RoomCards/" + c.getName() + ".jpg", 130, 200, false, false));
                     }
-                    System.out.println(c.getType() + ":" + c.getName());
                     cardImageView = new ImageView(c.getCardImage());
                     displayedCards.getChildren().add(cardImageView);
                 } catch (Exception e) {
                     c.setCardImage(new Image("/CharacterCards/unknownCard.png", 130, 200, false, false));
                     cardImageView = new ImageView(c.getCardImage());
                     displayedCards.getChildren().add(cardImageView);
-                    System.out.println(c.getType() + ":" + c.getName());
                 }
             }
             //Sets card distances
@@ -1504,9 +1490,6 @@ public class BoardGUI extends Application {
         //Give values of Players data to detectiveCardPanel
         detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getDetectiveChecklist());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
-        //Prints the data of players first
-        System.out.println("Players checkList is: " + detectiveCardPanel.getDetectiveChecklist());
-        System.out.println("Players current notes are : " + detectiveCardPanel.getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
 
@@ -1533,9 +1516,6 @@ public class BoardGUI extends Application {
                 //Assigns detective Card and Notes values as players detective Card and notes
                 board.getCurrentPlayer().setDetectiveChecklist(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
-                //Prints for cvalidation
-                System.out.println(board.getCurrentPlayer().getDetectiveChecklist());
-                System.out.println(board.getCurrentPlayer().getDetectiveNotes());
                 //Close string
                 stage.hide();
             }
@@ -1546,9 +1526,8 @@ public class BoardGUI extends Application {
     /**
      * Restarts the game from characterSelection
      */
-    private void startNewGame() {
-        // Stackoverflow says it is dirty way to do!
-        System.out.println("Restarting app!");
+    private void startNewGame() {    
+        System.out.println("Restarting Game!");
         primaryStage.close();
         primaryStage = new Stage();
         Platform.runLater(() -> new BoardGUI().start(primaryStage));
