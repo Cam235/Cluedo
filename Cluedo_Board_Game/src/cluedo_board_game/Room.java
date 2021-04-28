@@ -153,8 +153,6 @@ public class Room {
                     if (!doors.contains(roomDoor)) {
                         doors.add(roomDoor);
                     }
-                } else {
-                    //System.out.println("Door is not near this tile of "+ name);
                 }
 
             }
@@ -179,6 +177,7 @@ public class Room {
 
     /**
      * Gets the room which passage transfers(exits) to
+     *
      * @return passageExit
      */
     public Room getPassageExit() {
@@ -187,7 +186,8 @@ public class Room {
 
     /**
      * Sets the room which passage transfers(exists) to
-     * @param passageExit 
+     *
+     * @param passageExit
      */
     public void setPassageExit(Room passageExit) {
         this.passageExit = passageExit;
