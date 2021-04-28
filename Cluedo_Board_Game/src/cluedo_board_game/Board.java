@@ -353,10 +353,6 @@ public class Board {
         playerList = tempList;
     }
 
-    public void initialiseWeapons() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * Increments the current Player to the next playing player
      */
