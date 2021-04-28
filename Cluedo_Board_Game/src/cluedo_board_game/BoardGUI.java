@@ -56,7 +56,7 @@ import javafx.stage.WindowEvent;
 
 /**
  * Representation of the Cluedo game, where characters are chosen and game is
- * played
+ * played, with similar functions that actual board game has
  *
  * @author Anilz
  * @version 4.0
@@ -70,7 +70,7 @@ public class BoardGUI extends Application {
     //-----For the preGame Window-------//
     private Scene preGameScene; //pregame Scene
     //Setting of minimum player selection box number,and create arraylist with defined size
-    private int minSelectionBoxes = 2;
+    private int selectionBoxesNumber = 2;
     private ArrayList<PlayerSelectionBox> selectionBoxesList = new ArrayList<>();
     private Text preGameText; // text for pregame guidence    
     private Button startButton; //Pregame button to start the game
@@ -85,7 +85,6 @@ public class BoardGUI extends Application {
     private final int columns = 28;
     private final int rows = 28;
 
-    
     //Game Buttons(Left hand side of the board)
     private Button showHandBtn;
     private Button detectiveCardButton;
@@ -104,17 +103,17 @@ public class BoardGUI extends Application {
     private Text alertTxt;
     private Text counterTxt;
     //Diceroller object to play game
-    private DiceRoller diceRoller; 
+    private DiceRoller diceRoller;
     //Profile and alertBox to include all from players name text to diceroller
-    private VBox profileAndAlertVBox; 
-    
+    private VBox profileAndAlertVBox;
+
     //Adding MenuBar and items for gameSettings( Top left corner of the game)
     MenuBar gameSettingsMenuBar;
     Menu gameSettingsMenu;
     MenuItem quitItem;//Button to quit game
     MenuItem newGameItem;//Button to start new game
     MenuItem restartItem;//Button to restart game
-    
+
     //Weapon Image Views which are displayed in the room weapon belong to.
     private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
     //Card name values for accusation,suggestions and Image setting functions
@@ -123,30 +122,39 @@ public class BoardGUI extends Application {
     private final String[] roomNames = {"Kitchen", "Diningroom", "Lounge", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};
 
     //-------Accusation and Suggestion panels------//
-    //the suggestion Panel and stage
+    //the suggestion Panel and stage for suggestion attempts
     private SuggestionPanel suggestionPanel;
     private Stage suggestionStage;
     //For acqusationPanel and Stage for accusation attempts
     private AccusationPanel accusationPanel;
     private Stage accusationStage;
 
-
-
+    /**
+     * Pre-game content is created where number of players is decided using add and remove player buttons.
+     * Subsequently , players name , character and type is assigned via input fields of selection boxes
+     * Image of selected character and name of player is displayed below the selection boxes
+     * @return preGameBox
+     */
     public VBox createPreGameContent() {
-
+        //Create PreGameBox
         VBox preGameBox = new VBox();
+        //Spacing  and alighnment
         preGameBox.setAlignment(Pos.TOP_CENTER);
         preGameBox.setPrefSize(650, 280);
+        // display input areas to create player
         VBox selectionBoxesView = new VBox();
+        //Display of selected character images and spacing
         HBox characterSelectionViews = new HBox();
         characterSelectionViews.setSpacing(5);
-        for (int i = 0; i < minSelectionBoxes; i++) {
+        // creates new selection boxes as much as selectionBoxesNumber states
+        for (int i = 0; i < selectionBoxesNumber; i++) {
             final int nodeIndex = i;
             PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
             selectionBoxesList.add(newSelectionBox);
             selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
             VBox nameAndDisplay = new VBox(new Text(""), selectionBoxesList.get(i).getSelectedCharacterView());
             characterSelectionViews.getChildren().add(nameAndDisplay);
+            // Choosing character for each selection box appear gives display of selected cahracter
             newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -162,6 +170,7 @@ public class BoardGUI extends Application {
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                 }
             });
+            //Writing character name gives display of the character
             newSelectionBox.getPlayerTextField().setOnKeyReleased(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent key) {
@@ -172,6 +181,7 @@ public class BoardGUI extends Application {
                     characterSelectionViews.getChildren().add(nodeIndex, nameAndDisplay);
                 }
             });
+            //Ensure player name is no longer thaan 16 characters
             newSelectionBox.getPlayerTextField().setOnKeyTyped(event -> {
                 int maxCharacters = 16;
                 if (newSelectionBox.getPlayerTextField().getText().length() > maxCharacters) {
@@ -183,15 +193,16 @@ public class BoardGUI extends Application {
 
         //Adds player buttons
         Button addPlayerButton = new Button("+ Add Player");
+        //Adds new selection box,and based character text and image unless selectionBoxesNumber is equals to 6
         addPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (minSelectionBoxes < 6) {
-                    final int nodeIndex = minSelectionBoxes;
+                if (selectionBoxesNumber < 6) {
+                    final int nodeIndex = selectionBoxesNumber;
                     PlayerSelectionBox newSelectionBox = new PlayerSelectionBox();
                     selectionBoxesList.add(newSelectionBox);
                     selectionBoxesView.getChildren().add(newSelectionBox.selectionContent());
-                    minSelectionBoxes++;
+                    selectionBoxesNumber++;
                     VBox nameAndDisplay = new VBox(new Text(""), selectionBoxesList.get(selectionBoxesList.size() - 1).getSelectedCharacterView());
                     characterSelectionViews.getChildren().add(nameAndDisplay);
                     newSelectionBox.getCharacterSelectionCombobox().setOnAction(new EventHandler<ActionEvent>() {
@@ -227,7 +238,7 @@ public class BoardGUI extends Application {
                             e.consume();
                         }
                     });
-                    System.out.println(minSelectionBoxes);
+                    System.out.println(selectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List number:" + selectionBoxesView.getChildren().size());
                 } else {
@@ -237,15 +248,16 @@ public class BoardGUI extends Application {
         });
         //Remove Player Select Box
         Button removePlayerButton = new Button("- Remove Player");
+        //Removes last added selection box,and based character text and image unless selection box number is less than 2
         removePlayerButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (minSelectionBoxes > 2) {
+                if (selectionBoxesNumber > 2) {
                     selectionBoxesList.remove(selectionBoxesList.size() - 1);
                     selectionBoxesView.getChildren().remove(selectionBoxesView.getChildren().size() - 1);
                     characterSelectionViews.getChildren().remove(characterSelectionViews.getChildren().size() - 1);
-                    minSelectionBoxes--;
-                    System.out.println(minSelectionBoxes);
+                    selectionBoxesNumber--;
+                    System.out.println(selectionBoxesNumber);
                     System.out.println(selectionBoxesList.size());
                     System.out.println("List no:" + selectionBoxesView.getChildren().size());
                 } else {
@@ -253,12 +265,12 @@ public class BoardGUI extends Application {
                 }
             }
         });
-
+        //Start button to start game when every requirement is fulfilled
         startButton = new Button("Start Game");
         //Put player buttons into one
         HBox preSetupButtons = new HBox();
         preSetupButtons.getChildren().addAll(addPlayerButton, removePlayerButton, startButton);
-        //Display a text for guidance 
+        //Display a text to help users start game 
         preGameText = new Text("Please fill in player details");
         FlowPane preGameTextPane = new FlowPane(preGameText);
         preGameBox.getChildren().addAll(selectionBoxesView, preSetupButtons, characterSelectionViews, preGameTextPane);
@@ -268,19 +280,17 @@ public class BoardGUI extends Application {
         preSetupButtons.setAlignment(Pos.CENTER);
         preGameTextPane.setAlignment(Pos.CENTER);
 
-        //Create background
+        //Create background and set background of preGameBox
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
-        // set background
         preGameBox.setBackground(bg);
-
-        // scene setting
         return preGameBox;
     }
 
+    /**
+     * Creates weapons of the board and assigns their images
+     */
     private void setUpWeapons() {
-        //------------------------CREATES WEAPONS---------------------------//
-        //DO not yet place anywhere
-        // Dagger, candlestick, revolver, rope, lead piping and spanner.
+        // Dagger, candlestick, revolver, rope, lead piping and spanner
         board.initialiseWeapon("Dagger");
         board.initialiseWeapon("Candlestick");
         board.initialiseWeapon("Revolver");
@@ -293,8 +303,12 @@ public class BoardGUI extends Application {
         }
     }
 
+    /**
+     * Creates rooms of the board and add specified number of doors to specified positions on room walls
+     * By making tile a door, tile is no longer be wall, so tokens can move into room via doors without being blocked
+     */
     private void setUpRooms() {
-        //////////////////CREATES 9 ROOMS - LOUNGE, DININGROOM, KITCHEN, BALLROOM, CONSERVATORY, BILLIARDROOM, LIBRARY, STUDY, HALL////////////////////// 
+        //Create Kithen
         ArrayList<Tile> kitchenSpace = new ArrayList<>();
         ArrayList<Tile> kitchenDoors = new ArrayList<>();
         for (int i = 22; i < 27; i++) {
@@ -302,10 +316,12 @@ public class BoardGUI extends Application {
                 kitchenSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add Kitchen Doors
         Tile kitchenDoor = board.getTileMap()[22][21];
         kitchenDoors.add(kitchenDoor);
         Room kitchen = board.initialiseRoom("Kitchen", kitchenSpace, kitchenDoors);
 
+        //Create Diningroom
         ArrayList<Tile> diningroomSpace = new ArrayList<>();
         ArrayList<Tile> diningroomDoors = new ArrayList<>();
         for (int i = 20; i < 27; i++) {
@@ -313,12 +329,14 @@ public class BoardGUI extends Application {
                 diningroomSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add Diningroom Doors
         Tile diningroomDoor = board.getTileMap()[19][15];
         Tile diningroomDoor2 = board.getTileMap()[20][11];
         diningroomDoors.add(diningroomDoor);
         diningroomDoors.add(diningroomDoor2);
         Room diningroom = board.initialiseRoom("Diningroom", diningroomSpace, diningroomDoors);
 
+        //Create Lounge
         ArrayList<Tile> loungeSpace = new ArrayList<>();
         ArrayList<Tile> loungeDoors = new ArrayList<>();
         for (int i = 21; i < 27; i++) {
@@ -326,10 +344,12 @@ public class BoardGUI extends Application {
                 loungeSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add Lounge Doors
         Tile loungeDoor = board.getTileMap()[21][7];
         loungeDoors.add(loungeDoor);
         Room lounge = board.initialiseRoom("Lounge", loungeSpace, loungeDoors);
 
+        //Create Ballroom
         ArrayList<Tile> ballroomSpace = new ArrayList<>();
         ArrayList<Tile> ballroomDoors = new ArrayList<>();
         for (int i = 10; i < 18; i++) {
@@ -337,6 +357,7 @@ public class BoardGUI extends Application {
                 ballroomSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add BallRoomDoors
         Tile ballroomDoor = board.getTileMap()[11][21];
         Tile ballroomDoor2 = board.getTileMap()[16][21];
         Tile ballroomDoor3 = board.getTileMap()[9][23];
@@ -347,6 +368,7 @@ public class BoardGUI extends Application {
         ballroomDoors.add(ballroomDoor4);
         Room ballroom = board.initialiseRoom("Ballroom", ballroomSpace, ballroomDoors);
 
+        //Create Conservatory
         ArrayList<Tile> conservatorySpace = new ArrayList<>();
         ArrayList<Tile> conservatoryDoors = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
@@ -354,10 +376,12 @@ public class BoardGUI extends Application {
                 conservatorySpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add Conservatory Doors
         Tile conservatoryDoor = board.getTileMap()[5][22];
         conservatoryDoors.add(conservatoryDoor);
         Room conservatory = board.initialiseRoom("Conservatory", conservatorySpace, conservatoryDoors);
 
+        //Create BilliardRoom
         ArrayList<Tile> billiardroomSpace = new ArrayList<>();
         ArrayList<Tile> billiardroomDoors = new ArrayList<>();
         for (int i = 1; i < 6; i++) {
@@ -365,12 +389,14 @@ public class BoardGUI extends Application {
                 billiardroomSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add BilliardRoom Doors
         Tile billiardroomDoor = board.getTileMap()[1][14];
         Tile billiardroomDoor2 = board.getTileMap()[6][18];
         billiardroomDoors.add(billiardroomDoor);
         billiardroomDoors.add(billiardroomDoor2);
         Room billiardroom = board.initialiseRoom("Billiardroom", billiardroomSpace, billiardroomDoors);
 
+        //Create Library
         ArrayList<Tile> librarySpace = new ArrayList<>();
         ArrayList<Tile> libraryDoors = new ArrayList<>();
         for (int i = 1; i < 7; i++) {
@@ -378,13 +404,14 @@ public class BoardGUI extends Application {
                 librarySpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add Library Doors
         Tile libraryDoor = board.getTileMap()[3][12];
         Tile libraryDoor2 = board.getTileMap()[7][9];
         libraryDoors.add(libraryDoor);
         libraryDoors.add(libraryDoor2);
         Room library = board.initialiseRoom("Library", librarySpace, libraryDoors);
 
-        // HALL STUFF
+        // Create Hall
         ArrayList<Tile> hallSpace = new ArrayList<>();
         ArrayList<Tile> hallDoors = new ArrayList<>();
         for (int i = 11; i < 17; i++) {
@@ -392,6 +419,7 @@ public class BoardGUI extends Application {
                 hallSpace.add(board.getTileMap()[i][j]);
             }
         }
+        // Add Hall Doors
         Tile hallDoor1 = board.getTileMap()[13][7];
         Tile hallDoor2 = board.getTileMap()[14][7];
         Tile hallDoor3 = board.getTileMap()[8][4];
@@ -400,7 +428,7 @@ public class BoardGUI extends Application {
         hallDoors.add(hallDoor3);
         board.initialiseRoom("Hall", hallSpace, hallDoors);
 
-        //STUDY
+        // Create Study
         ArrayList<Tile> studySpace = new ArrayList<>();
         ArrayList<Tile> studyDoors = new ArrayList<>();
         for (int i = 1; i < 7; i++) {
@@ -408,26 +436,30 @@ public class BoardGUI extends Application {
                 studySpace.add(board.getTileMap()[i][j]);
             }
         }
+        // Add study Doors
         Tile studyDoor = board.getTileMap()[6][4];
         studyDoors.add(studyDoor);
         Room study = board.initialiseRoom("Study", studySpace, studyDoors);
 
+        //Sets up passage exit rooms of doors
         study.setPassageExit(kitchen);
         kitchen.setPassageExit(study);
         lounge.setPassageExit(conservatory);
         conservatory.setPassageExit(lounge);
 
-        //creates staircase
+        //Creates Staircase
         ArrayList<Tile> staircaseSpace = new ArrayList<>();
         for (int i = 11; i < 16; i++) {
             for (int j = 11; j < 18; j++) {
                 staircaseSpace.add(board.getTileMap()[i][j]);
             }
         }
+        //Add empty arraylist to create staircase as room with no doors
         ArrayList<Tile> staircaseDoors = new ArrayList<>();
         board.initialiseRoom("Staircase", staircaseSpace, staircaseDoors);
     }
 
+    
     /**
      * Creates Board, initialise Token at specified location and put in the
      * boardView Creates DiceRoller object Combines 2 different classes in VBox
@@ -435,12 +467,13 @@ public class BoardGUI extends Application {
      * @return
      */
     public VBox setUpBoard() {
-        gameBox = new VBox();
-        HBox gameBoxWithoutSettings = new HBox();
-        //DiceRoller added to play with dice
+        gameBox = new VBox(); // gameBox which will hold whole content         
+        HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
+        
+        //DiceRoller and its content added
         diceRoller = new DiceRoller();
         VBox diceRollerView = diceRoller.createContent();
-        //Button to switch between Player and AI
+        //Detective Card Button
         detectiveCardButton = new Button("Check Detective Card");
         detectiveCardButton.setTextAlignment(TextAlignment.CENTER);
         detectiveCardButton.setWrapText(true);
@@ -470,17 +503,17 @@ public class BoardGUI extends Application {
         endTurnBtn.setWrapText(true);
         endTurnBtn.setPrefSize(130, 100);
         endTurnBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
-
+        //Passage button which appears when player gets turn while in room with passage exits
         passageBtn = new Button("Take passage");
         passageBtn.setTextAlignment(TextAlignment.CENTER);
         passageBtn.setWrapText(true);
         passageBtn.setPrefSize(130, 100);
         passageBtn.setVisible(false);
         passageBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
-
+        //Left hand side of game board, Control VBox to hold game buttons
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
-
+        //Right hand side of game board, displays alerts and current user name,image 
         profileAndAlertVBox = new VBox();
         profileAndAlertVBox.setMaxWidth(300);
         profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
@@ -490,12 +523,10 @@ public class BoardGUI extends Application {
         alertTxt = new Text();
         counterTxt = new Text();
 
-        //Establish Board
-        board = new Board(columns, rows);
-        //Create Weapons on board
-        setUpWeapons();
-        //Create Rooms on board
-        setUpRooms();
+        
+        board = new Board(columns, rows); //Create the Board         
+        setUpWeapons(); //Create Weapons on board        
+        setUpRooms(); //Create Rooms on board
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms    
         Collections.shuffle(board.getWeapons());
@@ -561,7 +592,7 @@ public class BoardGUI extends Application {
         //Iterate through total player number ( 6 )
         for (int i = 0; i < 6; i++) {
             //If player is defined in selection boxes , then receive selection boxes
-            if (i < minSelectionBoxes) {
+            if (i < selectionBoxesNumber) {
                 playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
                 playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
                 System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
@@ -581,7 +612,7 @@ public class BoardGUI extends Application {
 
         //always create 6 players, create non playing players after playing players
         for (int i = 0; i < 6; i++) {
-            if (i < minSelectionBoxes) {
+            if (i < selectionBoxesNumber) {
                 board.initialisePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
                 tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
             } else {
@@ -1352,8 +1383,8 @@ public class BoardGUI extends Application {
                 } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
                         || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
                 //don't let agent try and retrace a move unless it needs to
-            } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer()) && 
-                    board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
+            } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer())
+                    && board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
             //add next move to agents previous path
             board.getCurrentPlayer().getPreviousPath().add(board.getTileMap()[newCoords[0]][newCoords[1]]);
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
