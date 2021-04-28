@@ -527,6 +527,7 @@ public class BoardGUI extends Application {
         board = new Board(columns, rows); //Create the Board         
         setUpWeapons(); //Create Weapons on board        
         setUpRooms(); //Create Rooms on board
+        
         //---------------------------PLACE WEAPONS TO ROOMS RANDOMLY--------------------------------///
         //Shuffles weapons list,so in each game different weapons can be placed in different rooms    
         Collections.shuffle(board.getWeapons());
@@ -540,7 +541,7 @@ public class BoardGUI extends Application {
         }
 
         ////////////////////////////////////////GRIDPANE//////////////////////////////////////
-        // create a background fill        
+        // Create a background fill        
         //Establish array of rectangles
         boardView = new GridPane();
         //Set up the Image of Board
@@ -806,7 +807,12 @@ public class BoardGUI extends Application {
                         }
                     } //otherwise make the player choose a card to show
                     else {
-                        suggestionStage.close();
+                        if(suggestionStage != null){
+                            suggestionStage.close();
+                        }
+                        if(suggestionPanel == null){
+                            suggestionPanel = new SuggestionPanel();
+                        }
                         ChoiceDialog responderChoiceBox = suggestionPanel.createSuggestionResponderContent(board.getPlayerList().get(j).getName(), foundCards);
                         boolean validItemChosen = false;
                         while (!validItemChosen) {
@@ -1375,6 +1381,8 @@ public class BoardGUI extends Application {
      */
     private void handleAgentMove(Player p) {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
+            //add current position to agents previous path
+            board.getCurrentPlayer().getPreviousPath().add(board.getCurrentPlayer().getToken().getTokenLocation());
             Integer[] newCoords;
             do {
                 do {
@@ -1383,6 +1391,7 @@ public class BoardGUI extends Application {
                 } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
                         || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
                 //don't let agent try and retrace a move unless it needs to
+
             } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer())
                     && board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
             //add next move to agents previous path

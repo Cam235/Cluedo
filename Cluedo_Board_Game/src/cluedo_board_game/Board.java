@@ -442,22 +442,23 @@ public class Board {
                 int doorToExit = random.nextInt(playerRoom.getRoomDoors().size());
                 int exitX = playerRoom.getRoomDoors().get(doorToExit).getColIndex();
                 int exitY = playerRoom.getRoomDoors().get(doorToExit).getRowIndex();
+                p.getPreviousPath().add(tileMap[exitX][exitY]);
                 //use the coordinates of the door exit to move player
                 p.getToken().getTokenLocation().setOccupied(false);
-                if (!getDoorExit(getTileMap()[exitX][exitY]).isOccupied()) {
+                if (!getDoorExit(tileMap[exitX][exitY]).isOccupied()) {
                     //also remove door text
                     for (Tile t : playerRoom.getRoomDoors()) {
                         t.setText("");
                     }
-                    p.moveToken(getDoorExit(getTileMap()[exitX][exitY]));
+                    p.moveToken(getDoorExit(tileMap[exitX][exitY]));
                 }
             } //If the tile to be moved is not wall or occupied
-            else if (!getTileMap()[x][y].isWall() && !getTileMap()[x][y].isOccupied()) {
+            else if (!tileMap[x][y].isWall() && !tileMap[x][y].isOccupied()) {
                 //if the tile is a door
-                if (getTileMap()[x][y].isDoor()) {
+                if (tileMap[x][y].isDoor()) {
                     //find the room that the door belongs to
                     for (Room room : getRooms()) {
-                        if (room.getRoomDoors().contains(getTileMap()[x][y])) {
+                        if (room.getRoomDoors().contains(tileMap[x][y])) {
                             //allow player to enter room
                             playerEntersRoom(currentPlayer, room);
                         }
@@ -465,7 +466,7 @@ public class Board {
                 } else {
                     //if the tile is not a wall or door then just make move
                     p.getToken().getTokenLocation().setOccupied(false);
-                    p.moveToken(getTileMap()[x][y]);
+                    p.moveToken(tileMap[x][y]);
                 }
             } else {
                 //if the tile to be moved is a wall or occupied don't move 
