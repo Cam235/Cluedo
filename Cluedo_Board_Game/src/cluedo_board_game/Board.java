@@ -771,5 +771,39 @@ public class Board {
         }
         return trapped;
     }
-
+    
+    /**
+     * given a player p, assumed to be an agent, return whether they must retrace a move
+     * in a given turn due to it being the only valid move to take, this method should be run at 
+     * some point after having run isPlayerTrapped()
+     * 
+     * @param p
+     * @return boolean for whether player is blocked
+     */
+    public boolean isPlayerBlockedByPreviousPath(Player p) {
+        boolean blocked = true;
+        int x = p.getToken().getTokenLocation().getColIndex();
+        int y = p.getToken().getTokenLocation().getRowIndex();
+        if ((x - 1) > -1 && (x - 1) < 28) {
+            if (!tileMap[x - 1][y].isOccupied() && !tileMap[x - 1][y].isWall() && !p.getPreviousPath().contains(tileMap[x - 1][y])) {
+                blocked = false;
+            }
+        }
+        if ((x + 1) > -1 && (x + 1) < 28) {
+            if (!tileMap[x + 1][y].isOccupied() && !tileMap[x + 1][y].isWall() && !p.getPreviousPath().contains(tileMap[x + 1][y])) {
+                blocked = false;
+            }
+        }
+        if ((y - 1) > -1 && (y - 1) < 28) {
+            if (!tileMap[x][y - 1].isOccupied() && !tileMap[x][y - 1].isWall() && !p.getPreviousPath().contains(tileMap[x][y - 1])) {
+                blocked = false;
+            }
+        }
+        if ((y + 1) > -1 && (y + 1) < 28) {
+            if (!tileMap[x][y + 1].isOccupied() && !tileMap[x][y + 1].isWall() && !p.getPreviousPath().contains(tileMap[x][y + 1])) {
+                blocked = false;
+            }
+        }
+        return blocked;
+    }
 }

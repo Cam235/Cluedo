@@ -22,6 +22,7 @@ public class Player {
     protected String mostRecentlySuggestedRoom = ""; //the players last suggested room, used to disable successive suggestions
     protected HashMap<String, Boolean> detectiveChecklist; //represents the detective checklist of the player
     protected String detectiveNotes; // represents detective Notes of player
+    protected ArrayList<Tile> previousPath; //represents the moves a player has taken in a given turn
 
     /**
      * Constructor for objects of class Player
@@ -238,5 +239,21 @@ public class Player {
      */
     public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
         throw new UnsupportedOperationException("Unsupported Player class for suggestions");
+    }
+
+    /**
+     * Getter for previous path field
+     * @return 
+     */
+    public ArrayList<Tile> getPreviousPath() {
+        return previousPath;
+    }
+
+    /**
+     * Setter for previous path field
+     * @param previousPath 
+     */
+    public void setPreviousPath(ArrayList<Tile> previousPath) {
+        this.previousPath = previousPath;
     }
 }

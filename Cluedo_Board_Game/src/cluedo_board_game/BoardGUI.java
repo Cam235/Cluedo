@@ -987,10 +987,6 @@ public class BoardGUI extends Application {
                         System.out.println("Not Valid Key");
                         break;
                 }
-                //--------------reset dice here just for testing -------------//
-                if (!(board.getCounter() < diceRoller.getDiceTotal())) {
-                    resetDice();
-                }
                 updateView();
             } else {
                 System.out.println("Agent Players turn");
@@ -1279,7 +1275,9 @@ public class BoardGUI extends Application {
                 diceRoller.getRollButton().fire();
                 //use current agent to make sure thread doesn't try to move the next player 
                 Player currentAgent = board.getCurrentPlayer();
-                //Starts the thread
+                currentAgent.setPreviousPath(new ArrayList<>());
+                currentAgent.getPreviousPath().add(currentAgent.getToken().getTokenLocation());
+                //create thread for agent move for showing individual movements
                 Thread thread = new Thread(() -> {
                     Runnable updater = () -> handleAgentMove(currentAgent);
                     while (board.getCounter() < diceRoller.getDiceTotal()) {
@@ -1298,6 +1296,7 @@ public class BoardGUI extends Application {
                     Platform.runLater(endTrunRunnalble);
 
                 });
+                //Starts the thread
                 thread.start();
                 break;
 
@@ -1347,10 +1346,16 @@ public class BoardGUI extends Application {
         if (board.getCounter() < diceRoller.getDiceTotal() && (board.getCurrentPlayer() == p)) {
             Integer[] newCoords;
             do {
-                newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
-                //don't let agent try and move out of bounds, to an occupied tile or to a wall
-            } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
-                    || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
+                do {
+                    newCoords = board.getCurrentPlayer().getMove(board.getCurrentPlayer().getToken().getTokenLocation().getColIndex(), board.getCurrentPlayer().getToken().getTokenLocation().getRowIndex());
+                    //don't let agent try and move out of bounds, to an occupied tile or to a wall
+                } while (newCoords[0] < 0 || newCoords[0] > 27 || newCoords[1] < 0 || newCoords[1] > 27
+                        || board.getTileMap()[newCoords[0]][newCoords[1]].isOccupied() || board.getTileMap()[newCoords[0]][newCoords[1]].isWall());
+                //don't let agent try and retrace a move unless it needs to
+            } while (!board.isPlayerBlockedByPreviousPath(board.getCurrentPlayer()) && 
+                    board.getCurrentPlayer().getPreviousPath().contains(board.getTileMap()[newCoords[0]][newCoords[1]]));
+            //add next move to agents previous path
+            board.getCurrentPlayer().getPreviousPath().add(board.getTileMap()[newCoords[0]][newCoords[1]]);
             board.moveCurrentPlayer(newCoords[0], newCoords[1], diceRoller.isDiceRolled(), diceRoller.getDiceTotal());
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
             updateView();
