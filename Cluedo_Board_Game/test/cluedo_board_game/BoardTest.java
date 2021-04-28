@@ -140,7 +140,7 @@ public class BoardTest {
     @Test
     public void testInitialisePlayerDetectiveCards() {
         board.initialisePlayerDetectiveCards();
-        assertEquals(21, board.getPlayerList().get(0).getCheckList().keySet().size());
+        assertEquals(21, board.getPlayerList().get(0).getChecklist().keySet().size());
     }
 }
 

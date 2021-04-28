@@ -685,7 +685,7 @@ public class Board {
                 for (String r : roomNames) {
                     currDetectCard.put(r, Boolean.FALSE);
                 }
-                p.setCheckList(currDetectCard);
+                p.setChecklist(currDetectCard);
                 p.setDetectiveNotes(currString);
 
                 if (p.isAgent()) {

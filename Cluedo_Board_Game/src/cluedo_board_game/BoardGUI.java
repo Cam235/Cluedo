@@ -1489,7 +1489,7 @@ public class BoardGUI extends Application {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
         //Give values of Players data to detectiveCardPanel
-        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getCheckList());
+        detectiveCardPanel.setDetectiveChecklist(board.getCurrentPlayer().getChecklist());
         detectiveCardPanel.setDetectiveNotes(board.getCurrentPlayer().getDetectiveNotes());
         //Create content with given values
         Scene detectiveCardScene = new Scene(detectiveCardPanel.createContent());
@@ -1498,7 +1498,7 @@ public class BoardGUI extends Application {
             //sets text areas value into detectiveNotes of detectiveCardsPanel
             detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
             //Assigns detective Card and Notes values as players detective Card and notes
-            board.getCurrentPlayer().setCheckList(detectiveCardPanel.getDetectiveChecklist());
+            board.getCurrentPlayer().setChecklist(detectiveCardPanel.getDetectiveChecklist());
             board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
         });
 
@@ -1515,7 +1515,7 @@ public class BoardGUI extends Application {
                 //sets text areas value into detectiveNotes of detectiveCardsPanel
                 detectiveCardPanel.setDetectiveNotes(detectiveCardPanel.getDetectiveNotesTextArea().getText());
                 //Assigns detective Card and Notes values as players detective Card and notes
-                board.getCurrentPlayer().setCheckList(detectiveCardPanel.getDetectiveChecklist());
+                board.getCurrentPlayer().setChecklist(detectiveCardPanel.getDetectiveChecklist());
                 board.getCurrentPlayer().setDetectiveNotes(detectiveCardPanel.getDetectiveNotes());
                 //Close string
                 stage.hide();
