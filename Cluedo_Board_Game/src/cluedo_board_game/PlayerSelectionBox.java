@@ -64,7 +64,6 @@ public class PlayerSelectionBox {
             @Override
             public void handle(ActionEvent event) {
                 playerName = playerTextField.getText();
-                //System.out.println(playerName);
             }
         });
         //Once character is selected from combobox, selected character image is found
@@ -74,7 +73,6 @@ public class PlayerSelectionBox {
             @Override
             public void handle(ActionEvent event) {
                 selectedCharacter = (String) characterSelectionCombobox.getValue();
-                System.out.println(selectedCharacter);
                 selectedCharacterImage = new Image("/CharacterCards/" + selectedCharacter + ".jpg", 130, 200, false, false);
                 selectedCharacterView = new ImageView(selectedCharacterImage);
             }

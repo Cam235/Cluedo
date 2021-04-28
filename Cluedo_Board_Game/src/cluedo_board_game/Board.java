@@ -472,11 +472,11 @@ public class Board {
                 }
             } else {
                 //if the tile to be moved is a wall or occupied don't move 
-                System.out.println("You cannot go through Wall or Occupied Tile");
+                //System.out.println("You cannot go through Wall or Occupied Tile");
                 alertMsg = "You cannot go through walls or occupied tiles!";
             }
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("You cant go here");
+            //System.out.println("You cant go here");
             alertMsg = "Invalid Move!";
         }
     }
