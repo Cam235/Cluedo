@@ -657,11 +657,11 @@ public class Board {
     }
 
     /**
-     * Initialises the player detective cards for all playing players, using a
+     * Initialises the player detective card for all playing players, using a
      * predefined list of characters, weapons and rooms, initialises all the
      * check list values as false and case notes values as empty
      */
-    public void initialisePlayerDetectiveCards() {
+    public void initialisePlayersDetectiveCards() {
         String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
         String[] weaponNames = {"Dagger", "Candlestick", "Revolver", "Rope", "Leadpiping", "Spanner"};
         String[] roomNames = {"Lounge", "Diningroom", "Kitchen", "Ballroom", "Conservatory", "Billiardroom", "Library", "Hall", "Study"};

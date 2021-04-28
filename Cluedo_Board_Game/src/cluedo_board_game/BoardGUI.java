@@ -107,12 +107,6 @@ public class BoardGUI extends Application {
     //Profile and alertBox to include all from players name text to diceroller
     private VBox profileAndAlertVBox;
 
-    //Adding MenuBar and items for gameSettings( Top left corner of the game)
-    MenuBar gameSettingsMenuBar;
-    Menu gameSettingsMenu;
-    MenuItem quitItem;//Button to quit game
-    MenuItem newGameItem;//Button to start new game
-    MenuItem restartItem;//Button to restart game
 
     //Weapon Image Views which are displayed in the room weapon belong to.
     private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
@@ -308,7 +302,7 @@ public class BoardGUI extends Application {
     /**
      * Places weapons to rooms randomly at the start of game
      */
-    private void randomlyPlaceWeapons() {
+    private void randomlyPlaceWeaponsInRooms() {
         //Shuffles weapons and rooms list,so in each game different weapons can be placed in different rooms    
         Collections.shuffle(board.getWeapons());
         Collections.shuffle(board.getRooms());
@@ -323,7 +317,7 @@ public class BoardGUI extends Application {
     /**
      * Sets colour of tokens and places them on specified positions on board
      */
-    private void placeTokensOnBoard() {
+    private void placePlayerTokensOnBoard() {
         for (Player player : board.getPlayerList()) {
             switch (player.getToken().getName()) {
                 case "Miss Scarlett": // Top Right
@@ -562,6 +556,59 @@ public class BoardGUI extends Application {
     }
 
     /**
+     * Sets up players of the game by taking player name, character(token) and
+     * player type (agent human) Every character must be assigned to some player
+     * to make corresponding token displayed on board . If player number below 6
+     * , some characters would not be assigned. In order to assign all the
+     * characters and display their tokens, non-playing agent players are
+     * created to make player number count to 6. After setting players, cards
+     * are distributed to all playing players,detectiveCardsAreGiven ,and their
+     * playing order is set depending on their character.
+     */
+    private void setUpPlayers() {
+        //Initialise PlayerName List
+        List<String> playerNamesList = new ArrayList<>();
+        //Initialise Player Type list
+        List<Character> playerTypesList = new ArrayList<>();
+        //Iterate through maximum player number ( 6 )
+        for (int i = 0; i < 6; i++) {
+            //If player is defined in selection boxes , then receive selection boxes
+            if (i < selectionBoxesNumber) {
+                playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
+                playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
+                System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
+            } else {
+                //If selection boxes are less than 6, create non-players,to fill up to 6
+                playerNamesList.add("nonplayer");
+                playerTypesList.add('a');
+                System.out.println(playerNamesList.get(i) + " is " + playerTypesList.get(i));
+            }
+        }
+        //Adds players and types ,creates the board
+        board.addPlayers(playerNamesList, playerTypesList);
+        ArrayList<String> tempCharacterNames = new ArrayList<>();
+        tempCharacterNames.addAll(Arrays.asList(characterNames));
+        //always create 6 players, create non playing players after playing players
+        for (int i = 0; i < 6; i++) {
+            if (i < selectionBoxesNumber) {
+                board.initialisePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
+                tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
+            } else {
+                board.initialisePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
+                board.getPlayerList().get(i).setIsPlaying(false);
+            }
+        }
+        board.distributeCards(); // cards are distrinbuted to players
+        board.initialisePlayersDetectiveCards(); // detective cards are given to players
+        board.orderPlayerList(); // orders the playing order
+
+        //Sets the current player to last player, then increments to start from beginning
+        board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
+        board.incrementCurrentPlayer();
+
+    }
+
+    /**
      * Creates Board, initialise Token at specified location and put in the
      * boardView Creates DiceRoller object Combines 2 different classes in VBox
      *
@@ -620,78 +667,20 @@ public class BoardGUI extends Application {
         profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         profileAndAlertVBox.setAlignment(Pos.CENTER);
 
-        //Informative texts for user interface
-        alertTxt = new Text();
-        counterTxt = new Text();
-
         board = new Board(columns, rows); //Create the Board         
         setUpWeapons(); //Create Weapons of board        
         setUpRooms(); //Create Rooms of board
-        randomlyPlaceWeapons(); // Randomly place weapons in rooms
         setUpBoardView(); // Sets the board View as a gridPane
         setUpPassageBtn(); //Sets upd passage button
+        setUpPlayers(); //Sets up players of board 
+        randomlyPlaceWeaponsInRooms(); // Randomly place weapons in rooms
+        placePlayerTokensOnBoard(); // Places tokens to positions
+        displayTokensAndWeapons(); //Displays tokens and weapons on grid
 
-        //Initialise PlayerName List
-        List<String> playerNamesList = new ArrayList<>();
-        //Initialise Player Type list
-        List<Character> playerTypesList = new ArrayList<>();
-        //Iterate through total player number ( 6 )
-        for (int i = 0; i < 6; i++) {
-            //If player is defined in selection boxes , then receive selection boxes
-            if (i < selectionBoxesNumber) {
-                playerNamesList.add(selectionBoxesList.get(i).getPlayerName());
-                playerTypesList.add(selectionBoxesList.get(i).getPlayerType());
-                System.out.println(playerNamesList.get(i) + "  is " + playerTypesList.get(i));
-            } else {
-                //If selection boxes are less than 6, create non-players,to fill up to 6
-                playerNamesList.add("nonplayer");
-                playerTypesList.add('a');
-                System.out.println(playerNamesList.get(i) + " is " + playerTypesList.get(i));
-            }
-        }
-        //Adds players and types ,creates the board
-        board.addPlayers(playerNamesList, playerTypesList);
-        ArrayList<String> tempCharacterNames = new ArrayList<>();
-        tempCharacterNames.addAll(Arrays.asList(characterNames));
-        //always create 6 players, create non playing players after playing players
-        for (int i = 0; i < 6; i++) {
-            if (i < selectionBoxesNumber) {
-                board.initialisePlayerToken(board.getPlayerList().get(i), selectionBoxesList.get(i).getPlayerCharacter());
-                tempCharacterNames.remove(selectionBoxesList.get(i).getPlayerCharacter());
-            } else {
-                board.initialisePlayerToken(board.getPlayerList().get(i), tempCharacterNames.remove(0));
-                board.getPlayerList().get(i).setIsPlaying(false);
-            }
-        }
-        board.distributeCards();
-        board.orderPlayerList();
-        //Sets the current player to last player, then increments to start from beginning
-        board.setCurrentPlayer(board.getPlayerList().get(board.getPlayerList().size() - 1));
-        board.incrementCurrentPlayer();
-
-        placeTokensOnBoard();
-
-        //Sets up display of playerTokens and weapons in board
-        for (int _r = 0; _r < rows; _r++) {
-            for (int _c = 0; _c < columns; _c++) {
-                for (Player p : board.getPlayerList()) {
-                    if (board.getTileMap()[_c][_r].isOccupied() && p.getToken().getTokenLocation() == board.getTileMap()[_c][_r]) {
-                        boardView.add(p.getToken(), _c, _r);
-                    }
-                }
-                for (Weapon weapon : board.getWeapons()) {
-                    //Gets the first placed weapons location
-                    if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
-                        weaponImageViews.add(new ImageView(weapon.getWeaponImage()));
-                        boardView.add(weaponImageViews.get(weaponImageViews.size() - 1), _c, _r);
-                    }
-                }
-            }
-        }
-
-        //Give players required stuff
-        board.initialisePlayerDetectiveCards();
-        //Displays current players Image
+        //Informative texts for user interface
+        alertTxt = new Text();
+        counterTxt = new Text();
+        //Displays current players name and Image
         currentPlayerNameText = new Text(board.getCurrentPlayer().getName() + " : " + board.getCurrentPlayer().getToken().getName() + "'s turn!");
         currentPlayerNameText.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 18));
         currentPlayerNameText.setWrappingWidth(170);
@@ -705,7 +694,6 @@ public class BoardGUI extends Application {
         counterTxt.setWrappingWidth(100);
         controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
         controlsVbx.setAlignment(Pos.TOP_CENTER);
-        //controlsVbx.setSpacing(5);
         profileAndAlertVBox.getChildren().addAll(currentPlayerNameText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
         currentPlayerNameText.setTextAlignment(TextAlignment.CENTER);
         alertTxt.setTextAlignment(TextAlignment.CENTER);
@@ -717,11 +705,11 @@ public class BoardGUI extends Application {
         gameBoxWithoutSettings.getChildren().addAll(controlsVbx, boardView, profileAndAlertVBox);
         gameBoxWithoutSettings.setAlignment(Pos.TOP_CENTER);
 
-        //Create GameSettings MenuBAr
-        gameSettingsMenu = new Menu("Game Settings");
-        quitItem = new MenuItem("Quit");
-        newGameItem = new MenuItem("Start New Game");
-        restartItem = new MenuItem("Restart");
+        //Create GameSettings MenuBar
+        Menu gameSettingsMenu = new Menu("Game Settings");
+        MenuItem quitItem = new MenuItem("Quit");
+        MenuItem newGameItem = new MenuItem("Start New Game");
+        MenuItem restartItem = new MenuItem("Restart");
         gameSettingsMenu.getItems().addAll(quitItem, newGameItem, restartItem);
         MenuBar menuBar = new MenuBar(gameSettingsMenu);
         //Actions on menuItems
@@ -731,8 +719,7 @@ public class BoardGUI extends Application {
 
         //Create background
         Background bg = new Background(new BackgroundFill(Color.DARKGRAY, CornerRadii.EMPTY, Insets.EMPTY));
-
-        // set background
+        //Set background
         gameBox.setBackground(bg);
         gameBox.getChildren().addAll(menuBar, gameBoxWithoutSettings);
 
@@ -1570,6 +1557,26 @@ public class BoardGUI extends Application {
         if (currentPlayerRoom.getPassageExit() != null) {
             passageBtn.setText("Move to " + board.getRoomOfPlayer(board.getCurrentPlayer()).getPassageExit().getName());
             passageBtn.setVisible(true);
+        }
+    }
+
+    private void displayTokensAndWeapons() {
+        //Sets up display of playerTokens and weapons in board
+        for (int _r = 0; _r < rows; _r++) {
+            for (int _c = 0; _c < columns; _c++) {
+                for (Player p : board.getPlayerList()) {
+                    if (board.getTileMap()[_c][_r].isOccupied() && p.getToken().getTokenLocation() == board.getTileMap()[_c][_r]) {
+                        boardView.add(p.getToken(), _c, _r);
+                    }
+                }
+                for (Weapon weapon : board.getWeapons()) {
+                    //Gets the first placed weapons location
+                    if (board.getTileMap()[_c][_r].equals(weapon.getWeaponLocation())) {
+                        weaponImageViews.add(new ImageView(weapon.getWeaponImage()));
+                        boardView.add(weaponImageViews.get(weaponImageViews.size() - 1), _c, _r);
+                    }
+                }
+            }
         }
     }
 
