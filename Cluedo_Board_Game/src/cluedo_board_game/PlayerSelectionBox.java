@@ -191,7 +191,7 @@ public class PlayerSelectionBox {
     /**
      * Gets the selected characters image
      *
-     * @returnselectedCharacterImage
+     * @return selectedCharacterImage
      */
     public Image getSelectedCharacterImage() {
         return selectedCharacterImage;

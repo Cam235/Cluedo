@@ -168,7 +168,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Creates suggestion & post suggestion content for agent
+     * Creates suggestion and post suggestion content for agent
      *
      * @param suggestingPlayer
      * @param respondingPlayer

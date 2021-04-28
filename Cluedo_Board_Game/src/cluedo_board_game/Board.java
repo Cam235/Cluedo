@@ -259,6 +259,8 @@ public class Board {
      *
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
+     * @param playerTypes a list of character representing which type of player to add
+     * for each given player name
      */
     public void addPlayers(List<String> playerNames, List<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
