@@ -672,7 +672,8 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates game box with all game displays desired
+     * Creates game box which includes control box of buttons,
+     * grid of game board, and player profile sections with a diceRoller
      * @return gameBox
      */
     public VBox setUpGameBox() {
@@ -738,7 +739,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Handles a suggestion with a given suspected character, weapon and rooms
+     * Handles a suggestion with a given suspected character, weapon and room
      * name
      *
      * @param characterName
@@ -852,6 +853,22 @@ public class BoardGUI extends Application {
         }
     }
 
+    
+    
+    
+    /**
+     * Handles a accusation with a given suspected character, weapon and room name
+     * Makes the correctly accusing player as winner of the game and gives a related display 
+     * with game settings options(Restart, Start new game, quit).
+     * 
+     * Also disables player having turns if player makes false accusation, 
+     * and if all of the players make false accusation, window appears with game settings options 
+     * to indicate no player won the game.
+     * 
+     * @param characterName
+     * @param weaponName
+     * @param roomName 
+     */
     private void handleAccusation(String characterName, String weaponName, String roomName) {
         //card distributor from board is used here for murder envlope functionality
         CardDistributor cardDistributor = board.getCardDistributor();
