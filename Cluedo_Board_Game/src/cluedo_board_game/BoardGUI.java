@@ -1397,7 +1397,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * handles movement of agent player p, calls updateView() after each move to
+     * Handles movement of agent player p, calls updateView() after each move to
      * see agent moves in real time on the board
      *
      * @param p
@@ -1428,14 +1428,10 @@ public class BoardGUI extends Application {
             updateView();
         }
     }
-
-    public void selectCharacters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
 
     /**
-     * opens a dialog on the stage pStage to show a list of player cards
-     *
+     * Display of current human player's hand on selected stage
      * @param pStage
      */
     public void displayCardList(Stage pStage) {
@@ -1445,9 +1441,11 @@ public class BoardGUI extends Application {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(pStage);
             VBox dialogVbox = new VBox(20);
+            //Header of dialog
             Text showHandtxt = new Text("--------Cards--------");
             showHandtxt.setFont(Font.font("Verdana", FontWeight.BLACK, FontPosture.REGULAR, 15));
             dialogVbox.getChildren().add(showHandtxt);
+            //Displays cards images on TilePane
             TilePane displayedCards = new TilePane();
             for (Card c : board.getCurrentPlayer().getHand()) {
                 ImageView cardImageView;
@@ -1482,11 +1480,15 @@ public class BoardGUI extends Application {
             dialog.setTitle("---" + board.getCurrentPlayer().getName() + "'s Cards---");
             dialog.show();
         } else {
-
             alertTxt.setText("You cannot see agent player's hand !");
         }
     }
 
+    /**
+     * Display of the detective card of current player on selected stage, 
+     * which includes detective checklist and notes of player
+     * @param stage 
+     */
     public void displayDetectiveCard(Stage stage) {
 
         DetectiveCardPanel detectiveCardPanel = new DetectiveCardPanel();
@@ -1529,7 +1531,6 @@ public class BoardGUI extends Application {
                 stage.hide();
             }
         });
-        //Updates detectiveCards when checkBox is selected
 
     }
 
@@ -1546,7 +1547,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * resets the dice and counter
+     * Resets the dice and counter
      */
     private void resetDice() {
         //Sets Counter to 0
@@ -1557,6 +1558,10 @@ public class BoardGUI extends Application {
         diceRoller.enableDiceRollerButton();
     }
 
+    /**
+     * Updates movement alerts,counts number of moves left and displays alert messages
+     * Also make passage Button invisible if player is not in room
+     */
     private void updateMovementAlerts() {
         if (diceRoller.isDiceRolled()) {
             counterTxt.setText("Moves Left:" + (diceRoller.getDiceTotal() - board.getCounter()));
@@ -1567,6 +1572,9 @@ public class BoardGUI extends Application {
         }
     }
 
+    /**
+     * Sets up passage button to transport token to passage exit room
+     */
     private void setUpPassageBtn() {
         passageBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -1585,6 +1593,11 @@ public class BoardGUI extends Application {
         });
     }
 
+    
+    /**
+     * Enables passage button and makes it visible when player is already 
+     * in room with passage exit while having turn
+     */
     private void enablePassageBtn() {
         Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());
         if (currentPlayerRoom.getPassageExit() != null) {
@@ -1593,6 +1606,9 @@ public class BoardGUI extends Application {
         }
     }
 
+    /**
+     * Displays token and weapon images on boardView
+     */
     private void displayTokensAndWeapons() {
         //Sets up display of playerTokens and weapons in board
         for (int _r = 0; _r < rows; _r++) {
