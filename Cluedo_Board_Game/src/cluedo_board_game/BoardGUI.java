@@ -107,7 +107,6 @@ public class BoardGUI extends Application {
     //Profile and alertBox to include all from players name text to diceroller
     private VBox profileAndAlertVBox;
 
-
     //Weapon Image Views which are displayed in the room weapon belong to.
     private ArrayList<ImageView> weaponImageViews = new ArrayList<>();
     //Card name values for accusation,suggestions and Image setting functions
@@ -609,18 +608,9 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates Board, initialise Token at specified location and put in the
-     * boardView Creates DiceRoller object Combines 2 different classes in VBox
-     *
-     * @return gameBox
+     * Sets up game Buttons
      */
-    public VBox setUpBoard() {
-        gameBox = new VBox(); // gameBox which will hold whole content         
-        HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
-
-        //DiceRoller and its content added
-        diceRoller = new DiceRoller();
-        VBox diceRollerView = diceRoller.createContent();
+    private void setControlsBox() {
         //Detective Card Button
         detectiveCardButton = new Button("Check Detective Card");
         detectiveCardButton.setTextAlignment(TextAlignment.CENTER);
@@ -658,25 +648,45 @@ public class BoardGUI extends Application {
         passageBtn.setPrefSize(130, 100);
         passageBtn.setVisible(false);
         passageBtn.setStyle(" -fx-font-size: 15px; -fx-font-weight : bold ;");
+        setUpPassageBtn(); //Sets up passage functionality
         //Left hand side of game board, Control VBox to hold game buttons
         controlsVbx = new VBox();
         controlsVbx.setAlignment(Pos.CENTER);
-        //Right hand side of game board, displays alerts and current user name,image 
-        profileAndAlertVBox = new VBox();
-        profileAndAlertVBox.setMaxWidth(300);
-        profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        profileAndAlertVBox.setAlignment(Pos.CENTER);
+        //Puts buttons into controlVBox
+        controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
+        controlsVbx.setAlignment(Pos.TOP_CENTER);
+    }
+    
+    
+
+    /**
+     * Creates Board, initialise Token at specified location and put in the
+     * boardView Creates DiceRoller object Combines 2 different classes in VBox
+     *
+     * @return gameBox
+     */
+    public VBox setUpBoard() {
+        gameBox = new VBox(); // gameBox which will hold whole content         
+        HBox gameBoxWithoutSettings = new HBox();//Box to hold everything except settings
+        setControlsBox(); // Sets the the control Box including buttons of game
 
         board = new Board(columns, rows); //Create the Board         
         setUpWeapons(); //Create Weapons of board        
         setUpRooms(); //Create Rooms of board
-        setUpBoardView(); // Sets the board View as a gridPane
-        setUpPassageBtn(); //Sets upd passage button
+        setUpBoardView(); // Sets the board View as a gridPane      
         setUpPlayers(); //Sets up players of board 
         randomlyPlaceWeaponsInRooms(); // Randomly place weapons in rooms
         placePlayerTokensOnBoard(); // Places tokens to positions
         displayTokensAndWeapons(); //Displays tokens and weapons on grid
 
+        //DiceRoller and its content added
+        diceRoller = new DiceRoller();
+        VBox diceRollerView = diceRoller.createContent();
+        //Right hand side of game board, displays alerts and current user name,image 
+        profileAndAlertVBox = new VBox();
+        profileAndAlertVBox.setMaxWidth(300);
+        profileAndAlertVBox.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        profileAndAlertVBox.setAlignment(Pos.CENTER);
         //Informative texts for user interface
         alertTxt = new Text();
         counterTxt = new Text();
@@ -690,10 +700,8 @@ public class BoardGUI extends Application {
         alertTxt.setFont(Font.font("Verdana", FontWeight.SEMI_BOLD, 15));
         alertTxt.setWrappingWidth(170);
         counterTxt.setFont(Font.font("Verdana", FontPosture.REGULAR, 13));
-
         counterTxt.setWrappingWidth(100);
-        controlsVbx.getChildren().addAll(showHandBtn, detectiveCardButton, suggestionBtn, accusationBtn, endTurnBtn, passageBtn);
-        controlsVbx.setAlignment(Pos.TOP_CENTER);
+
         profileAndAlertVBox.getChildren().addAll(currentPlayerNameText, currentPlayerImageView, counterTxt, diceRollerView, alertTxt);
         currentPlayerNameText.setTextAlignment(TextAlignment.CENTER);
         alertTxt.setTextAlignment(TextAlignment.CENTER);
@@ -1380,7 +1388,7 @@ public class BoardGUI extends Application {
             Integer[] newCoords = new Integer[2];
             Tile adjDoor = board.getAdjacentDoor(p);
             //if agent can enter desirable room do so
-            if(board.getRoomOfPlayer(p) == null && adjDoor != null && !board.getRoomOfTile(adjDoor).getName().equals(p.getMostRecentlySuggestedRoom())) {
+            if (board.getRoomOfPlayer(p) == null && adjDoor != null && !board.getRoomOfTile(adjDoor).getName().equals(p.getMostRecentlySuggestedRoom())) {
                 newCoords[0] = adjDoor.getColIndex();
                 newCoords[1] = adjDoor.getRowIndex();
             } else { //else make other move 
