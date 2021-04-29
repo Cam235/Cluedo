@@ -25,7 +25,7 @@ public class Player {
     protected ArrayList<Tile> previousPath; //represents the moves a player has taken in a given turn
 
     /**
-     * Constructor for objects of class Player
+     * Constructor for objects of class Player.
      *
      * @param playerId a number which uniquely identifies a player during a game
      * @param name the display name for the player
@@ -38,7 +38,7 @@ public class Player {
     }
 
     /**
-     * Gets player Id
+     * Gets player Id.
      *
      * @return playerId
      */
@@ -47,7 +47,7 @@ public class Player {
     }
 
     /**
-     * Gets player name
+     * Gets player name.
      *
      * @return name
      */
@@ -56,7 +56,7 @@ public class Player {
     }
 
     /**
-     * Gets player's hand
+     * Gets player's hand.
      *
      * @return hand
      */
@@ -65,7 +65,7 @@ public class Player {
     }
 
     /**
-     * Sets player's hand
+     * Sets player's hand.
      *
      * @param hand
      */
@@ -74,7 +74,7 @@ public class Player {
     }
 
     /**
-     * Gets player's token
+     * Gets player's token.
      *
      * @return token
      */
@@ -83,7 +83,7 @@ public class Player {
     }
 
     /**
-     * Sets player's token
+     * Sets player's token.
      *
      * @param token
      */
@@ -92,7 +92,7 @@ public class Player {
     }
 
     /**
-     * For moving token,implemented in human and agent player
+     * For moving token, implemented in human and agent player.
      *
      * @param tile
      */
@@ -101,7 +101,7 @@ public class Player {
     }
 
     /**
-     * To return whether player is agent or human. Implemented in subclasses
+     * To return whether player is agent or human. Implemented in subclasses.
      *
      * @return null
      */
@@ -110,7 +110,7 @@ public class Player {
     }
 
     /**
-     * Gets whether the player is actively playing
+     * Gets whether the player is actively playing.
      *
      * @return isPlaying
      */
@@ -119,7 +119,7 @@ public class Player {
     }
 
     /**
-     * Sets whether the player is actively playing
+     * Sets whether the player is actively playing.
      *
      * @param isPlaying
      */
@@ -128,7 +128,7 @@ public class Player {
     }
 
     /**
-     * For the token movement. Implemented in subclasses
+     * For the token movement. Implemented in subclasses.
      *
      * @param x
      * @param y
@@ -139,8 +139,8 @@ public class Player {
     }
 
     /**
-     * update the players detective checklist with a given string key k and pair
-     * value v
+     * Update the players detective checklist with a given string key k and pair
+     * value v.
      *
      * @param k
      * @param v
@@ -150,7 +150,7 @@ public class Player {
     }
 
     /**
-     * Gets the detective checklist
+     * Gets the detective checklist.
      *
      * @return checklist
      */
@@ -159,7 +159,7 @@ public class Player {
     }
 
     /**
-     * Sets the detective checklist
+     * Sets the detective checklist.
      *
      * @param checklist
      */
@@ -168,7 +168,7 @@ public class Player {
     }
 
     /**
-     * Gets the detective notes
+     * Gets the detective notes.
      *
      * @return detectiveNotes
      */
@@ -177,7 +177,7 @@ public class Player {
     }
 
     /**
-     * Sets the detective notes
+     * Sets the detective notes.
      *
      * @param detectiveNotes
      */
@@ -186,7 +186,7 @@ public class Player {
     }
 
     /**
-     * Gets the name of most recently suggested room
+     * Gets the name of most recently suggested room.
      *
      * @return mostRecentlySuggestedRoom
      */
@@ -195,7 +195,7 @@ public class Player {
     }
 
     /**
-     * Sets the name of most recently suggested room
+     * Sets the name of most recently suggested room.
      *
      * @param mostRecentlySuggestedRoom
      */
@@ -204,7 +204,7 @@ public class Player {
     }
 
     /**
-     * Returns names of unseen cards, implementation in subclasses
+     * Returns names of unseen cards, implementation in subclasses.
      *
      * @return
      */
@@ -213,14 +213,15 @@ public class Player {
     }
 
     /**
-     * Mark hand as seen, implementation in subclasses
+     * Mark hand as seen, implementation in subclasses.
      */
     public void markHandAsSeen() {
         throw new UnsupportedOperationException("Unsupported Player class for detective card operations");
     }
 
     /**
-     * Gets Accusation , implementation in subclasses
+     * Gets Accusation, implementation in subclasses.
+     *
      * @param characters
      * @param rooms
      * @param weapons
@@ -229,29 +230,32 @@ public class Player {
     public String[] getAccusation(String[] characters, String[] rooms, String[] weapons) {
         throw new UnsupportedOperationException("Unsupported Player class for suggestions");
     }
-    
+
     /**
-     * Gets suggestion , implementation in subclasses
+     * Gets suggestion, implementation in subclasses.
+     *
      * @param characters
      * @param rooms
      * @param weapons
-     * @return 
+     * @return
      */
     public String[] getSuggestion(String[] characters, String[] rooms, String[] weapons) {
         throw new UnsupportedOperationException("Unsupported Player class for suggestions");
     }
 
     /**
-     * Getter for previous path field
-     * @return 
+     * Getter for previous path field.
+     *
+     * @return
      */
     public ArrayList<Tile> getPreviousPath() {
         return previousPath;
     }
 
     /**
-     * Setter for previous path field
-     * @param previousPath 
+     * Setter for previous path field.
+     *
+     * @param previousPath
      */
     public void setPreviousPath(ArrayList<Tile> previousPath) {
         this.previousPath = previousPath;

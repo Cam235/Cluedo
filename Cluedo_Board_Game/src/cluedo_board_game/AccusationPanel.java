@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cluedo_board_game;
 
 import javafx.collections.FXCollections;
@@ -25,7 +20,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * Accusation panel class which includes displays and fields to fulfil accusation functions of the game
+ * Accusation panel class which includes displays and fields to fulfil
+ * accusation functions of the game.
+ *
  * @author Anilz
  * @version 1.0
  */
@@ -52,7 +49,7 @@ public class AccusationPanel {
 
     /**
      * Create the accusation content where human player can make accusation by
-     * selecting weapon,room and suspect card
+     * selecting a weapon, room and suspect card.
      *
      * @param accusingPlayerName name of player who accuses
      * @return accusationContent
@@ -120,9 +117,9 @@ public class AccusationPanel {
     }
 
     /**
-     * An alert displayed when a player makes a correct accusation
+     * An alert displayed when a player makes a correct accusation.
      *
-     * @param wonPlayerName player's name who made correct accusation
+     * @param wonPlayerName player's name who made a correct accusation
      * @param envelopeSuspect
      * @param envelopeRoom
      * @param envelopeWeapon
@@ -148,7 +145,7 @@ public class AccusationPanel {
 
     /**
      *
-     * @param lostPlayerName player's name who made false accusation
+     * @param lostPlayerName player's name who made a false accusation
      * @param envelopeSuspect
      * @param envelopeRoom
      * @param envelopeWeapon
@@ -177,7 +174,7 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of accused suspect
+     * Gets the name of the accused suspect.
      *
      * @return accusedSuspect
      */
@@ -186,7 +183,7 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of accused room
+     * Gets the name of the accused room.
      *
      * @return accusedRoom
      */
@@ -195,7 +192,7 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of accused Weapon
+     * Gets the name of the accused Weapon.
      *
      * @return accusedWeapon
      */
@@ -204,7 +201,7 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of envelope suspect (murderer)
+     * Gets the name of the envelope suspect (murderer).
      *
      * @return envelopeSuspect
      */
@@ -213,7 +210,7 @@ public class AccusationPanel {
     }
 
     /**
-     * Sets the name of envelope suspect (murderer)
+     * Sets the name of the envelope suspect (murderer).
      *
      * @param envelopeSuspect
      */
@@ -222,7 +219,8 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of envelope room (murder room)
+     * Gets the name of the envelope room (murder room).
+     *
      * @return envelopeRoom
      */
     public String getEnvelopeRoom() {
@@ -230,7 +228,8 @@ public class AccusationPanel {
     }
 
     /**
-     * Sets the name of envelope room (murder room)
+     * Sets the name of the envelope room (murder room).
+     *
      * @param envelopeRoom
      */
     public void setEnvelopeRoom(String envelopeRoom) {
@@ -238,7 +237,8 @@ public class AccusationPanel {
     }
 
     /**
-     * Gets the name of envelope weapon (murder weapon)
+     * Gets the name of the envelope weapon (murder weapon).
+     *
      * @return envelopeWeapon
      */
     public String getEnvelopeWeapon() {
@@ -246,15 +246,17 @@ public class AccusationPanel {
     }
 
     /**
-     * Sets the name of envelope weapon
-     * @param envelopeWeapon 
+     * Sets the name of the envelope weapon.
+     *
+     * @param envelopeWeapon
      */
     public void setEnvelopeWeapon(String envelopeWeapon) {
         this.envelopeWeapon = envelopeWeapon;
     }
 
     /**
-     * Gets the submit button
+     * Gets the submit button.
+     *
      * @return submitButton
      */
     public Button getSubmitButton() {
@@ -262,10 +264,11 @@ public class AccusationPanel {
     }
 
     /**
-     * Creates the display of accusation cards
+     * Creates the display of accusation cards.
+     *
      * @param suspectName
      * @param roomName
-     * @param weaponName 
+     * @param weaponName
      */
     public void initialiseCardsDisplay(String suspectName, String roomName, String weaponName) {
         ImageView suspectCardView = new ImageView(new Image("/CharacterCards/" + suspectName + ".jpg", 130, 200, false, false));

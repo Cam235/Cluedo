@@ -21,7 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * Represents the rolling a dice via button
+ * Represents rolling a dice via button.
  *
  * @author Anilz
  */
@@ -42,7 +42,7 @@ public class DiceRoller {
     ImageView diceImageView2 = new ImageView(diceImage2);
 
     /**
-     * Creates DiceRoller content including 2 Dices and a roll button GUI
+     * Creates DiceRoller content including 2 Dices and a roll button GUI.
      *
      * @return diceRollerBox
      */
@@ -87,7 +87,7 @@ public class DiceRoller {
     }
 
     /**
-     * Returns true if dice is rolled, and false if dice has not rolled yet
+     * Returns true if dice is rolled, and false if dice has not been rolled.
      *
      * @return diceRolled
      */
@@ -96,7 +96,7 @@ public class DiceRoller {
     }
 
     /**
-     * Sets whether or not dice is rolled
+     * Sets whether or not dice is rolled.
      *
      * @param diceRolled
      */
@@ -105,21 +105,22 @@ public class DiceRoller {
     }
 
     /**
-     * Enables the diceRoller Button to roll the dice
+     * Enables the diceRoller Button to roll the dice.
      */
     public void enableDiceRollerButton() {
         rollButton.setDisable(false);
     }
 
     /**
-     * @return total Dice value 
+     * @return total Dice value
      */
     public int getDiceTotal() {
         return diceNumber + diceNumber2;
     }
 
     /**
-     * Gets the roll button
+     * Gets the roll button.
+     *
      * @return rollButton
      */
     public Button getRollButton() {

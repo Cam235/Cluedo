@@ -14,8 +14,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 /**
- * Represents each tile of the board
- * Extends to rectangle to be displayed on board
+ * Represents each tile of the board.
  *
  * @author Anilz
  * @version 1.0
@@ -32,8 +31,8 @@ public class Tile extends Rectangle {
     private Image image;    //Image of tile ,each tile has its own image
 
     /**
-     * Constructor of tile object Takes row and column index parameters to
-     * identify tile from other tiles
+     * Constructor of tile object takes row and column index parameters to
+     * identify tile from other tiles.
      *
      * @param colIndex
      * @param rowIndex
@@ -48,7 +47,8 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Gets column index of tile
+     * Gets column index of tile.
+     *
      * @return column index
      */
     public int getColIndex() {
@@ -56,7 +56,8 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Gets Row index of tile
+     * Gets Row index of tile.
+     *
      * @return rowIndex
      */
     public int getRowIndex() {
@@ -64,15 +65,16 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Get the occupied value,returns true if a weapon or token is on tile
-     * @return occupied 
+     * Get the occupied value, returns true if a weapon or token is on tile.
+     *
+     * @return occupied
      */
     public boolean isOccupied() {
         return occupied;
     }
 
     /**
-     * Set the occupied value
+     * Set the occupied value.
      *
      * @param isOccupied
      */
@@ -81,7 +83,8 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Get the wall value
+     * Get the wall value.
+     *
      * @return wall
      */
     public boolean isWall() {
@@ -89,15 +92,17 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Set the wall value
-     * @param isWall 
+     * Set the wall value.
+     *
+     * @param isWall
      */
     public void setWall(boolean isWall) {
         this.wall = isWall;
     }
 
     /**
-     * Get the door value
+     * Get the door value.
+     *
      * @return door
      */
     public boolean isDoor() {
@@ -105,8 +110,9 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Set the door value
-     * @param isDoor 
+     * Set the door value.
+     *
+     * @param isDoor
      */
     public void setDoor(boolean isDoor) {
         //if its door, its no longer wall
@@ -115,15 +121,17 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Set the tile text
-     * @param tileText 
+     * Set the tile text.
+     *
+     * @param tileText
      */
     public void setText(String tileText) {
         text.setText(tileText);
     }
 
     /**
-     * Gets the text value of tile
+     * Gets the text value of tile.
+     *
      * @return text
      */
     public Text getText() {
@@ -131,7 +139,8 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Gets the tile image
+     * Gets the tile image.
+     *
      * @return image
      */
     public Image getImage() {
@@ -139,8 +148,9 @@ public class Tile extends Rectangle {
     }
 
     /**
-     * Sets the tile image
-     * @param image 
+     * Sets the tile image.
+     *
+     * @param image
      */
     public void setImage(Image image) {
         this.image = image;

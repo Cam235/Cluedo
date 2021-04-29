@@ -8,19 +8,20 @@ package cluedo_board_game;
 import javafx.scene.image.Image;
 
 /**
- * The weapon class which is for creating and placing game weapons in rooms to indicate previous suggestions 
+ * The weapon class which is for creating and placing game weapons in rooms to
+ * indicate previous suggestions.
+ *
  * @author Anilz
  * @version 1.0
  */
-public class Weapon  {
+public class Weapon {
 
     private String name; // Name of weapon
     private Tile weaponLocation; // Tile Position of weapon
     private Image weaponImage; // Image of weapon
 
     /**
-     * Constructor for weapon
-     * Creates weapon but does not place in board yet
+     * Constructor for weapon.
      *
      * @param name
      */
@@ -30,7 +31,8 @@ public class Weapon  {
     }
 
     /**
-     * Gets name of weapon
+     * Gets name of weapon.
+     *
      * @return name
      */
     public String getName() {
@@ -39,7 +41,8 @@ public class Weapon  {
     }
 
     /**
-     * Gets the location of weapon
+     * Gets the location of weapon.
+     *
      * @return
      */
     public Tile getWeaponLocation() {
@@ -47,7 +50,8 @@ public class Weapon  {
     }
 
     /**
-     * Places the weapon on selected tile, and make the tile occupied
+     * Places the weapon on selected tile, and makes the tile occupied.
+     *
      * @param newWeaponLocation tile in which weapon is put
      */
     public void setWeaponLocation(Tile newWeaponLocation) {
@@ -62,7 +66,8 @@ public class Weapon  {
     }
 
     /**
-     * Gets weapon Image
+     * Gets weapon Image.
+     *
      * @return weaponImage
      */
     public Image getWeaponImage() {
@@ -70,7 +75,8 @@ public class Weapon  {
     }
 
     /**
-     * Sets the weapon Image
+     * Sets the weapon Image.
+     *
      * @param weaponImage
      */
     public void setWeaponImage(Image weaponImage) {

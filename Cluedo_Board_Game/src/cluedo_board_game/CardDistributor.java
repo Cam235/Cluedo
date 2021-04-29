@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Used to distribute cards among players and the envelope
+ * Used to distribute cards among players and the envelope.
  *
  * @author cwood
  * @version 1.01
@@ -63,7 +63,7 @@ public class CardDistributor {
 
     /**
      * Sets the envelope for the board game with one card from each of the three
-     * types
+     * types.
      */
     public void setEnvelope() {
         //create new empty envelope
@@ -79,7 +79,7 @@ public class CardDistributor {
     }
 
     /**
-     * Puts all the cards into one deck and shuffles them into a random order
+     * Puts all the cards into one deck and shuffles them into a random order.
      */
     public void shuffleCards() {
         //add all elements from pCards, wCards and rCards to finalDeck
@@ -92,7 +92,7 @@ public class CardDistributor {
     }
 
     /**
-     * Getter for murderer
+     * Getter for murderer.
      *
      * @return murderer
      */
@@ -101,7 +101,7 @@ public class CardDistributor {
     }
 
     /**
-     * Getter for murder weapon
+     * Getter for murder weapon.
      *
      * @return murder weapon
      */
@@ -110,7 +110,7 @@ public class CardDistributor {
     }
 
     /**
-     * Getter for murder room
+     * Getter for murder room.
      *
      * @return returns murder room
      */
@@ -124,7 +124,7 @@ public class CardDistributor {
     }
 
     /**
-     * Deals the cards in the deck to a given list of players
+     * Deals the cards in the deck to a given list of players.
      *
      * @param pList
      */

@@ -24,7 +24,7 @@ public class Token extends Circle {
     private Tile tokenLocation = null; //Token location , initially set to null
 
     /**
-     * Constructor for Token,creates token with desired circle properties
+     * Constructor for Token that creates token with desired circle properties.
      *
      * @param name name of the Token
      */
@@ -40,37 +40,37 @@ public class Token extends Circle {
     }
 
     /**
-     * Gets the name of token
+     * Gets the name of token.
+     *
      * @return name
      */
-    
     public String getName() {
         return name;
     }
 
     /**
-     * Sets the name of token
+     * Sets the name of token.
+     *
      * @param name
      */
-    
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Gets tokens location
+     * Gets tokens location.
+     *
      * @return tokenLocation
      */
-    
     public Tile getTokenLocation() {
         return tokenLocation;
     }
 
     /**
-     * Sets Token's location on selected tile
+     * Sets Token's location on selected tile.
+     *
      * @param tokenLocation
      */
-    
     public void setTokenLocation(Tile tokenLocation) {
         this.tokenLocation = tokenLocation;
         tokenLocation.setOccupied(true);

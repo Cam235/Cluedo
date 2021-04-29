@@ -18,8 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
 /**
- * A class put in pre-game content, and allows potential players to write their
- * name ,and choose their character
+ * A class put in the pre-game content, and allows players to write their name,
+ * and choose their character.
  *
  * @author Anilz
  */
@@ -106,7 +106,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets player name
+     * Gets player name.
      *
      * @return playerName
      */
@@ -115,7 +115,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets player type (agent or human)
+     * Gets player type (agent or human).
      *
      * @return selectedPlayerType
      */
@@ -124,7 +124,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets player character
+     * Gets player character.
      *
      * @return selectedCharacter
      */
@@ -133,7 +133,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets game characters
+     * Gets game characters.
      *
      * @return characters
      */
@@ -142,7 +142,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets textfield
+     * Gets text field.
      *
      * @return playerTextField
      */
@@ -151,7 +151,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets comboBox of character selection
+     * Gets comboBox of character selection.
      *
      * @return characterSelectionCombobox
      */
@@ -160,7 +160,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets cardView of selected character
+     * Gets cardView of selected character.
      *
      * @return selectedCharacterView
      */
@@ -169,7 +169,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets the name of selected character
+     * Gets the name of selected character.
      *
      * @return selectedCharacter
      */
@@ -178,7 +178,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Sets the character to be played with
+     * Sets the character to be played with.
      *
      * @param selectedCharacter
      */
@@ -187,7 +187,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets the selected characters image
+     * Gets the selected characters image.
      *
      * @return selectedCharacterImage
      */
@@ -196,7 +196,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Sets the image of selected character
+     * Sets the image of selected character.
      *
      * @param selectedCharacterImage
      */
@@ -205,7 +205,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Sets the imageView of selected character
+     * Sets the imageView of selected character.
      *
      * @param selectedCharacterView
      */
@@ -214,7 +214,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets the agent button
+     * Gets the agent button.
      *
      * @return agentButton
      */
@@ -223,7 +223,7 @@ public class PlayerSelectionBox {
     }
 
     /**
-     * Gets the human button
+     * Gets the human button.
      *
      * @return humanButton
      */

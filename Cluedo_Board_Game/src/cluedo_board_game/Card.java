@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 
 /**
  * Represents cards in the board game which are handed to players and put in the
- * envelope
+ * envelope.
  *
  * @author cwood
  * @version 1.0
@@ -19,7 +19,7 @@ public class Card {
     private Image cardImage; // for the image of the card
 
     /**
-     * Constructor for objects of class Card
+     * Constructor for objects of class Card.
      *
      * @param cardType Card type enum, either Person, Weapon or Room
      * @param cardName Display name of the card
@@ -31,7 +31,7 @@ public class Card {
     }
 
     /**
-     * Gets card name
+     * Gets card name.
      *
      * @return name
      */
@@ -40,7 +40,7 @@ public class Card {
     }
 
     /**
-     * Sets card name
+     * Sets card name.
      *
      * @param newName
      */
@@ -49,7 +49,7 @@ public class Card {
     }
 
     /**
-     * Gets card type
+     * Gets card type.
      *
      * @return type
      */
@@ -58,7 +58,8 @@ public class Card {
     }
 
     /**
-     * Sets card type
+     * Sets card type.
+     *
      * @param newType
      */
     public void setType(CardType newType) {
@@ -66,7 +67,8 @@ public class Card {
     }
 
     /**
-     * Gets card Image
+     * Gets card Image.
+     *
      * @return cardImage
      */
     public Image getCardImage() {
@@ -74,8 +76,9 @@ public class Card {
     }
 
     /**
-     * Sets card image
-     * @param cardImage 
+     * Sets card image.
+     *
+     * @param cardImage
      */
     public void setCardImage(Image cardImage) {
         this.cardImage = cardImage;

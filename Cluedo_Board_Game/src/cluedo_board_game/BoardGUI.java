@@ -9,7 +9,6 @@ package cluedo_board_game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -56,7 +55,7 @@ import javafx.stage.WindowEvent;
 
 /**
  * Representation of the Cluedo game, where characters are chosen and game is
- * played, with similar functions that actual board game has
+ * played, with similar functions that the actual board game has.
  *
  * @author Anilz
  * @version 4.0
@@ -124,9 +123,9 @@ public class BoardGUI extends Application {
 
     /**
      * Pre-game content is created where number of players is decided using add
-     * and remove player buttons. Subsequently , players name , character and
+     * and remove player buttons. Subsequently the players name, character and
      * type is assigned via input fields of selection boxes Image of selected
-     * character and name of player is displayed below the selection boxes
+     * character and name of player is displayed below the selection boxes.
      *
      * @return preGameBox
      */
@@ -274,7 +273,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates weapons of the board and assigns their images
+     * Creates weapons of the board and assigns their images.
      */
     private void setUpWeapons() {
         // Dagger, candlestick, revolver, rope, lead piping and spanner
@@ -293,7 +292,7 @@ public class BoardGUI extends Application {
     /**
      * Creates rooms of the board and add specified number of doors to specified
      * positions on room walls By making tile a door, tile is no longer be wall,
-     * so tokens can move into room via doors without being blocked
+     * so tokens can move into room via doors without being blocked.
      */
     private void setUpRooms() {
         //Create Kithen
@@ -448,7 +447,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Places weapons to rooms randomly at the start of game
+     * Places weapons to rooms randomly at the start of game.
      */
     private void randomlyPlaceWeaponsInRooms() {
         //Shuffles weapons and rooms list,so in each game different weapons can be placed in different rooms    
@@ -463,7 +462,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Sets colour of tokens and places them on specified positions on board
+     * Sets colour of tokens and places them on specified positions on board.
      */
     private void placePlayerTokensOnBoard() {
         for (Player player : board.getPlayerList()) {
@@ -501,8 +500,8 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates visual representation of game board, Giving each tiles some
-     * texture image
+     * Creates visual representation of game board, giving each tile a texture
+     * image.
      */
     private void displayBoardView() {
         boardView = new GridPane();
@@ -547,7 +546,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Displays token and weapon images on boardView
+     * Displays token and weapon images on boardView.
      */
     private void displayTokensAndWeapons() {
         //Sets up display of playerTokens and weapons in board
@@ -571,15 +570,15 @@ public class BoardGUI extends Application {
 
     /**
      * Sets up players of the game by taking player name, character(token) and
-     * player type (agent human) Every character must be assigned to some player
-     * to make corresponding token displayed on board .
+     * player type (agent human). Every character must be assigned to some
+     * player to make corresponding token display on the board.
      *
-     * If player number is below 6 ,some characters would not be assigned. In
+     * If player number is below 6,some characters will not be assigned. In
      * order to assign all the characters and display their tokens, non-playing
      * agent players are created to make player number count to 6.
      *
      * After setting players, cards are distributed to all playing players,
-     * detective cards are given ,and their playing order is set depending on
+     * detective cards are given, and their playing order is set depending on
      * their character.
      */
     private void setUpPlayers() {
@@ -624,7 +623,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Creates the gameBoard
+     * Creates the gameBoard.
      */
     private void setUpGameBoard() {
         board = new Board(columns, rows); //Create the Board         
@@ -639,7 +638,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Sets up game Buttons
+     * Sets up game Buttons.
      */
     private void setButtonControlsBox() {
         //Detective Card Button
@@ -690,7 +689,7 @@ public class BoardGUI extends Application {
 
     /**
      * Creates game box which includes control box of buttons, grid of game
-     * board, and player profile sections with a diceRoller
+     * board, and player profile sections with a diceRoller.
      *
      * @return gameBox
      */
@@ -757,9 +756,9 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Returns true when game starting criterias are obtained All box input
-     * fields must be filled. Name and Characters of different players must not
-     * be same
+     * Returns true when game starting criteria are obtained. All box input
+     * fields must be filled. Names and Characters of different players must not
+     * be same.
      *
      * @param e
      * @return gameStarting
@@ -802,7 +801,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Restarts the game from characterSelection
+     * Restarts the game from characterSelection.
      */
     private void startNewGame() {
         System.out.println("Restarting Game!");
@@ -814,7 +813,7 @@ public class BoardGUI extends Application {
 
     /**
      * Method to start and and play the game after characters are selected This
-     * method is also be used for restarting game with same player details
+     * method is also be used for restarting game with same player details.
      *
      * @param primaryStage
      */
@@ -991,7 +990,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Starts the prototype GUI
+     * Starts the prototype GUI.
      *
      * @param primaryStage
      */
@@ -1036,11 +1035,9 @@ public class BoardGUI extends Application {
 
     }
 
-    
-    
     /**
      * Sets up handlers for key presses during game play, including human player
-     * movement controls
+     * movement controls.
      */
     public void setUpControls() {
         gameScene.setOnKeyPressed((KeyEvent event) -> {
@@ -1096,8 +1093,8 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Updates movement alerts,counts number of moves left and displays alert
-     * messages Also make passage Button invisible if player is not in room
+     * Updates movement alerts, counts number of moves left and displays alert
+     * messages. Also makes passage Button invisible if player is not in room.
      */
     private void updateMovementAlerts() {
         if (diceRoller.isDiceRolled()) {
@@ -1111,7 +1108,7 @@ public class BoardGUI extends Application {
 
     /**
      * Updates GUI by removing all the tokens from boardView then adding them
-     * back again in their updated positions
+     * back again in their updated positions.
      */
     public void updateView() {
         for (Player p : board.getPlayerList()) {
@@ -1122,7 +1119,7 @@ public class BoardGUI extends Application {
 
     /**
      * Handles a suggestion with a given suspected character, weapon and room
-     * name
+     * name.
      *
      * @param characterName
      * @param roomName
@@ -1237,13 +1234,14 @@ public class BoardGUI extends Application {
 
     /**
      * Handles a accusation with a given suspected character, weapon and room
-     * name Makes the correctly accusing player as winner of the game and gives
-     * a related display with game settings options(Restart, Start new game,
+     * name. Makes the correctly accusing player as winner of the game and gives
+     * a related display with game settings options (Restart, Start new game,
      * quit).
      *
-     * Also disables player having turns if player makes false accusation, and
-     * if all of the players make false accusation, window appears with game
-     * settings options to indicate no player won the game.
+     * Also disables player's ability to make turns if player makes false
+     * accusation, and if all of the players make false accusations, then a
+     * window appears with game settings options to indicate no player won the
+     * game.
      *
      * @param characterName
      * @param weaponName
@@ -1376,7 +1374,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Controls the actions of an agent player during its turn
+     * Controls the actions of an agent player during its turn.
      */
     private void handleAgentTurn() {
         endTurnBtn.setDisable(true);
@@ -1449,7 +1447,7 @@ public class BoardGUI extends Application {
 
     /**
      * Handles movement of agent player p, calls updateView() after each move to
-     * display agent movement in real time on the board
+     * display agent movement in real time on the board.
      *
      * @param p
      */
@@ -1481,7 +1479,7 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Display of current human player's hand on selected stage
+     * Display current human player's hand on selected stage.
      *
      * @param pStage
      */
@@ -1534,8 +1532,8 @@ public class BoardGUI extends Application {
     }
 
     /**
-     * Display of the detective card of current player on selected stage, which
-     * includes detective checklist and notes of player
+     * Display detective card of current player on selected stage, which
+     * includes detective checklist and notes of player.
      *
      * @param stage
      */
@@ -1578,9 +1576,8 @@ public class BoardGUI extends Application {
 
     }
 
-    
     /**
-     * Resets the dice and counter
+     * Resets the dice and counter.
      */
     private void resetDice() {
         //Sets Counter to 0
@@ -1590,9 +1587,9 @@ public class BoardGUI extends Application {
         diceRoller.setDiceRolled(false);
         diceRoller.enableDiceRollerButton();
     }
-    
+
     /**
-     * Sets up passage button to transport token to passage exit room
+     * Sets up passage button to transport token to passage exit room.
      */
     private void setUpPassageBtn() {
         passageBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -1614,7 +1611,7 @@ public class BoardGUI extends Application {
 
     /**
      * Enables passage button and makes it visible when player is already in
-     * room with passage exit while having turn
+     * room with passage exit while having turn.
      */
     private void enablePassageBtn() {
         Room currentPlayerRoom = board.getRoomOfPlayer(board.getCurrentPlayer());

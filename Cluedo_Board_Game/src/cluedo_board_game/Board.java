@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * Represents board of the game including players and tokens
+ * Represents game board functionality including players and tokens.
  *
  * @author Anilz
  * @version 4.0
@@ -50,11 +50,11 @@ public class Board {
         playerList = new ArrayList<>();
         idGenerator = new Random();
     }
-    
+
     /**
      * initialises the tile map using the columns and rows fields
      */
-    public void initialiseTileMap(){
+    public void initialiseTileMap() {
         // initialise tileMap 
         tileMap = new Tile[columns][rows];
         for (int _row = 0; _row < rows; _row++) {
@@ -66,7 +66,7 @@ public class Board {
     }
 
     /**
-     * Gets card distributor
+     * Gets card distributor.
      *
      * @return cardDistributor
      */
@@ -75,7 +75,7 @@ public class Board {
     }
 
     /**
-     * Gets tileMap
+     * Gets tileMap.
      *
      * @return tileMap
      */
@@ -84,7 +84,7 @@ public class Board {
     }
 
     /**
-     * Gets column size of the board
+     * Gets column size of the board.
      *
      * @return columns
      */
@@ -93,7 +93,7 @@ public class Board {
     }
 
     /**
-     * Gets row size of the board
+     * Gets row size of the board.
      *
      * @return rows
      */
@@ -102,7 +102,7 @@ public class Board {
     }
 
     /**
-     * returns to list of weapons
+     * Gets list of weapons.
      *
      * @return weapons
      */
@@ -111,7 +111,7 @@ public class Board {
     }
 
     /**
-     * Initialise a new weapon and add to the list
+     * Initialise a new weapon and add to the list.
      *
      * @param weapon
      * @return initialised weapon
@@ -122,7 +122,7 @@ public class Board {
     }
 
     /**
-     * Moves a selected weapon into a selected room
+     * Moves a selected weapon into a selected room.
      *
      * @param room
      * @param weapon
@@ -139,7 +139,7 @@ public class Board {
     }
 
     /**
-     * Returns list of rooms
+     * Returns list of rooms.
      *
      * @return rooms
      */
@@ -148,7 +148,7 @@ public class Board {
     }
 
     /**
-     * Initialise a new Room on the board
+     * Initialise a new Room on the board.
      *
      * @param name roomName
      * @param roomSpace list of tiles which will create roomSpace
@@ -208,7 +208,7 @@ public class Board {
     }
 
     /**
-     * Initialise token for each playing and non-playing players on board
+     * Initialise token for each playing and non-playing players on board.
      *
      * @param player
      * @param tokenName
@@ -249,7 +249,7 @@ public class Board {
     }
 
     /**
-     * Instantiates the cardDistributor for the board
+     * Instantiates the cardDistributor for the board.
      *
      * @param cardList a list of card Objects used to instantiate the
      * cardDistributor
@@ -264,8 +264,8 @@ public class Board {
      *
      * @param playerNames a list of player name Strings to be made into player
      * Objects and added to the player Map
-     * @param playerTypes a list of characters representing which type of player to add
-     * for each given player name
+     * @param playerTypes a list of characters representing which type of player
+     * to add for each given player name
      */
     public void addPlayers(ArrayList<String> playerNames, ArrayList<Character> playerTypes) {
         boolean playerAdded; //represents if a player is added successfully
@@ -296,8 +296,8 @@ public class Board {
 
     /**
      * Moves the current player to coordinates x y as long as dice is rolled and
-     * counter is less that dice total, increments counter if move is made, max
-     * out counter if player enters room
+     * counter is less that dice total, increments counter if a move is made,
+     * max out counter if player enters room.
      *
      * @param x
      * @param y
@@ -332,8 +332,8 @@ public class Board {
 
     /**
      * Orders the player list based on the name of their character token in the
-     * order: "Miss Scarlett","Colonel Mustard","Mrs.White","Mr.Green",
-     * "Mrs.Peacock","Professor Plum"
+     * order: "Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green",
+     * "Mrs.Peacock", "Professor Plum".
      */
     public void orderPlayerList() {
         ArrayList<Player> tempList = new ArrayList<>();
@@ -354,14 +354,14 @@ public class Board {
     }
 
     /**
-     * Increments the current Player to the next playing player
+     * Increments the current Player to the next playing player.
      */
     public void incrementCurrentPlayer() {
         currentPlayer = getNextActivePlayer(currentPlayer);
     }
 
     /**
-     * returns the next playing player from a given player p
+     * Returns the next playing player from a given player p.
      *
      * @param p
      * @return the next playing player
@@ -390,7 +390,7 @@ public class Board {
     }
 
     /**
-     * Returns to current player
+     * Returns to current player.
      *
      * @return currentPlayer
      */
@@ -399,7 +399,7 @@ public class Board {
     }
 
     /**
-     * Sets the current Player
+     * Sets the current Player.
      *
      * @param currentPlayer
      */
@@ -408,7 +408,7 @@ public class Board {
     }
 
     /**
-     * moves a given player to a random space in a given room
+     * Moves a given player to a random space in a given room.
      *
      * @param player
      * @param room
@@ -428,8 +428,8 @@ public class Board {
     }
 
     /**
-     * move a specified player p to a specified set of coordinates x and y only
-     * allows valid moves and handles agent player enter/exit room
+     * Move a specified player p to a specified set of coordinates: x and y that
+     * only allows valid moves and handles agent player enter/exit room.
      *
      * @param p
      * @param x
@@ -480,8 +480,8 @@ public class Board {
     }
 
     /**
-     * returns the current room of player p if they are in a room, null
-     * otherwise
+     * Returns the current room of player p if they are in a room, null
+     * otherwise.
      *
      * @param p
      * @return null or player p's room
@@ -491,8 +491,8 @@ public class Board {
     }
 
     /**
-     * returns a player p given a character name cName or null if the player
-     * doesn't exist
+     * Returns a player p given a character name cName or null if the player
+     * doesn't exist.
      *
      * @param cName
      * @return null or Player p
@@ -513,7 +513,7 @@ public class Board {
 
     /**
      * Utilises the card distributor object to distribute cards to each playing
-     * player fairly, current build uses a predefined list of card names
+     * player fairly.
      */
     public void distributeCards() {
         //use predefined list of card names for now
@@ -537,7 +537,7 @@ public class Board {
     }
 
     /**
-     * Gets the counter, how many times player can move token
+     * Gets the counter, how many times player can move token.
      *
      * @return counter
      */
@@ -546,7 +546,7 @@ public class Board {
     }
 
     /**
-     * Sets the counter value
+     * Sets the counter value.
      *
      * @param counter
      */
@@ -555,8 +555,8 @@ public class Board {
     }
 
     /**
-     * Gets the alert message
-     * 
+     * Gets the alert message.
+     *
      * @return alertMsg
      */
     public String getAlertMsg() {
@@ -564,8 +564,8 @@ public class Board {
     }
 
     /**
-     * Gets door to exit
-     * 
+     * Gets door to exit.
+     *
      * @param door
      * @return exitDoor tile
      */
@@ -590,7 +590,7 @@ public class Board {
     }
 
     /**
-     * returns the current room of tile t if it is in a room, null otherwise
+     * Returns the current room of tile t if it is in a room, null otherwise.
      *
      * @param t
      * @return null or tile t's room
@@ -610,8 +610,8 @@ public class Board {
     }
 
     /**
-     * Function is for player to exit room properly,and when doors are not
-     * blocked, and force to stay in room if door is blocked by another player
+     * Function is for player to exit room properly, and when doors are not
+     * blocked, and force to stay in room if door is blocked by another player.
      *
      * @param i
      * @param diceRolled parameter to identify if the dice is rolled. Player
@@ -659,9 +659,9 @@ public class Board {
     }
 
     /**
-     * Initialises the player detective card for all playing players, using a
-     * predefined list of characters, weapons and rooms, initialises all the
-     * check list values as false and case notes values as empty
+     * Initialises the player detective card for all players, using a predefined
+     * list of characters, weapons and rooms. Initialises all the check list
+     * values as false and case notes values as empty.
      */
     public void initialisePlayerDetectiveCards() {
         String[] characterNames = {"Miss Scarlett", "Colonel Mustard", "Mrs.White", "Mr.Green", "Mrs.Peacock", "Professor Plum"};
@@ -694,7 +694,7 @@ public class Board {
 
     /**
      * Returns a decision for what the current players turn should be, assuming
-     * the current player is an agent
+     * the current player is an agent.
      *
      * @return string representing turn decision
      */
@@ -722,7 +722,7 @@ public class Board {
 
     /**
      * Given a string s return a room with a name equal to s if one exists, else
-     * null
+     * null.
      *
      * @param s
      * @return room or null
@@ -743,7 +743,7 @@ public class Board {
 
     /**
      * Given a player p, returns whether the player is trapped by checking its
-     * adjacent tiles to see if there is one that the player can move to
+     * adjacent tiles to see if there is one that the player can move to.
      *
      * @param p
      * @return boolean for whether player is trapped
@@ -752,7 +752,7 @@ public class Board {
         boolean trapped = true;
         int i = 0;
         ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
-        while(trapped && i < adjTiles.size()){
+        while (trapped && i < adjTiles.size()) {
             if (!adjTiles.get(i).isOccupied() && !adjTiles.get(i).isWall()) {
                 trapped = false;
             }
@@ -760,12 +760,13 @@ public class Board {
         }
         return trapped;
     }
-    
+
     /**
-     * given a player p, assumed to be an agent, return whether they must retrace a move
-     * in a given turn due to it being the only valid move to take, this method should be run at 
-     * some point after having run isPlayerTrapped()
-     * 
+     * Given a player p, assumed to be an agent, return whether they must
+     * retrace a move in a given turn due to it being the only valid move to
+     * take, this method should be run at some point after having run
+     * isPlayerTrapped().
+     *
      * @param p
      * @return boolean for whether player is blocked
      */
@@ -773,7 +774,7 @@ public class Board {
         boolean blocked = true;
         int i = 0;
         ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
-        while(blocked && i < adjTiles.size()){
+        while (blocked && i < adjTiles.size()) {
             if (!adjTiles.get(i).isOccupied() && !adjTiles.get(i).isWall() && !p.getPreviousPath().contains(adjTiles.get(i))) {
                 blocked = false;
             }
@@ -783,8 +784,9 @@ public class Board {
     }
 
     /**
-     * given a player p, returns a door tile adjacent to the player if one exists, else returns null
-     * 
+     * Given a player p, returns a door tile adjacent to the player if one
+     * exists, else returns null.
+     *
      * @param p
      * @return door tile or null
      */
@@ -792,7 +794,7 @@ public class Board {
         Tile door = null;
         int i = 0;
         ArrayList<Tile> adjTiles = getAdjacentTiles(p.getToken().getTokenLocation());
-        while(door == null && i < adjTiles.size()){
+        while (door == null && i < adjTiles.size()) {
             if (adjTiles.get(i).isDoor()) {
                 door = adjTiles.get(i);
             }
@@ -800,22 +802,22 @@ public class Board {
         }
         return door;
     }
-    
+
     /**
-     * given a tile t, return all the tiles that are vertically and horizontally
-     * adjacent to t that exist on the board
-     * 
+     * Given a tile t, return all the tiles that are vertically and horizontally
+     * adjacent to t that exist on the board.
+     *
      * @param t
      * @return array list of tiles
      */
-    public ArrayList<Tile> getAdjacentTiles(Tile t){
+    public ArrayList<Tile> getAdjacentTiles(Tile t) {
         ArrayList<Tile> adjTiles = new ArrayList<>();
         int x = t.getColIndex();
         int y = t.getRowIndex();
-        if(x < 0 || x > 27 || y < 0 || y > 27){
+        if (x < 0 || x > 27 || y < 0 || y > 27) {
             throw new IndexOutOfBoundsException("Given tile is not within board range");
         }
-        if ((x - 1) > -1 && (x - 1) < 28) { 
+        if ((x - 1) > -1 && (x - 1) < 28) {
             adjTiles.add(tileMap[x - 1][y]);
         }
         if ((x + 1) > -1 && (x + 1) < 28) {

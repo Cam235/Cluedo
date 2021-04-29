@@ -19,8 +19,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
- * For the creation of detective card where player can take notes and select suspect,weapon,and room items 
- * to help finding murder cards 
+ * For the creation of detective card where player can take notes and select a
+ * suspect, weapon and room items to help uncover the murder cards.
+ *
  * @author Anilz
  * @version 1.0
  */
@@ -38,12 +39,13 @@ public class DetectiveCardPanel {
     //Detective notes field and text area
     private String detectiveNotes;
     private TextArea detectiveNotesTextArea;
-    
+
     //Save button
     private Button saveButton;
 
     /**
-     * Create content of detective Card
+     * Create content of detective Card.
+     *
      * @return detectiveCheckList
      */
     public Parent createContent() {
@@ -108,7 +110,7 @@ public class DetectiveCardPanel {
             //Finally add HBox into VBox
             weaponList.getChildren().add(weaponCheckListLine);
         }
-        
+
         //Final VBox is created for complete checklist including suspectList,roomList and weaponList
         VBox completeCheckList = new VBox(suspectList, roomList, weaponList);
         //A text area is created for a player to take notes
@@ -125,10 +127,9 @@ public class DetectiveCardPanel {
         return detectiveCard;
     }
 
-    
     /**
-     * Selects / deselects the box corresponding to label,
-     * therefore saving the data in HashMap
+     * Selects/deselects the box corresponding to label, saving the data in a
+     * HashMap.
      *
      * @param itemName
      */
@@ -137,7 +138,6 @@ public class DetectiveCardPanel {
         return !detectiveChecklist.get(itemName);
     }
 
-    
     /**
      * Returns updated detective checklist when a checkbox is selected
      *
@@ -168,7 +168,8 @@ public class DetectiveCardPanel {
     }
 
     /**
-     * Gets the detectiveChecklist
+     * Gets the detectiveChecklist.
+     *
      * @return detectiveChecklist
      */
     public HashMap<String, Boolean> getDetectiveChecklist() {
@@ -176,15 +177,17 @@ public class DetectiveCardPanel {
     }
 
     /**
-     * Sets the detective card
-     * @param detectiveChecklist 
+     * Sets the detective card.
+     *
+     * @param detectiveChecklist
      */
     public void setDetectiveChecklist(HashMap<String, Boolean> detectiveChecklist) {
         this.detectiveChecklist = detectiveChecklist;
     }
 
     /**
-     * Gets detective notes
+     * Gets detective notes.
+     *
      * @return detectiveNotes
      */
     public String getDetectiveNotes() {
@@ -192,15 +195,17 @@ public class DetectiveCardPanel {
     }
 
     /**
-     * Sets detective notes
-     * @param detectiveNotes 
+     * Sets detective notes.
+     *
+     * @param detectiveNotes
      */
     public void setDetectiveNotes(String detectiveNotes) {
         this.detectiveNotes = detectiveNotes;
     }
 
     /**
-     * Gets Text area
+     * Gets Text area.
+     *
      * @return detectiveNotesTextArea
      */
     public TextArea getDetectiveNotesTextArea() {
@@ -208,7 +213,8 @@ public class DetectiveCardPanel {
     }
 
     /**
-     * Gets the save button
+     * Gets the save button.
+     *
      * @return saveButton
      */
     public Button getSaveButton() {

@@ -5,7 +5,7 @@ import java.util.Random;
 
 /**
  * Represents a room which is part of the board in the board game
- * 
+ *
  * @author Anilz
  */
 public class Room {
@@ -17,7 +17,7 @@ public class Room {
     private Room passageExit; //Passage exit to transport other linked room
 
     /**
-     * Constructor for room taking name and roomSpace
+     * Constructor for room taking name and roomSpace.
      *
      * @param roomName
      * @param roomSpace
@@ -28,7 +28,7 @@ public class Room {
     }
 
     /**
-     * Gets name of room
+     * Gets name of room.
      *
      * @return name
      */
@@ -37,7 +37,7 @@ public class Room {
     }
 
     /**
-     * Gets list of tiles that creates the room space
+     * Gets list of tiles that creates the room space.
      *
      * @return roomSpace
      */
@@ -46,7 +46,7 @@ public class Room {
     }
 
     /**
-     * Gets room doors
+     * Gets room doors.
      *
      * @return doors
      */
@@ -55,7 +55,7 @@ public class Room {
     }
 
     /**
-     * Gets weapons currently in the room
+     * Gets weapons currently in the room.
      *
      * @return roomWeapon
      */
@@ -64,8 +64,8 @@ public class Room {
     }
 
     /**
-     * Places selected weapon on random tile within roomSpace ,which is not
-     * occupied
+     * Places selected weapon on random tile within roomSpace, which is not
+     * occupied.
      *
      * @param roomWeapon
      */
@@ -81,7 +81,7 @@ public class Room {
     }
 
     /**
-     * Checks tile if it is in room
+     * Checks tile if it is in room.
      *
      * @param tile
      * @return
@@ -91,8 +91,9 @@ public class Room {
     }
 
     /**
-     * Adds door to room, The door must be part of wall tiles that covers
-     * roomspace. Once the tile is set to be door, tile will no longer be wall
+     * Adds door to the room, The door must be part of wall tiles that covers
+     * the room space. Once the tile is set to be door, tile will no longer be a
+     * wall.
      *
      * @param roomDoor
      */
@@ -162,7 +163,7 @@ public class Room {
     }
 
     /**
-     * Gets all the non-occupied tiles in roomSpace
+     * Gets all the non-occupied tiles in roomSpace.
      *
      * @return freeSpace
      */
@@ -177,7 +178,7 @@ public class Room {
     }
 
     /**
-     * Gets the room which passage transfers(exits) to
+     * Gets the room which passage transfers (exits) to.
      *
      * @return passageExit
      */
@@ -186,7 +187,7 @@ public class Room {
     }
 
     /**
-     * Sets the room which passage transfers(exists) to
+     * Sets the room which passage transfers (exists) to.
      *
      * @param passageExit
      */

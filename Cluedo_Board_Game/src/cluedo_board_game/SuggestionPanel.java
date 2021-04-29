@@ -49,7 +49,7 @@ public class SuggestionPanel {
     
     /**
      * Displays the content for user to make suggestion. Includes room field and
-     * 2 ComboBox to suggest suspect and weapon
+     * 2 combo boxes to suggest a suspect and weapon.
      *
      * @param roomName current room of player's token is in
      * @param suggestingPlayer current player who is making suggestion
@@ -118,7 +118,7 @@ public class SuggestionPanel {
 
     /**
      * A ChoiceDialog appears when suggestion is made and some human player
-     * possess 1 or more suggested card, and has to show
+     * possess 1 or more suggested card, and has to show.
      *
      * @param responderName first player name after current suggesting player,
      * who has suggested card
@@ -139,8 +139,8 @@ public class SuggestionPanel {
     }
 
     /**
-     * An alert appears when responder shows a card This includes name and image
-     * of suggested and possessed card
+     * An alert appears when responder shows a card: this includes name and image
+     * of suggested and possessed card.
      *
      * @param responderPlayer
      * @param responseCardName
@@ -168,7 +168,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Creates suggestion and post suggestion content for agent
+     * Creates suggestion and post suggestion content for agent.
      *
      * @param suggestingPlayer
      * @param respondingPlayer
@@ -189,7 +189,7 @@ public class SuggestionPanel {
 
     /**
      * Alert appears if suggested card is not found at any players hand,
-     * indicating no other players possess the card is not found!
+     * indicating no other players possess the card.
      *
      * @param isAgent
      * @param suggestingPlayer
@@ -214,7 +214,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Gets suggested suspect name
+     * Gets suggested suspect name.
      *
      * @return suggestedSuspectName
      */
@@ -223,7 +223,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Gets suggested room name
+     * Gets suggested room name.
      *
      * @return suggestedRoomName
      */
@@ -232,7 +232,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Gets suggested weapon name
+     * Gets suggested weapon name.
      *
      * @return suggestedWeaponName
      */
@@ -241,7 +241,7 @@ public class SuggestionPanel {
     }
 
     /**
-     * Gets the submit button
+     * Gets the submit button.
      *
      * @return submitButton
      */

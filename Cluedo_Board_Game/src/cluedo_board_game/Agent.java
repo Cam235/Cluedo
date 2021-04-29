@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cluedo_board_game;
 
 import java.util.ArrayList;
@@ -10,15 +5,16 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * Represents an agent player in the board game
+ * Represents an agent player in the board game.
+ *
  * @author cwood
  * @version 1.0
  */
 public class Agent extends Player {
 
     /**
-     * Constructor for agent player Creates a agent player and assigns specified
-     * token to it
+     * Constructor for agent player which creates a agent player and assigns a
+     * specified token to it.
      *
      * @param playerId
      * @param name
@@ -29,7 +25,7 @@ public class Agent extends Player {
     }
 
     /**
-     * Sets the player as agent
+     * Sets the player as agent.
      *
      * @return true
      */
@@ -39,7 +35,7 @@ public class Agent extends Player {
     }
 
     /**
-     * A method to move player token to specified tile
+     * A method to move player token to specified tile.
      *
      * @param tile
      */
@@ -49,12 +45,12 @@ public class Agent extends Player {
     }
 
     /**
-     * Generates a random set of coords adjacent to the coords x y for agent
-     * movement
+     * Generates a random set of coordinates adjacent to the coordinates x y for
+     * agent movement.
      *
-     * @param x x axis coord
-     * @param y y axis coord
-     * @return random coords adjacent to x y
+     * @param x x axis coordinates
+     * @param y y axis coordinates
+     * @return random coordinates adjacent to x y
      */
     @Override
     public Integer[] getMove(int x, int y) {
@@ -84,9 +80,9 @@ public class Agent extends Player {
 
     /**
      * Returns an ArrayList of card names which are marked as unseen in the
-     * players detective card
+     * players detective card.
      *
-     * @return ArrayList of Strings of card names
+     * @return String ArrayList of card names
      */
     @Override
     public ArrayList<String> getUnseenCards() {
@@ -98,7 +94,7 @@ public class Agent extends Player {
     }
 
     /**
-     * Marks the cards in the agents hand as seen in the agents detective card
+     * Marks the cards in the agents hand as seen in the agents detective card.
      */
     @Override
     public void markHandAsSeen() {
@@ -108,8 +104,8 @@ public class Agent extends Player {
     }
 
     /**
-     * Given arrays of character, room and weapon names, returns a character,
-     * weapon and room to use in an accusation
+     * Given arrays of character, room and weapon names: return a character,
+     * weapon and room to use in an accusation.
      *
      * @param characters array list of character names
      * @param rooms array list of room names
@@ -134,8 +130,8 @@ public class Agent extends Player {
     }
 
     /**
-     * Given arrays of character, room and weapon names, returns a character and
-     * weapon name to use in a suggestion
+     * Given arrays of character, room and weapon names: return a character and
+     * weapon name to use in a suggestion.
      *
      * @param characters array list of character names
      * @param rooms array list of room names
