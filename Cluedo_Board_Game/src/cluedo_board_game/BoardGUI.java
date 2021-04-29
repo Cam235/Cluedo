@@ -924,6 +924,12 @@ public class BoardGUI extends Application {
                                     //calls private method to handle suggestion
                                     handleSuggestion(suggestionPanel.getSuggestedSuspectName(), board.getRoomOfPlayer(board.getCurrentPlayer()).getName(),
                                             suggestionPanel.getSuggestedWeaponName());
+                                    //if human player makes a suggestion at the start of their turn don't allow them to roll after 
+                                    if (!diceRoller.isDiceRolled()) {
+                                        resetDice();
+                                        diceRoller.getRollButton().fire();
+                                        board.setCounter(diceRoller.getDiceTotal());
+                                    }
                                 } else {
                                     alertTxt.setText("Please fill all boxes to make suggestion!");
                                 }
